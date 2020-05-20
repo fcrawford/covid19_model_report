@@ -1,0 +1,584 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{enumerate}
+\usepackage{amscd}
+
+\usepackage{longtable}
+
+
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage[sort&compress,numbers]{natbib}
+
+
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+
+
+
+
+
+\usepackage{tikz-cd}
+\usepackage[hyphens]{url}
+\usepackage{wrapfig}
+\usepackage{mathrsfs}
+\usepackage{mdframed}
+
+\usepackage{dsfont} % blackboard numerals
+
+\usepackage{geometry}
+\geometry{margin=0.75in}
+
+\usepackage{setspace}
+
+%\usepackage{endfloat}
+
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Econd}{\E_{\Yij|\Yinj,\xinj}}
+\newcommand{\EXY}{\E_{\Yinj,\xinj}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\LDGP}{L^{\text{DGP}}}
+\newcommand{\lDGP}{l^{\text{DGP}}}
+\newcommand{\lcox}{l^{\text{Cox}}}
+\newcommand{\lpois}{l^{\text{Pois}}}
+\newcommand{\hazt}{\lambda_{ij}(t)}
+\newcommand{\Yij}{Y_{ij}}
+\newcommand{\Yik}{Y_{ik}}
+\newcommand{\Yinj}{Y_{i-j}(t)}
+
+
+\newcommand{\cDE}{\text{\it cDE}}
+\newcommand{\mDE}{\text{\it mDE}}
+\newcommand{\mPE}{\text{\it mPE}}
+
+\newcommand{\xij}{x_{ij}}
+\newcommand{\xik}{x_{ik}}
+\newcommand{\xinj}{x_{i-j}}
+\newcommand{\tij}{t_{ij}}
+\newcommand{\tik}{t_{ik}}
+\newcommand{\T}{\mathbf{T}}
+\newcommand{\V}{\mathbf{V}}
+\newcommand{\W}{\mathbf{W}}
+\newcommand{\X}{\mathbf{X}}
+\newcommand{\Y}{\mathbf{Y}}
+\newcommand{\Z}{\mathbf{Z}}
+\newcommand{\bH}{\mathbf{H}}
+\newcommand{\bL}{\mathbf{L}}
+\newcommand{\h}{\mathbf{h}}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\y}{\mathbf{y}}
+\newcommand{\z}{\mathbf{z}}
+\newcommand{\w}{\mathbf{w}}
+
+\newcommand{\bomega}{\boldsymbol{\omega}}
+\newcommand{\bxi}{\boldsymbol{\xi}}
+\newcommand{\btheta}{\boldsymbol{\theta}}
+\newcommand{\bphi}{\boldsymbol{\phi}}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\betapois}{\hat{\beta}_{\text{Pois}}}
+\newcommand{\betacox}{\hat{\beta}_{\text{Cox}}}
+\newcommand{\betaDGP}{\hat{\beta}_{\text{DGP}}}
+\newcommand{\betaPA}{\hat{\beta}_{\text{PA}}}
+\newcommand{\er}{\text{error}}
+\newcommand{\omegastar}{\omega^{\textstyle{*}}}
+\newcommand{\etastar}{\eta^{\textstyle{*}}}
+
+\newcommand{\dx}[1]{\ \text{d} #1}
+\newcommand{\indicator}[1]{\mathds{1}\!\left\{ #1 \right\}}
+\newcommand{\indep}{\ \rotatebox[origin=c]{90}{$\models$}\ }
+\newcommand{\nindep}{\not\!\perp\!\!\!\perp}
+
+\newcommand{\comments}[1]{[\textcolor{red}{#1}]}
+\newcommand{\ZLcomment}[1]{[\textcolor{red}{Richard: #1}]}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}{Proposition}
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{defn}{Definition}
+
+\setlength{\bibsep}{0.0pt}
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0.0pt}
+
+
+\allowdisplaybreaks
+
+
+% Blinding for peer review: set to 1
+\newcommand{\blind}{0}
+
+
+\title{COVID-19 epidemic forecast in Connecticut}
+
+\author{Olga Morozova$^{1}$,
+  Zehang Richard Li$^1$,
+and Forrest W. Crawford$^{1,2,3,4}$  \\[1em]
+\small 1. Department of Biostatistics, Yale School of Public Health \\
+\small 2. Department of Statistics \& Data Science, Yale University \\
+\small 3. Department of Ecology \& Evolutionary Biology, Yale University \\
+\small 4. Yale School of Management }
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%55
+
+\section{Introduction}
+
+
+%\comments{The introduction should be focused on how we model covid-19 and what we want from a model of this type.  Emphasize that we want a simple tractable model for a large population. Emphasize what policymakers will do with the information model projections provide}
+
+%\comments{Three part introduction:}
+%\begin{enumerate}
+%  \item We need models to support public health decision making, including reopening and surveillance
+%  \item Model output can tell us about historical info (e.g. R0 before interventions), the effects of interventions (e.g. lockdown), and projections about the future under specified scenarios. 
+%  \item Models need to balance parsimony and realism.  Need to be able to explain to policymakers ``what the assumptions are''. 
+%  \item Many nation-wide models do not use local data, or make simplifying assumptions not appropriate for localities.  
+%  \item In this paper, we introduce a county-structured transmission model ...
+%\end{enumerate}
+
+Epidemiologic models of disease transmission play an important role in supporting public health decision-making. They can provide insights about the historical trends in the epidemic dynamics, i.e. estimates of the $R_0$ (basic reproductive number) or $R_{eff}$ (effective reproductive number) that accounts for the effects of interventions intended to slow down transmission and depletion of susceptible individuals.
+Models are especially useful in situations of high uncertainty, offering a structured way to assess the potential effects of interventions under hypothetical scenarios. Models cannot predict the future with certainty, but they can often help evaluate the ``best'' and the ``worst'' case scenarios, bounding the range of plausible trajectories given assumptions. 
+
+United States and other counties implemented strict social distancing measures to slow down transmission of SARS-CoV-2, which, if remained uncontrolled, would have likely quickly overwhelmed health care system leading to a large number of deaths. 
+As many states, including Connecticut, are planning phased lifting of lockdown, the important questions that policy makers and public health professionals are faced with are: 1) how effective are current social distancing restrictions, and 2) what can be expected if these restrictions are lifted. Mechanistic transmission models can help answer these questions. When models are developed with a primary goal to support decision-making, they need to be simple and tractable and balance parsimony and realism. They should be simple enough to provide clear outputs in a timely manner with assumptions that can be understood by policymakers. At the same time, for such models to be useful, they need to be flexible enough to accommodate various sets of scenarios and give projections of epidemiologic features that may be needed by different stakeholders.
+
+Many nation-wide COVID-19 forecasting models that have been developed in the United States do not use local data, or make simplifying assumptions not appropriate for localities \citep{cdc2020covid19forecasts}. These models may capture the country-wide dynamics and forecasting well, but be less useful for individual states or counties. Several nation-wide models have been developed with a goal to provide projections at the state level, but they usually use the same set of assumptions and estimates of key model parameters across all states, and may or may not be able to capture important local variations. For example, the COVID Act Now project \citep{covidactnow2020you} estimates that between April 13 - May 15, 2020, a 100\% of ICU rooms have been occupied in Connecticut, and that if all restriction are lifted, over 70\% of population would be infected and over 19,000 deaths would occur in the state before August 14th, 2020. Under current level of restrictions, the projections predict 26\% of population being infected and a total of 5,000 deaths by the same date. These projections may offer a useful snapshot of two hypothetical scenarios, but do not provide enough flexibility to estimate potential epidemic dynamics under partial lifting of restrictions, improved testing, increased hospitalization capacity, or a different set of assumptions about highly uncertain parameters.  
+
+In this paper, we introduce a county-structured transmission model of SARS-CoV-2 transmission and COVID-19 disease progression. The model was developed with a goal to support intervention planning and decision-making in Connecticut, but can be adapted to other states. This report provides technical description of the model and data calibration approach, along with calibration results in Connecticut. 
+
+
+
+%Stay-at-home orders are effective in reducing epidemiological contact that can transmit COVID-19.
+%Which states have implemented stay at home orders: 
+%https://www.cnn.com/2020/03/23/us/coronavirus-which-states-stay-at-home-order-trnd/index.html
+%https://www.nytimes.com/interactive/2020/us/coronavirus-stay-at-home-order.html
+
+%Stay-at-home orders are effective in reducing epidemiological contact that can transmit COVID-19. \citep{peak2020modeling}
+%[Evidence on impact/effectiveness of stay at home orders]
+%Lockdown in Wuhan (see refs in \citet{wells2020impact, tian2020investigation, kupferschmidt2020can})
+%travel and border control measures \citep{wells2020impact}
+%The travel quarantine of Wuhan delayed the overall epidemic progression by only 3 to 5 days in Mainland China, but has a more marked effect at the international scale \citep{chinazzi2020effect}. 
+%Use real-time mobility data from Wuhan and detailed case data including travel history to elucidate the role of case importation on transmission in cities across China and ascertain the impact of control measures \citep{kraemer2020effect}.
+%Effect of duration of measures \citep{prem2020effect}.
+%A data-driven SEIQR model study in China. \citep{zhang2020impact}.
+%Modeling in Singapore \citep{koo2020interventions}.
+%Effectiveness and cost-effectiveness \citep{wang2020effectiveness}.
+
+% contact tracing: ferretti2020quantifying
+% other possibly related refs: niu2020deciphering, niehus2020using, prem2020age-structured, lewnard2020scientific, lin2020which.
+
+
+
+%%%%%%%%%%%%%%%%%%
+
+\section{Model specification}
+
+We developed a deterministic compartmental model of SARS-CoV-2 transmission and COVID-19 disease progression.
+The model is based on the SEIR (Susceptible, Exposed, Infectious, Recovered) framework \citep{keeling2011modeling}, which was extended to accommodate distinct features of COVID-19 disease. We calibrate the model to observed dynamics of deaths and hospitalizations in Connecticut, and produce estimates of incidence and prevalence that may be helpful in designing population-level surveys. Similar models have been published recently offering intervention effect estimates and projections in various locations \citep{cdc2020covid19forecasts, li2020substantial, kissler2020projecting, childs2020impact, salje2020estimating, salomon2020defining}.
+
+Figure \ref{fig:model} shows a schematic representation of the model structure. We categorize infections as asymptomatic, mild symptomatic, and severe. Only severe infections may lead to death. Severe infections are defined as those requiring hospitalization. Since one of the key observable features of the model is dynamics of hospitalizations in the community, we use separate compartments for community hospitalizations and for severe cases occurring in closed communities, such as nursing homes, assisted living facilities, or prisons. Case fatality ratio (CFR) among severe cases in closed communities is assumed to be higher than the community hospital CFR.  If hospitalization capacity is overwhelmed, some severe cases in the community are denied hospitalization, and experience a higher probability of death compared to hospitalized cases. Mild symptomatic infections are assumed to self-isolate shortly after they develop symptoms and remain isolated until they recover. Duration of infectiousness of symptomatic cases assumes a period of presymptomatic viral shedding, i.e. we assume that latency period is shorter than incubation period \citep{furukawa2020evidence}. In line with other similar models, we assume that asymptomatic cases exert lower force of infection, but remain infectious for a longer period of time, since they are less likely to self-isolate in the absence of wide-spread testing \citep{childs2020impact, salomon2020defining}.  The average time that severe cases spend in the infectious state is approximated by the time between onset of infectiousness and hospitalization (or attempted hospitalization in case of hospital overflow). Since, in practice, severe case likely become isolated at home before hospitalization starts, and those in nursing homes, assisted living facilities, or prisons likely get isolated within a few days after symptom onset, we use an ``isolation coefficient'' to reduce the effective force of infection from severe infectious compartment to avoid using an extra transient isolation compartment. Force of infection from hospitalized patients is assumed to be negligible. We assume that recovered individuals remain immune to reinfection for the duration of modeling period.
+
+The model is implemented at the level of individual counties in Connecticut assuming that most contacts are happening within a given county. A small proportion of contacts is allowed to happen between adjacent counties. 
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.75\textwidth]{model_diagram_ct.pdf}
+	\end{center}
+	\caption{Schematic of the SARS-CoV-2 transmission model and COVID-19 disease progression.  
+		The model is an extension of a SEIR-type model. Exposed individuals may develop either asymptomatic infection (compartment $A$), mild infection (compartment $I_m$), or severe infection (compartment $I_s$). Asymptomatic and mild infections resolve without hospitalization and never lead to death. Mild symptomatic cases self-isolate (transition to compartment $R_M$) shortly after development of symptoms, and transition to recovery (compartment $R$) when they stop transmitting the virus. A proportion of severe cases lead to hospitalization (compartment $H$) unless hospitalization capacity is exhausted, in which case they transition to compartment $\bar{H}$, which represents hospital overflow. Hospitalized and hospital overflow cases may result in recovery ($R$) or death ($D$). Some severe cases, including nursing home residents, people in prisons, or individuals, who do not have access to hospitalization for other reasons, transition to compartment $U$ and may later recover or die. The model assumes a closed population without births and non-COVID-19 related deaths. }
+	\label{fig:model}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Compartmental model}
+
+The model divides the population into 11 compartments: susceptible ($S$), exposed, latent infections ($E$), infectious and asymptomatic ($A$), infectious and mild symptomatic ($I_M$), infectious and severe ($I_S$), isolated mild infections removed from the pool of infectious individuals ($R_M$), hospitalized ($H$), severe in need of hospitalization, but denied it due to hospital capacity overflow ($\bar{H}$), severe in nursing homes, prisons or otherwise not having access to hospitalization ($U$), recovered ($R$), and died ($D$).  
+
+The transmission dynamics at the level of a given county is guided by the following ODE system: \\
+\[ \frac{\dx{S}}{\dx{t}} = -\beta S \left[ (1-k_n) \frac{ I_M + k_{I_S} I_S + k_A A}{N} + \frac{k_n}{J} \sum_{j=1}^J  \frac{I_M^{(j)} + k_{I_S} I_S^{(j)} + k_A A^{(j)}}{N^{(j)}} \right], \]
+where $j = 1, \cdots , J$ index counties adjacent to a given county.
+\[ \frac{\dx{E}}{\dx{t}} = \beta S \left[ (1-k_n) \frac{ I_M + k_{I_S} I_S + k_A A}{N} + \frac{k_n}{J} \sum_{j=1}^J  \frac{I_M^{(j)} + k_{I_S} I_S^{(j)} + k_A A^{(j)}}{N^{(j)}} \right] - \delta E \]
+\[ \frac{\dx{A}}{\dx{t}} = q_A \delta E - \alpha_A A \]
+\[ \frac{\dx{I_M}}{\dx{t}} = q_{I_M} \delta E - \alpha_{I_M} I_M \]
+\[ \frac{\dx{R_M}}{\dx{t}} = \alpha_{I_M} I_M - \gamma_{R_M} R_M \]
+\[ \frac{\dx{I_S}}{\dx{t}} = q_{I_S} \delta E - \alpha_{I_S} I_S \]
+\[ \frac{\dx{H}}{\dx{t}} =  q_H (1 - \rho) \alpha_{I_S} I_S - \gamma_H H  \]
+\[ \frac{\dx{\bar{H}}}{\dx{t}} =  q_H \rho \alpha_{I_S} I_S - \gamma_{\bar{H}} \bar{H},  \]
+where $\rho = \left[ 1+\exp(0.5(C-H)) \right]^{-1}$ is a hospitalization capacity overflow function, and $C$ represents hospitalization capacity at a given time point.
+\[ \frac{\dx{U}}{\dx{t}} =  (1 - q_H) \alpha_{I_S} I_S - \gamma_{U} U  \]
+\[ \frac{\dx{D}}{\dx{t}} = \gamma_H m_H H + \gamma_{\bar{H}}  m_{\bar{H}} \bar{H} + \gamma_{U} m_{U} U \]
+\[ \frac{\dx{R}}{\dx{t}} = \alpha_A A + \gamma_{R_M} R_M + \gamma_H (1-m_H) H + \gamma_{\bar{H}} (1 - m_{\bar{H}}) \bar{H} + \gamma_{U} (1- m_{U}) U  \]
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Parameter definitions}
+
+Table \ref{table:params} provides a list of model parameters and their definitions. 
+
+\begin{spacing}{1}
+\begin{longtable}[H] {p{.11\textwidth} p{.85\textwidth} }
+	\caption{Model parameters} \\
+	Notation & Definition \\[0.5em] \hline
+	{} & {} \\
+	\endfirsthead
+	Notation & Definition  \\[0.5em] \hline
+	\endhead
+	{} & {}  \\[-1em]
+	$\beta$ & Transmission parameter per S-I pair \\[0.5em]
+	$\delta$ & (Latency period)$^{-1}$ (days$^{-1}$) \\[0.5em]
+	$q_A$, $q_{I_M}$, $q_{I_S}$  & Proportions of asymptomatic, mild symptomatic, and severe infections \\[0.5em]
+	$q_H$ & Proportion of severe cases that will result in hospitalization or attempted hospitalization under hospital overflow \\ [0.5em]
+	$\alpha_A$ & (Duration of infectiousness among asymptomatic infections)$^{-1}$ (days$^{-1}$) \\[0.5em]	
+	$\alpha_{I_M}$ & (Duration of infectiousness among mild symptomatic infections, time until isolation)$^{-1}$ (days$^{-1}$) \\[0.5em]
+	$\gamma_{R_M}$ & (Duration of isolation among mild symptomatic infections, time to recovery)	$^{-1}$ (days$^{-1}$) \\[0.5em]
+	$\alpha_{I_S}$ & (Duration of infectiousness among severe cases, time until hospitalization)$^{-1}$ (days$^{-1}$) \\[0.5em]	
+	$\gamma_{H}$ & (Length of hospitalization, time until recovery or death)$^{-1}$ (days$^{-1}$) \\[0.5em]
+	$\gamma_{\bar{H}}$ & (Remaining time until recovery or death among hospital overflow patients)$^{-1}$ (days$^{-1}$) \\[0.5em]
+	$\gamma_{U}$ & (Remaining time until recovery or death among nursing home residents and alike)$^{-1}$ (days$^{-1}$) \\[0.5em]
+	$k_A$ & Relative infectiousness of asymptomatic cases compared to symptomatic \\[0.5em]
+	$k_{I_S}$ & Isolation coefficient among severe cases in nursing homes and those expecting hospitalization \\[0.5em]
+	$m_H$ & Case fatality ratio among hospitalized severe cases \\[0.5em]
+	$m_{\bar{H}}$ & Case fatality ratio among severe cases denied hospitalization due to hospital capacity overflow \\[0.5em]
+	$m_{U}$ & Case fatality ratio among severe cases in nursing homes, prisons, or with no access to hospitalization \\[0.5em]
+	$k_n$ & Proportion of all contacts that happen with individuals from adjacent counties (as opposed to within county) \\[0.5em]
+	$C(t)$ & Hospitalization capacity at time $t$, may be constant or vary over time representing capacity increase intervention\\
+	\hline
+	\label{table:params}
+\end{longtable}
+\end{spacing}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\subsection{Geographic structure}
+
+%\comments{Describe the contact structure for counties}
+%\comments{Richard, could you generate a map of Connecticut with counties labeled, alongside a labeled adjacency matrix for counties? }
+Figure \ref{fig:map} shows the county map of Connecticut along with the county adjacency matrix. We assume that a fraction $(1-k_n)$ of all contacts happen within a given county, and the remaining $k_n$ contacts happen between individuals residing in adjacent counties.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.7\textwidth]{figures/map_adj.pdf}
+	\caption{County map of Connecticut and spatial adjacency matrix of the counties.}
+	\label{fig:map}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Effects of social distancing and testing interventions} 
+Social distancing measures, in particular school closure and lockdown, reduce the value of transmission parameter $\beta$. The value of the transmission parameter at time $t$ is calculated as:
+\[ \beta(t) = \beta_0 (1 - \iota_{school}(t) ) (1 - \iota_{lockdown} (t) ), \]
+where $\beta_0$ is a value of transmission parameters in the absence of any interventions, $\iota_{school}(t)$ is the size of contact reduction effect of school closure, and $\iota_{lockdown} (t)$ is a size of contact reduction effect of lockdown that is independent of school closure effect. $\iota_{school}(t)$ and $\iota_{lockdown} (t)$ are zero when these interventions are not in effect, and can either have a constant or time-varying effect when interventions are in effect. 
+
+Based on the known dates of school closure and lockdown orders, and assuming that these effects are constant over time once they reach their maximum levels, we calibrate the values of these effects to observed data. To project epidemic dynamics into the future, we replace  $\iota_{lockdown} (t)$ with a function representing post-lockdown lifting distancing effect, which is unknown, but is assumed to be lower than the lockdown effect. 
+
+Increase in testing capacity and contact-tracing is assumed to result in earlier identification and isolation of mild symptomatic and asymptomatic cases, and leads to increases in $\alpha_A$ (rate of transition from $A$ to $R$) and $\alpha_{I_M}$ (rate of transition from $I_M$ to $R_M$). The values of the transition rates at time $t$ are calculated as:
+
+\[ \alpha_A(t) = \alpha_A^{(0)} (1 + \iota_{testing,A} (t)) \]
+\[ \alpha_{I_M}(t) = \alpha_{I_M}^{(0)} (1 + \iota_{testing,{I_M}} (t)), \]
+where $\alpha_A^{(0)}$ and $\alpha_{I_M}^{(0)}$ are reciprocals of the duration of time until isolation among asymptomatic and mildly symptomatic infections respectively under current testing availability conditions. Similarly to the paramterization of distancing effects, $\iota_{testing,A} (t)$ and $\iota_{testing,{I_M}} (t)$ may vary over time.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Model calibration and Bayesian posterior inference}
+
+%\begin{enumerate}
+%\item Framework: due to identifiability issues, specify some parameters according to values in the literatuer, with uncertainty distributions, fit others to data
+%\item Priors for estimated parameters
+%\item initial conditions
+%\item Give the likelihood
+%\item Give the form of the posterior
+%\item posterior inference (MCMC?)
+%\item Generating posterior predictive samples
+%\end{enumerate}
+%
+%\comments{Richard and Olya: this is a bit tricky: the ODE solution is a deterministic function, so it does not have a natural likelihood.  I am assuming you are using the corresponding least squares or Poisson likelihood.  Please write this down in terms of, e.g. the model prediction $H(t_i|\btheta)$ and obs data $\hat{h}(t_i)$ where $\btheta$ is all parameters.  Then give the prior on $\btheta$, and the posterior (up to a normalizing constant). } 
+
+We calibrate the joint posterior distribution of model parameters to the observed dynamics of community hospitalizations and cumulative number of deaths. 
+Due to changing testing patterns and varying case ascertainment proportions over time, we do not use reported cumulative case counts in the calibration procedure.  
+The parameters in the transmission model are not simultaneously identifiable given the observed data. In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates (see Table \ref{table:priors}), specify prior distributions of the remaining parameters, and calibrate the joint posterior distribution of these parameters to observed data. 
+
+\subsection{Transmission parameters} 
+
+Let $\btheta$ denote the subset of continuous parameters whose joint distribution is calibrated to observed data. For each parameter $\theta$, we specify a fixed support $[\theta_{min}, \theta_{max}]$, and put independent beta priors on the transformed parameters, i.e.,
+\begin{equation}
+\frac{\theta - \theta_{min}}{\theta_{max} - \theta_{min}} \sim \mbox{Beta}(a_{\theta}, b_{\theta}),
+\label{eq:truncdist}
+\end{equation}    
+where the shape parameters $a_{\theta}$ and $b_\theta$ are set to let $\theta$ to have mean $\mu_\theta$ and standard deviation $\sigma_\theta$. Table \ref{table:priors} presents the list of $(\mu_\theta, \sigma_\theta, \theta_{min}, \theta_{max})$ for all parameters in $\btheta$. 
+
+% We assume prior independence of parameters in $\btheta$, so the prior likelihood function takes a form:
+% \begin{equation}
+% \mathcal{L}_{prior} (\btheta | (\mu_{\btheta}, \sigma_{\btheta}, \btheta_{min}, \btheta_{max}) )  = \prod_{\theta_i} g(\theta_i | \mu_{\theta_i}, \sigma_{\theta_i}, \theta_{i, min}, \theta_{i, max}  ),
+% \end{equation}
+% where $\theta_i$ are elements of $\btheta$, and $g(\theta_i | \mu_{\theta_i}, \sigma_{\theta_i}, \theta_{i, min}, \theta_{i, max}  )$ is a probability density function of truncated beta distribution given in (\ref{eq:truncdist}).
+
+\subsection{Initial conditions} %\\[0.5em]
+Given a set of transmission parameters, we initialize the compartmental model by specifying the size of exposed compartment in each county and setting the size of the rest of downstream compartments to be zero. The initial size of susceptible compartment is the population of a given county minus the size of exposed compartment. The initial size of exposed compartment in each county was set based on the relative population size and the dates of first registered case and deaths in that county. It was not required to be an integer. 
+We allow the date of epidemic onset to vary by setting the described initial conditions to correspond to day $-L_0$, where day $0$ corresponds to a calendar date of March 1, 2020. 
+% The value of $L_0$ was calibrated to data as part of the MCMC algorithm. At each step of the algorithm, a proposed value of $L_0$ was sampled independently from a set of candidate values, i.e. $L_{0} \sim \mbox{Unif} \{l_{min}, \ldots, l_{max}\}$. 
+The state of the system at any given time is therefore a deterministic function of the initial size of exposed compartment, model parameters, and $L_0$ that determines the date of epidemic onset. We put a uniform prior on $L_{0}$ over $\{l_{min}, \ldots, l_{max}\}$.
+
+
+% \subsection{Reporting lags} %\\[0.5em]
+% We assume that reported hospitalizations and deaths are subject to reporting lags $L_H$ and $L_D$ and put uniform priors on them over a range of plausible values. 
+% The reporting lags are treated as model parameters, which are required to be integers and are calibrated as part of the MCMC algorithms in a way similar to the calibration of epidemic onset lag $L_0$. At each MCMC step, proposed values of $L_H$ and $L_D$ are sampled from a given set of integers with given probabilities. 
+% The posterior distributions of $L_H$ and $L_D$ do not necessarily represent the actual reporting lags. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. 
+
+
+
+\subsection{Reported hospitalizations and deaths} %\\[0.5em]
+
+We expect there exist reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. We model the observed hospitalizations $h(t)$ and deaths $d(t)$ at time $t$ using a Poisson model, 
+\begin{align}
+h(t) &\sim \mbox{Poisson}(H(t - L_H, \btheta)), \\
+d(t) &\sim \mbox{Poisson}(D(t - L_D, \btheta)), 
+\end{align}
+where $H(t - L_H, \btheta)$ and $D(t - L_D, \btheta)$ are model-projected current hospitalizations and cumulative deaths at time $t$ with reporting lags $L_H$ and $L_D$ under parameter values $\btheta$. We put uniform priors on $L_H$ and $L_D$ over a range of plausible values. 
+
+% \comments{
+% The hospitalizations and deaths data likelihood functions take a form:
+% \begin{align}
+% \mathcal{L}_{hosp. data} (\btheta | h(t_{h_1},\cdots, t_{h_K}) ) =  \prod_{t=t_{h_1}}^{t_{h_K}} \left[ f_{Pois} (h(t) | H(t - L_H , \btheta) ) \right]^{\frac{1}{K}} \\
+% \mathcal{L}_{death. data} (\btheta | d(t_{d_1},\cdots, t_{d_M}) ) =  \prod_{t=t_{d_1}}^{t_{d_K}} \left[ f_{Pois} (d(t) | D(t - L_D , \btheta) ) \right]^{\frac{1}{M}}, 
+% \end{align}
+% where $f_{Pois}(x | \lambda) $ is a probability mass function of Poisson distribution with rate parameter $\lambda$, $K$ is number of observations in hospitalization data series, and $M$ is number of observations in death data series. The joint data likelihood function combines hospitalizations and deaths likelihoods:
+% \begin{equation}
+% \mathcal{L}_{data} (\btheta | h(t_{h_1},\cdots, t_{h_K}), d(t_{d_1},\cdots, t_{d_M}) ) =  \mathcal{L}_{hosp. data} (\btheta | h(t_{h_1},\cdots, t_{h_K}) ) \mathcal{L}_{death. data} (\btheta | d(t_{d_1},\cdots, t_{d_M}) )
+% \end{equation}
+% }
+
+% \comments{
+% Joint posterior distribution of $\btheta$ up to a normalizing constant is given by
+% \begin{equation}
+% f_{posterior}(\btheta) = \mathcal{L}_{prior} (\btheta | (\mu_{\btheta}, \sigma_{\btheta}, \btheta_{min}, \btheta_{max}) ) \mathcal{L}_{data} (\btheta | h(t_{h_1},\cdots, t_{h_K}), d(t_{d_1},\cdots, t_{d_M}) )
+% \label{eq:posterior}
+% \end{equation}
+% }
+
+The model above yields the following posterior distribution,
+\begin{equation}
+p(\btheta, \bL | h(t), d(t)) \propto p(\btheta) p(\bL)
+							 \prod_t p\big(h(t)| H(t - L_H, \btheta)\big)
+							         p\big(d(t)| D(t - L_D, \btheta)\big).
+\label{eq:posterior}
+\end{equation}
+Sampling from the joint posterior distribution of $\btheta$ given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis algorithm with symmetric Gaussian proposals for $\btheta$ and independent proposals for $\bL$. We ran the sampler for $200,000$ iterations and thinned the chain using every $5$-th iteration.
+
+
+%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Parameter values, prior distributions, and data sources}
+
+While it is recognized that asymptomatic infections play an important role in transmission of SARS-CoV-2 \citep{furukawa2020evidence}, estimates of the proportion of all infections that do not exhibit symptoms vary \citep{he2020estimation, nishiura2020estimation, mizumoto2020estimating, emery2020contribution}. The true proportion of asymptomatic infections is important for projections and policy planning due to their contribution to herd immunity. In the absence of reliable estimates of cumulative incidence based on sero-prevalence surveys, we consider three scenarios: 
+
+\begin{enumerate}
+	\item Scenario 1, low asymptomatic: $q_A = 0.36$
+	\item Scenario 2, medium asymptomatic: $q_A = 0.5$
+	\item Scenario 3, high asymptomatic: $q_A = 0.7$
+\end{enumerate}
+
+The value $q_A = 0.36$ was calculated as an age-adjusted weighted average of 30.8\% estimated by \citet{nishiura2020estimation} among Japanese citizens evacuated from Wuhan, China and applied to age group 20-64 years old; 17.9\% estimated by \citet{mizumoto2020estimating} among infections on the Diamond Princess cruise ship and applied to age group 65 plus years old; and 60\% applied to age group 0-19 years old, which was assumed and consistent with findings reported by \citet{russell2020estimating}, where 4 out of 6 infections in this age group were asymptomatic among passengers of the Diamond Princess. The average was weighted by the age distribution of Connecticut population. Based on recent evidence suggesting that the proportion of asymptomatic infections may be higher \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic}, we assumed $q_A = 0.5$ and $q_A = 0.7$ in medium and high scenarios respectively.  
+
+Table \ref{table:priors} provides a list of mean, standard deviation, and lower and upper thresholds of truncated prior distributions of model parameters along with data sources. For a subset of parameters whose values were fixed at a point estimate, only mean is indicated. In the three scenarios considered, we fixed the respective values of asymptomatic proportions ($q_A$). The proportion of severe cases ($q_{I_S}$) was allowed to vary with a mean assumed to be 10\% of symptomatic infections in line with \citep{verity2020estimates, bi2020epidemiology, salje2020estimating}. $q_{I_M}$ is calculated as $(1 - q_A - q_{I_S})$. 
+
+Duration of latent period ($1/\delta$) was fixed, since relatively reliable estimates of this parameter are available and because it is correlated with parameters that were allowed to vary, including reporting lags and parameters that determine duration of infectiousness and time between infection and outcome (recovery or death). We assume an average of 4 days of latency \citep{li2020substantial, salje2020estimating} and 1.5 days of presymptomatic infectiousness \citep{wei2020presymptomatic} resulting in an average incubation period of 5.5 days in line with \citep{lauer2020incubation, bi2020epidemiology, li2020early, linton2020incubation, he2020estimation, salje2020estimating}. 
+
+Most of the fixed and assumed parameters ($\alpha_A$, $k_A$, $\alpha_{I_M}$, $\alpha_{I_S}$, $k_{I_S}$) collectively determine force of infection at a given time. Force of infection and transmission parameter $\beta$, which combines contact frequency and transmission probability per contact, determine the early growth of the epidemic. Without additional data, these parameters cannot be simultaneously identified. We therefore fixed parameters, for which estimates are available or which can be calculated from available estimates ($\alpha_A$, $\alpha_{I_M}$, $\alpha_{I_S}$) and put plausible prior distributions on those, which are unavailable ($k_A$, $k_{I_S}$). We put a wide uninformative prior distribution on transmission parameter $\beta$, which absorbs individual variation of parameters that determine force of infection.
+
+\begin{spacing}{.8}
+	\begin{longtable}[H] {p{.15\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.38\textwidth} }
+		\caption{Prior distributions of model parameters} \\
+		Parameter & Mean & SD & Lower & Upper & Source   \\[0.5em] \hline
+		{} & {} & {} & {} & {} & {} \\
+		\endfirsthead
+		Parameter & Mean & SD & Lower & Upper & Source  \\[0.5em] \hline
+		{} & {} & {} & {} & {} & {}  \\
+		\endhead
+		$q_A$: low & 0.36 & {-} & {-} & {-} & \citep{nishiura2020estimation, mizumoto2020estimating, russell2020estimating}  \\[0.5em]
+		$q_A$: medium & 0.5 & {-} & {-} & {-} & Assumed, in line with \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic} \\[0.5em]
+		$q_A$: high & 0.7  & {-} & {-} & {-} & Assumed, in line with \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic} \\[0.5em]
+		$q_{I_S}$ (low $q_A$) & 0.064 & 0.012 & 0.024 & 0.104 & 10\% of symptomatic infections: \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
+		$q_{I_S}$ (medium $q_A$) & 0.05 & 0.012 & 0.015 & 0.085 & 10\% of symptomatic infections: \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
+		$q_{I_S}$ (high $q_A$) & 0.03 & 0.0075 & 0.01 & 0.05 & 10\% of symptomatic infections: \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
+		$\beta$ (low $q_A$) & 1.25 & 0.5 & 0.25 & 2.25 & A wide, uninformative prior assumed \\[0.5em]
+		$\beta$ (medium $q_A$) & 1.5 & 0.5 & 0.25 & 2.75 & A wide, uninformative prior assumed \\[0.5em]
+		$\beta$ (high $q_A$) & 2 & 0.5 & 0.75 & 2.75 & A wide, uninformative prior assumed \\[0.5em]
+		$\delta$ & 1/4 & {-} & {-} & {-} & \citep{lauer2020incubation, bi2020epidemiology, li2020early, linton2020incubation, he2020estimation, salje2020estimating, wei2020presymptomatic} \\[0.5em]
+		$\alpha_A$ & 1/7 & {-} & {-} & {-} & \citep{wolfel2020virological} \\[0.5em]
+		$\alpha_{I_M}$ & 1/4 & {-} & {-} & {-} & \citep{salje2020estimating, li2020substantial, kissler2020projecting}; of 4 days, 1.5 is assumed to be presymptomatic \citep{wei2020presymptomatic} \\[0.5em]
+		$\gamma_{R_M}$ & 1/7 & {-} & {-} & {-} & \citep{wolfel2020virological, cdc2020isolation} \\[0.5em]
+		$\alpha_{I_S}$ & 1/9.5 & {-} & {-} & {-} & \citep{verity2020estimates, lewnard2020incidence} \\[0.5em]
+		$\gamma_H$, $\gamma_{\bar{H}}$ & 1/10 & 0.015 & 0.06 & 0.14 & \citep{lewnard2020incidence, paranjpe2020clinical}, data from Yale Hew Haven Hospital \\[0.5em]
+		$\gamma_U$ & 1/14 & 0.01 & 0.03 & 0.11 & Assumed \\[0.5em]
+		$k_A$ & 0.4 & 0.05 & 0.25 & 0.55 & \citep{salomon2020defining, ferguson2020impact} \\[0.5em]
+		$k_{I_S}$ &  0.7 & 0.05 & 0.55 & 0.85 & Assumed \\[0.5em]
+		$m_H$ & 0.2 & 0.015 & 0.155 & 0.245 & \citep{lewnard2020incidence, paranjpe2020clinical, petrilli2020factors, verity2020estimates, CHAwebsite} \\[0.5em]
+		$m_U / m_H$ & 1.5 & 0.15 & 1.1 & 1.9 & Assumed \\[0.5em]
+		$m_{\bar{H}} / m_H$ & 1.5 & 0.25 & 1 & 2 & Assumed \\[0.5em]
+		$q_H$ & 0.58 & {-} & {-} & {-} & {Calculated based $q_{HD}$ and $m_U/m_H$} \\[0.5em]
+		$q_{HD}$ & 0.48 & 0.01 & 0.43 & 0.53 & \citep{CHAwebsite, DPHwebsite} \\[0.5em]
+		$k_n$ & 0.015 & {-} & {-} & {-} & Assumed \\[0.5em]
+		\hline
+	\label{table:priors}
+	\end{longtable}
+\end{spacing}
+
+$q_{HD}$ denotes proportion of all COVID-19 related deaths that occur in hospitals.
+
+\textbf{Initial conditions and reporting lags}\\[0.5em]
+Based on the relative population size of the counties and the date of first registered case and death, we assume an initial size of exposed compartment to be 7.5 in Fairfield, 6.5 in Hartford, 0 in Litchfield, 0.25 in Middlesex, 4.5 in New Haven, 0.13 in New London, 0.05 in Tolland and 0.04 in Windham. We allow the starting date of the epidemic to be between February 14th - 20th and calibrate a scenario-specific distribution of starting dates to the observed data. 
+
+Early in the epidemic, many infections were likely imported from New York City, which experienced a major outbreak in the spring of 2020. In particular, many residents of Fairfield county work in New York City. We do not directly model importation events, and the pre-specified number of exposed individuals in Fairfield does not include all infection importation events, which likely happened in the course of several days or even weeks. This unaccounted force of infection early in the epidemic got absorbed in the estimation of transmission parameter $\beta$.
+
+We specified a wide range of reporting lags for hospitalizations and deaths, resulting in ranges of 4-7 days for hospitalizations and 7-11 days for deaths. It is likely that deaths occurring in hospitals are reported with substantially smaller lag than those occurring in nursing homes, since many of them need to be confirmed by a medical examiner.  
+
+\textbf{Reduction in transmission following school closure and lockdown orders} \\[0.5em]
+We calibrated the parameters that determine reduction in contact rates following school closure and lockdown orders to the observed data. 
+We assume that $\iota_{school}(t)$ equals zero before March 13th, 2020 - the date of school closure order, and equals some constant positive value $w_{school}$ afterwards. 
+The  $\iota_{lockdown} (t)$ equals zero before March 20th, 2020 - the date of lockdown order, and equals some positive values $w_{lockdown}$ after March 22nd, 2020 - the date when the lockdown order took effect. Between March 20th - March 22nd, 2020 the value of $\iota_{lockdown} (t)$ is smoothly increasing from zero to $w_{lockdown}$. 
+Since the dates of school closure and lockdown orders are very close, it is difficult to simultaneously identify $w_{school}$ and $w_{lockdown}$. We therefore put a narrow prior distribution on $w_{school}$ and wide on $w_{lockdown}$ with a restriction $ 0 < (w_{school} + w_{lockdown}) < 1$ . 
+
+
+\textbf{Observed data} \\[0.5em]
+% Cumulative deaths were obtained from the New York Times coronavirus data repository~\citep{nyt2020Connecticut}. 
+Cumulative deaths and current hospitalizations were obtained from Connecticut Department of Public Health daily reports~\citep{DPHwebsite} and the Connecticut Hospital Association~\citep{CHAwebsite}. 
+We calculated county-level population and age structure in Connecticut using the 2014--2018 estimates of the American Community Survey~\citep{acs2018}. 
+Daily total available hospital beds (including occupied) in each county were obtained from the Connecticut Hospital Association~\citep{CHAwebsite} and used as hospitalization capacity values on a given date. The latest available value of hospitalization capacity was used for future projections.
+
+% We used data from the United States Census Bureau to estimate county-level population and age structure in Connecticut \citep{bureau2020american} \comments{give the correct reference}. 
+% \comments{Richard, can  you please describe hospitalization capacity estimation}
+
+%Parameter estimates are obtained considering \citet{zhao2020mathematical, russell2020estimating, riou2020adjusted, riou2020pattern, prem2017projecting, nishiura2020estimation, mossong2008social, liu2020contribution, linton2020incubation, li2020substantial, li2020early, funk2018socialmixr}.
+%Detailed description of model parameters and equations is provided in the Appendix. \ZLcomment{Not sure if we want to write more explicitly some of the parameters (probably fixed ones)? Something like: ``We assumed an incubation period of X days[ref]''?}
+
+
+% We estimated county-level population age distributions using American Community Survey 2013-2017 5-year Data Release \citep{bureau2020american}. We used Florida's hospital bed counts reported by \citet{chen2020florida}, which was based on Medicare cost reports for fiscal year 2017. Then, we aggregated bed counts for each county. Cases, hospitalizations and deaths counts were obtained longitudinally from \citet{noauthor2020covid19}.
+
+%Age related: Age-specific transmissibility \citep{zhao2020mathematical}; age-adjusted data from the outbreak on the diamond princess cruise ship \citep{russell2020estimating}; case fatality ratio in Wuhan \citep{riou2020adjusted}.
+%Pattern of early human-to-human transmission \citep{linton2020incubation}.
+%social contact matrices \citep{prem2017projecting}.
+%ratio of novel coronavirus infections \citep{nishiura2020estimation}.
+%Social contacts and mixing patterns \citep{mossong2008social}.
+%contribution of pre-symptomatic transmission \citep{liu2020contribution}.
+%Incubation period \citep{linton2020incubation}.
+%undocumented infection \citep{li2020substantial}.
+%Early transmission dynamics  \citep{li2020early}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+
+
+\section{Results}
+
+%\comments{This can be brief. Show model fit, and projections. }
+
+Figure \ref{fig:fit} illustrate the results of parameter calibration to observed hospitalizations and deaths under the low asymptomatic fraction scenario. 
+Calibration results under medium and high asymptomatic fraction scenarios demonstrate a similar fit.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.8\textwidth]{figures/calibration.pdf}
+	\caption{Parameter calibration results under the low asymptomatic fraction scenario ($q_A = 0.36$).}
+	\label{fig:fit}
+\end{figure}
+
+
+Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters under the three asymptomatic fraction scenarios.
+
+\begin{spacing}{1.25}
+\begin{table}
+	\centering
+	\caption{Means and 95\% credible interval of marginal posterior distributions of model parameters under the low ($q_A = 0.36$), medium ($q_A = 0.5$), and high ($q_A = 0.7$) asymptomatic fraction scenarios.}
+	\begin{tabular}{rrrrrrrrrr}
+		\hline
+		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
+		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
+		\hline
+	$q_Is$ & 0.063 & 0.040 & 0.086 & 0.050 & 0.028 & 0.073 & 0.028 & 0.015 & 0.042 \\ 
+	$\beta$ & 1.302 & 1.152 & 1.447 & 1.566 & 1.359 & 1.797 & 2.024 & 1.681 & 2.435 \\ 
+	$\gamma_H$ & 0.115 & 0.099 & 0.131 & 0.113 & 0.095 & 0.131 & 0.115 & 0.095 & 0.134 \\ 
+	$\gamma_U$ & 0.071 & 0.053 & 0.088 & 0.071 & 0.052 & 0.090 & 0.072 & 0.054 & 0.094 \\ 
+	$k_A$ & 0.395 & 0.305 & 0.495 & 0.403 & 0.306 & 0.501 & 0.392 & 0.289 & 0.502 \\ 
+	$k_Is$ & 0.697 & 0.603 & 0.796 & 0.698 & 0.606 & 0.795 & 0.707 & 0.599 & 0.798 \\ 
+	$m_H$ & 0.209 & 0.186 & 0.231 & 0.209 & 0.183 & 0.232 & 0.208 & 0.185 & 0.232 \\ 
+	$m_U$ & 0.307 & 0.247 & 0.375 & 0.309 & 0.239 & 0.379 & 0.308 & 0.248 & 0.385 \\ 
+	$q_H$ & 0.572 & 0.520 & 0.617 & 0.573 & 0.519 & 0.620 & 0.574 & 0.524 & 0.622 \\ 
+	$w_{school}$ & 0.149 & 0.123 & 0.177 & 0.150 & 0.120 & 0.177 & 0.151 & 0.121 & 0.178 \\ 
+	$w_{lockdown}$ & 0.700 & 0.659 & 0.738 & 0.711 & 0.674 & 0.748 & 0.714 & 0.678 & 0.761 \\ 
+		\hline
+	\end{tabular}
+\label{tbl:posterior}
+\end{table}
+\end{spacing}
+
+
+%%%%%%%%%%%%%%%%%%
+
+\section{Discussion}
+
+\comments{Contextualize the model structure by comparing it to others. This can be short.} 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\noindent \textbf{Acknowledgements}:
+This work was supported by a gift from the Pershing Square Foundation and NIH grant NICHD DP2 HD091799-01. The funders of the study had no role in study design, data collection, data analysis, data interpretation, or writing of the report.  We are grateful to [...]
+% Eben Kenah
+% Ira Longini
+% Albert Ko
+% Sten Vermund
+% A. David Paltiel
+% Peter M. Aronow,
+% Xiaoxuan Cai,
+% Fredrik S\"avje
+% Daniel Weinberger
+% Virginia E. Pitzer
+% Who else?
+for helpful comments.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{unsrtnat}
+
+\bibliography{covid19}
+
+\end{document}

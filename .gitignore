@@ -1,0 +1,12 @@
+*.aux
+*.out
+*.log
+*.bbl
+*.blg
+.*.swp
+*.gz
+covid19_tech_report.pdf
+
+
+*.fdb_latexmk
+*.fls
