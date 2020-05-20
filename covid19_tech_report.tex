@@ -484,6 +484,8 @@ Daily total available hospital beds (including occupied) in each county were obt
 \section{Results}
 
 %\comments{This can be brief. Show model fit, and projections. }
+\comments{Add: basic projections, including plots of R effective. Possibly, report estimates of epidemiologic quantities, such as $R_0$, IFR, hospitalization fraction, etc.}
+
 
 Figure \ref{fig:fit} illustrates the results of parameter calibration to observed hospitalizations and deaths under the low asymptomatic fraction scenario. 
 Calibration results under medium and high asymptomatic fraction scenarios demonstrate a similar fit.
@@ -532,6 +534,15 @@ Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal 
 \comments{Contextualize the model structure by comparing it to others. This can be short.} 
 
 \comments{When comparing IHME, probably mention we use all beds as capacity instead of available beds. IHME capacity is about 1/4 ours.}
+
+In this paper, we describe technical details of the mechanistic model of SARS-CoV-2 transmission and COVID-19 disease progression, which was developed to support public health decision-making in Connecticut. 
+The model was calibrated to the observed dynamics of hospitalizations and cumulative deaths and reproduced these dynamics very closely. 
+A number of COVID-19 models have been developed and analyzed by the CDC in the attempt to perform ensemble forecasting of the epidemic development in the US \citep{cdc2020covid19forecasts}. Most of these models offer state-level projections. The CDC publishes updates of consolidated summary of cumulative death projections in the next four weeks from these models for each state. Local projections from national-level models may offer useful insights, but they inevitably make simplifying or uniform assumptions, which may hold in some locations, but not the other. 
+There is high uncertainty about many epidemiologic parameters that govern COVID-19 dynamics and have direct impact on the quality of projections. When local context is not directly taken into account, the effects of parametric uncertainty is exacerbated.
+State and county-level models are needed to support local decision-making.  
+Our model projections are tightly linked to the state reopening plans, showing potential dynamics of new infections, hospitalization and deaths through the end of Summer of 2020 as a function of contact rates increase following the lifting of lockdown restrictions. By calibrating model parameters to local data,...
+
+In addition to assisting policymakers, model projections may be useful for epidemiologic studies planning. In particular, planning of sero-prevalence surveys requires estimates of the proportion of population who have been exposed to the virus in the past or are in the active stage of infection. Due to limited testing availability and potentially high proportion of asymptomatic individuals, official case counts offer a poor approximation to the true cumulative incidence. Sero-prevalence surveys, if properly conducted, can provide an important piece of information that would allow narrowing down the estimates of the fraction of asymptomatic infections. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%5
 
