@@ -525,18 +525,27 @@ Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal 
 
 \section{Discussion}
 
-\comments{Contextualize the model structure by comparing it to others. This can be short.} 
+%\comments{Contextualize the model structure by comparing it to others. This can be short.} 
 
-\comments{When comparing IHME, probably mention we use all beds as capacity instead of available beds. IHME capacity is about 1/4 ours.}
+%\comments{When comparing IHME, probably mention we use all beds as capacity instead of available beds. IHME capacity is about 1/4 ours.}
 
 In this paper, we describe technical details of the mechanistic model of SARS-CoV-2 transmission and COVID-19 disease progression, which was developed to support public health decision-making in Connecticut. 
 The model was calibrated to the observed dynamics of hospitalizations and cumulative deaths and reproduced these dynamics very closely. 
-A number of COVID-19 models have been developed and analyzed by the CDC in the attempt to perform ensemble forecasting of the epidemic development in the US \citep{cdc2020covid19forecasts}. Most of these models offer state-level projections. The CDC publishes updates of consolidated summary of cumulative death projections in the next four weeks from these models for each state. Local projections from national-level models may offer useful insights, but they inevitably make simplifying or uniform assumptions, which may hold in some locations, but not the other. 
+A number of COVID-19 models have been developed and analyzed by the CDC in the attempt to perform ensemble forecasting of the epidemic development in the US \citep{cdc2020covid19forecasts}. Most of these models offer state-level projections. The CDC publishes updates of consolidated summary of cumulative death projections in the next four weeks from these models for each state. Local projections from national-level models may offer useful insights, but they inevitably make simplifying or uniform assumptions, which may hold in some locations, but not others. 
 There is high uncertainty about many epidemiologic parameters that govern COVID-19 dynamics and have direct impact on the quality of projections. When local context is not directly taken into account, the effects of parametric uncertainty is exacerbated.
 State and county-level models are needed to support local decision-making.  
-Our model projections are tightly linked to the state reopening plans, showing potential dynamics of new infections, hospitalization and deaths through the end of Summer of 2020 as a function of contact rates increase following the lifting of lockdown restrictions. By calibrating model parameters to local data,...
+Our model captures distinct important features of COVID-19 dynamics and relationship between model features and data reporting in Connecticut. 
+By calibrating model parameters to local data, including changes in hospitalization capacity, and the exact timing of intervention events, we can narrow down the uncertainty in projections. However, the calibrated posterior distribution of model parameters is not necessarily generalizable to other settings.
+Our model projections are tightly linked to the state reopening plans, showing potential dynamics of new infections, hospitalization and deaths through the end of Summer of 2020 as a function of contact rates increase following the lifting of lockdown restrictions. 
 
 In addition to assisting policymakers, model projections may be useful for epidemiologic studies planning. In particular, planning of sero-prevalence surveys requires estimates of the proportion of population who have been exposed to the virus in the past or are in the active stage of infection. Due to limited testing availability and potentially high proportion of asymptomatic individuals, official case counts offer a poor approximation to the true cumulative incidence. Sero-prevalence surveys, if properly conducted, can provide an important piece of information that would allow narrowing down the estimates of the fraction of asymptomatic infections. 
+
+Prior knowledge and assumptions about plausible ranges of parameter values combined with local data allows us to substantially reduce parametric uncertainty and narrow down projection intervals. However, several important considerations limit our ability to make exact long-term projections. First and foremost, it is hard to make predictions about the extent of contact rate increases following specific lockdown release steps, such as allowing only certain types of businesses to reopen. Second, the effectiveness of wide-spread testing and contact tracing on timely isolation of infectious individuals, and its subsequent impact on the force of infection is unknown. This effect is a complex function of viral shedding characteristics among symptomatic, presymptomatic and asymptomatic individuals, along with the implementation features of testing and isolation. Third, there may be unequal depletion of susceptibles depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced the infection compared to low-risk individuals, then we may be over-estimating future number of deaths. Forth, we assume that all epidemiologic parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal.
+
+In an evolving public health crisis, it is very important to keep projections up to date. As more information about the extent of asymptomatic transmission, general epidemiologic characteristics of COVID-19, and data on observable model features in Connecticut becomes available, we will update the projections presented in this paper.
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%5
 
