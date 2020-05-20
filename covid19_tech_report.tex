@@ -244,9 +244,10 @@ where $\rho = \left[ 1+\exp(0.5(C-H)) \right]^{-1}$ is a hospitalization capacit
 
 \subsection{Parameter definitions}
 
-Table \ref{table:params} provides a list of model parameters and their definitions. \comments{Seems missing $q_{HD}$ here which is in the next table?}
+Table \ref{table:params} provides a list of model parameters and their definitions. Some of the parameters from Table \ref{table:params} are not directly used in the ODE system, but are used as inputs to compute other model parameters. \\ 
+\comments{Add the rest of parameters here, including intervention effects}
 
-\begin{spacing}{1}
+\begin{spacing}{0.9}
 \begin{longtable}[H] {p{.11\textwidth} p{.85\textwidth} }
 	\caption{Model parameters} \\
 	Notation & Definition \\[0.5em] \hline
@@ -259,6 +260,7 @@ Table \ref{table:params} provides a list of model parameters and their definitio
 	$\delta$ & (Latency period)$^{-1}$ (days$^{-1}$) \\[0.5em]
 	$q_A$, $q_{I_M}$, $q_{I_S}$  & Proportions of asymptomatic, mild symptomatic, and severe infections \\[0.5em]
 	$q_H$ & Proportion of severe cases that will result in hospitalization or attempted hospitalization under hospital overflow \\ [0.5em]
+	$q_{HD}$ & Proportion of all COVID-19 related deaths that occur in hospitals \\ [0.5em]
 	$\alpha_A$ & (Duration of infectiousness among asymptomatic infections)$^{-1}$ (days$^{-1}$) \\[0.5em]	
 	$\alpha_{I_M}$ & (Duration of infectiousness among mild symptomatic infections, time until isolation)$^{-1}$ (days$^{-1}$) \\[0.5em]
 	$\gamma_{R_M}$ & (Duration of isolation among mild symptomatic infections, time to recovery)	$^{-1}$ (days$^{-1}$) \\[0.5em]
@@ -301,15 +303,16 @@ Figure \ref{fig:map} shows the county map of Connecticut along with the county a
 \subsection{Effects of social distancing and testing interventions} 
 Social distancing measures, in particular school closure and lockdown, reduce the value of transmission parameter $\beta$. The value of the transmission parameter at time $t$ is calculated as:
 \[ \beta(t) = \beta_0 (1 - \iota\textsubscript{school}(t) ) (1 - \iota\textsubscript{lockdown} (t) ), \]
-where $\beta_0$ is a value of transmission parameters in the absence of any interventions, $\iota\textsubscript{school}(t)$ is the size of contact reduction effect of school closure, and $\iota\textsubscript{lockdown} (t)$ is a size of contact reduction effect of lockdown that is independent of school closure effect. $\iota\textsubscript{school}(t)$ and $\iota\textsubscript{lockdown} (t)$ are zero when these interventions are not in effect, and can either have a constant or time-varying effect when interventions are in effect. 
+where $\beta_0$ is a value of transmission parameters in the absence of any interventions, $\iota\textsubscript{school}(t)$ is the proportion of contact reduction following school closure, and $\iota\textsubscript{lockdown} (t)$ is a proportion of contact reduction following lockdown that is independent of school closure effect. $\iota\textsubscript{school}(t)$ and $\iota\textsubscript{lockdown} (t)$ are zero when these interventions are not in effect, and can either have a constant or time-varying values when interventions are in effect. 
 
-Based on the known dates of school closure and lockdown orders, and assuming that these effects are constant over time once they reach their maximum levels, we calibrate the values of these effects to observed data. To project epidemic dynamics into the future, we replace  $\iota\textsubscript{lockdown} (t)$ with a function representing post-lockdown lifting distancing effect, which is unknown, but is assumed to be lower than the lockdown effect. 
+Based on the known dates of school closure and lockdown orders, and assuming that these effects are constant over time once they reach their maximum levels $w\textsubscript{school}$ and $w\textsubscript{lockdown}$, we calibrate the values of these effects to observed data. To project epidemic dynamics into the future, we replace  $\iota\textsubscript{lockdown} (t)$ with a function representing post-lockdown lifting distancing effect, which is unknown, but is assumed to be lower than the lockdown effect. 
+\comments{Describe the implementation of distancing stepdown function here.}
 
 Increase in testing capacity and contact-tracing is assumed to result in earlier identification and isolation of mild symptomatic and asymptomatic cases, and leads to increases in $\alpha_A$ (rate of transition from $A$ to $R$) and $\alpha_{I_M}$ (rate of transition from $I_M$ to $R_M$). The values of the transition rates at time $t$ are calculated as:
 
-\[ \alpha_A(t) = \alpha_A^{(0)} (1 + \iota\textsubscript{testing,$A$} (t)) \]
+\[ \alpha_A(t) = \alpha_A^{(0)} (1 + \iota\textsubscript{testing, $A$} (t)) \]
 \[ \alpha_{I_M}(t) = \alpha_{I_M}^{(0)} (1 + \iota\textsubscript{testing, $I_M$} (t)), \]
-where $\alpha_A^{(0)}$ and $\alpha_{I_M}^{(0)}$ are reciprocals of the duration of time until isolation among asymptomatic and mildly symptomatic infections respectively under current testing availability conditions. Similarly to the parametrization of distancing effects, $\iota\textsubscript{testing, $A$} (t)$ and $\iota\textsubscript{testing, $I_M$} (t)$ may vary over time.
+where $\alpha_A^{(0)}$ and $\alpha_{I_M}^{(0)}$ are reciprocals of the duration of time until isolation among asymptomatic and mildly symptomatic infections respectively under current testing availability conditions. Similarly to the parametrization of distancing effects, $\iota\textsubscript{testing, $A$} (t)$ and $\iota\textsubscript{testing, $I_M$} (t)$ may vary over time. 
 
 
 
@@ -427,7 +430,7 @@ A subset of parameters ($\alpha_A$, $k_A$, $\alpha_{I_M}$, $\alpha_{I_S}$, $k_{I
 % , which combines contact frequency and transmission probability per contact, 
 determine the early growth of the epidemic. Without additional data, these parameters cannot be simultaneously identified. We therefore fixed parameters for which estimates are available or can be calculated from available estimates ($\alpha_A$, $\alpha_{I_M}$, $\alpha_{I_S}$), and calibrate those that are unavailable ($k_A$, $k_{I_S}$). We put a diffuse prior on $\beta$, which absorbs additional variations of parameters that determine force of infection. 
 
-\begin{spacing}{.8}
+\begin{spacing}{.9}
 	\begin{longtable}[H] {p{.15\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.38\textwidth} }
 		\caption{Prior distributions of model parameters} \\
 		Parameter & Mean & SD & Lower & Upper & Source   \\[0.5em] \hline
@@ -457,8 +460,8 @@ determine the early growth of the epidemic. Without additional data, these param
 		$m_H$ & 0.2 & 0.015 & 0.155 & 0.245 & \citep{lewnard2020incidence, paranjpe2020clinical, petrilli2020factors, verity2020estimates, CHAwebsite} \\[0.5em]
 		$m_U / m_H$ & 1.5 & 0.15 & 1.1 & 1.9 & Assumed \\[0.5em]
 		$m_{\bar{H}} / m_H$ & 1.5 & 0.25 & 1 & 2 & Assumed \\[0.5em]
+		$q_{HD}$ & 0.48 & 0.01 & 0.43 & 0.53 & \citep{CHAwebsite, DPHwebsite} \\[0.5em]		
 		$q_H$ & 0.58 & {-} & {-} & {-} & {Calculated based $q_{HD}$ and $m_U/m_H$} \\[0.5em]
-		$q_{HD}$ & 0.48 & 0.01 & 0.43 & 0.53 & \citep{CHAwebsite, DPHwebsite} \\[0.5em]
 		$k_n$ & 0.015 & {-} & {-} & {-} & Assumed \\[0.5em]
 		\hline
 	\label{table:priors}
