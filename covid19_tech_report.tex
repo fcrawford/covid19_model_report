@@ -151,49 +151,17 @@ and Forrest W. Crawford$^{1,2,3,4}$  \\[1em]
 \section{Introduction}
 
 
-%\comments{The introduction should be focused on how we model covid-19 and what we want from a model of this type.  Emphasize that we want a simple tractable model for a large population. Emphasize what policymakers will do with the information model projections provide}
+Epidemiological models of disease transmission play an important role in supporting public health decision-making. Trajectories from these models can provide insights into the historical trends in epidemic dynamics or future outcomes under hypothetical intervention scenarios. 
+%, i.e. estimates of the $R_0$ (basic reproductive number) or $R\textsubscript{eff}$ (effective reproductive number) that accounts for the effects of interventions intended to slow down transmission and depletion of susceptible individuals.
+Transmission models are especially useful in situations of high uncertainty, offering a structured way to assess the potential effects of interventions under hypothetical scenarios.  Models cannot predict the future with certainty, but they can be helpful for scenario analysis by bounding the range of plausible future trajectories under assumptions about transmission \citep{holmdahl2020wrong}. 
 
-%\comments{Three part introduction:}
-%\begin{enumerate}
-%  \item We need models to support public health decision making, including reopening and surveillance
-%  \item Model output can tell us about historical info (e.g. R0 before interventions), the effects of interventions (e.g. lockdown), and projections about the future under specified scenarios. 
-%  \item Models need to balance parsimony and realism.  Need to be able to explain to policymakers ``what the assumptions are''. 
-%  \item Many nation-wide models do not use local data, or make simplifying assumptions not appropriate for localities.  
-%  \item In this paper, we introduce a county-structured transmission model ...
-%\end{enumerate}
+Most US states implemented social distancing measures and stay-at-home orders to slow transmission of SARS-CoV-2. 
+%, which, if remained uncontrolled, would have likely quickly overwhelmed health care system leading to a large number of deaths. 
+As many states, including Connecticut, begin phased lifting of stay-at-home orders, public officials and public health policymakers are faced with several questions: 1) How effective are public health interventions like social distancing and stay-at-home orders in reducing cases, hospitalizations, and deaths? 2)  How should public health interventions be implemented in the future to minimize the risk of a resurgence? 3) What will be the effect of phased reopening plans?  Mechanistic transmission models can help answer these questions. When models are developed with a primary goal to support decision-making, they must balance parsimony and realism. Projection models should be simple enough to provide clear outputs in a timely manner with assumptions that can be understood by policymakers. At the same time, for such models to be useful, they need to be flexible enough to accommodate various sets of scenarios and give projections of epidemiologic features that may be needed by different stakeholders. 
 
-Epidemiological models of disease transmission play an important role in supporting public health decision-making. They can provide insights about the historical trends in the epidemic dynamics, i.e. estimates of the $R_0$ (basic reproductive number) or $R\textsubscript{eff}$ (effective reproductive number) that accounts for the effects of interventions intended to slow down transmission and depletion of susceptible individuals.
-Models are especially useful in situations of high uncertainty, offering a structured way to assess the potential effects of interventions under hypothetical scenarios. Models cannot predict the future with certainty, but they can often help evaluate the ``best'' and the ``worst'' case scenarios, bounding the range of plausible trajectories given assumptions. 
+Many of the nation-wide COVID-19 forecasting models that have been developed in the United States either do not use local data, or make simplifying assumptions not appropriate for localities \citep{cdc2020covid19forecasts}. These models may capture the country-wide dynamics, but are less useful for supporting decision-making in individual states or counties. Several nation-wide models have been developed with a goal to provide projections at the state level, but they usually use the same set of assumptions and estimates of key model parameters across all states, and may or may not be able to capture important local variations. For example, the COVID Act Now project \citep{covidactnow2020you} estimates that between April 13 - May 15, 2020, a 100\% of ICU rooms have been occupied in Connecticut, and that if all restriction are lifted, over 70\% of population would be infected and over 19,000 deaths would occur in the state before August 14th, 2020. Under current level of restrictions, the projections predict 26\% of population being infected and a total of 5,000 deaths by the same date. These projections may offer a useful snapshot of two hypothetical scenarios, but do not provide enough flexibility to estimate potential epidemic dynamics under partial lifting of restrictions, improved testing, increased hospitalization capacity, or a different set of assumptions about highly uncertain parameters.  
 
-United States and other counties implemented strict social distancing measures to slow down transmission of SARS-CoV-2, which, if remained uncontrolled, would have likely quickly overwhelmed health care system leading to a large number of deaths. 
-As many states, including Connecticut, are planning phased lifting of lockdown, the important questions that policy makers and public health professionals are faced with are: 1) how effective are current social distancing restrictions, and 2) what can be expected if these restrictions are lifted. Mechanistic transmission models can help answer these questions. When models are developed with a primary goal to support decision-making, they need to be simple and tractable and balance parsimony and realism. They should be simple enough to provide clear outputs in a timely manner with assumptions that can be understood by policymakers. At the same time, for such models to be useful, they need to be flexible enough to accommodate various sets of scenarios and give projections of epidemiologic features that may be needed by different stakeholders.
-
-Many nation-wide COVID-19 forecasting models that have been developed in the United States do not use local data, or make simplifying assumptions not appropriate for localities \citep{cdc2020covid19forecasts}. These models may capture the country-wide dynamics and forecasting well, but are less useful for individual states or counties. Several nation-wide models have been developed with a goal to provide projections at the state level, but they usually use the same set of assumptions and estimates of key model parameters across all states, and may or may not be able to capture important local variations. For example, the COVID Act Now project \citep{covidactnow2020you} estimates that between April 13 - May 15, 2020, a 100\% of ICU rooms have been occupied in Connecticut, and that if all restriction are lifted, over 70\% of population would be infected and over 19,000 deaths would occur in the state before August 14th, 2020. Under current level of restrictions, the projections predict 26\% of population being infected and a total of 5,000 deaths by the same date. These projections may offer a useful snapshot of two hypothetical scenarios, but do not provide enough flexibility to estimate potential epidemic dynamics under partial lifting of restrictions, improved testing, increased hospitalization capacity, or a different set of assumptions about highly uncertain parameters.  
-
-In this paper, we introduce a county-structured transmission model of SARS-CoV-2 transmission and COVID-19 disease progression. The model was developed with a goal to support intervention planning and decision-making in Connecticut, but can be adapted to other states. This report provides technical description of the model and data calibration approach, along with calibration results in Connecticut. 
-
-
-
-%Stay-at-home orders are effective in reducing epidemiological contact that can transmit COVID-19.
-%Which states have implemented stay at home orders: 
-%https://www.cnn.com/2020/03/23/us/coronavirus-which-states-stay-at-home-order-trnd/index.html
-%https://www.nytimes.com/interactive/2020/us/coronavirus-stay-at-home-order.html
-
-%Stay-at-home orders are effective in reducing epidemiological contact that can transmit COVID-19. \citep{peak2020modeling}
-%[Evidence on impact/effectiveness of stay at home orders]
-%Lockdown in Wuhan (see refs in \citet{wells2020impact, tian2020investigation, kupferschmidt2020can})
-%travel and border control measures \citep{wells2020impact}
-%The travel quarantine of Wuhan delayed the overall epidemic progression by only 3 to 5 days in Mainland China, but has a more marked effect at the international scale \citep{chinazzi2020effect}. 
-%Use real-time mobility data from Wuhan and detailed case data including travel history to elucidate the role of case importation on transmission in cities across China and ascertain the impact of control measures \citep{kraemer2020effect}.
-%Effect of duration of measures \citep{prem2020effect}.
-%A data-driven SEIQR model study in China. \citep{zhang2020impact}.
-%Modeling in Singapore \citep{koo2020interventions}.
-%Effectiveness and cost-effectiveness \citep{wang2020effectiveness}.
-
-% contact tracing: ferretti2020quantifying
-% other possibly related refs: niu2020deciphering, niehus2020using, prem2020age-structured, lewnard2020scientific, lin2020which.
-
-
+In this technical report, we introduce a county-structured transmission model of SARS-CoV-2 transmission and COVID-19 disease progression in Connecticut.  The model was developed with a goal to support intervention planning and decision-making in Connecticut, but could be adapted to other states or regions.  This report provides an in-depth technical description of the model and data calibration approach, along with results in Connecticut.  Additional COVID-19 reports for Connecticut in this series are available from \url{https://crawford-lab.github.io/covid19_ct/}. 
 
 %%%%%%%%%%%%%%%%%%
 
