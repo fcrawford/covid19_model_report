@@ -15,4 +15,11 @@ script:
 - tectonic --keep-intermediates --reruns 0 ./covid19_tech_report.tex
 - if [ -f "main.bcf" ]; then biber covid19_tech_report; fi
 - tectonic ./covid19_tech_report.tex --print
-
+deploy:
+  provider: releases
+  api_key:
+    secure: Js9ekykTRY8gStBXpEz+ZMO7Rw/zXA4N0EqbgGp2y2MXLaCyVl9XR4djiYsMMyYLli7/rNIdrNE2nNJaX0QuO+NjgSZTDPUjD6OlaW1zH2f5RXekdDeN1gQQ8UQpGZIPKjTzbP+ZeprHfTOfmBpW4T/OPxzuqusdBk61r4c7/ckX4G1KAD1+kyO9XR3YR6vl1Q88JQ27ahA9z09bJvqgYAyfStpls5gca6ZNtVAOp8sUjXcdRKwAr6YO5UA2ikTQ6vr8ljEeWsOxbe/0u32/qp8X29RUYolZWzqqiJf1wRm059vnVhpJ1W4OgYJRjvk8WztOHTALqHCIq1vHicvyqZIFgg0aYFq63Fy4a6FfJPU7XqyuauAo3Jp2lGQ8H6sf0+hizpWkWreRJWnc93oeOSaSiZtgpTZC3ZrKVDCnxCFP6n1vYyCgoktb6b9yIDkuJZqrv0KizqzrJ0DnAbtXWGpWCu8tqLesTjCca5yG5lmUzz4DiTh9X9jz3fISqMVj8BvLWzpaho761vIOHCaY5m6D7xiLlLKb6qg/TKBi9lrh2KT1UhHkFSBJvDOtca3wt8g88BQnGSUu8GmFSj0q9a6DqUN/oCctuAHg5nceDfRksiW625vfldp5LKr/jmNAHdQGFO5iAL93U0vXXdw8c6Pbl9skefDHgDGVfJmIzHI=
+  file: covid19_tech_report.pdf
+  on:
+    tags: true
+  skip_cleanup: 'true'
