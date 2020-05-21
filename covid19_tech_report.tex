@@ -177,7 +177,7 @@ Figure \ref{fig:model} shows a schematic representation of the model structure. 
 	\begin{center}
 		\includegraphics[width=0.65\textwidth]{model_diagram_ct.pdf}
 	\end{center}
-	\caption{Schematic illustration of the SARS-CoV-2 transmission model and COVID-19 disease progression structure.  Individuals begin in the susceptible ($S)$ compartment. Exposed individuals ($E$) may develop either asymptomatic ($A$), mild ($I_m$), or severe ($I_s$) infection. Asymptomatic and mild infections resolve without hospitalization and do not lead to death. Mild symptomatic cases self-isolate ($R_M$) shortly after development of symptoms, and transition to recovery ($R$) when infectiousness ceases. A proportion of severe cases require hospitalization ($H$) unless hospitalization capacity is exhausted, in which case they transition to $\bar{H}$ representing hospital overflow, then to recovery ($R$) or death ($D$). Some severe cases, including nursing home residents, people in prisons, or individuals, who do not have access to hospitalization for other reasons, transition to compartment $U$ and may later recover or die. The model assumes a closed population without births and does not capture non-COVID-19 deaths.}
+	\caption{Schematic illustration of the SARS-CoV-2 transmission model and COVID-19 disease progression structure.  Individuals begin in the susceptible ($S)$ compartment. Exposed individuals ($E$) may develop either asymptomatic ($A$), mild ($I_M$), or severe ($I_S$) infection. Asymptomatic and mild infections resolve without hospitalization and do not lead to death. Mild symptomatic cases self-isolate ($R_M$) shortly after development of symptoms, and transition to recovery ($R$) when infectiousness ceases. A proportion of severe cases require hospitalization ($H$) unless hospitalization capacity is exhausted, in which case they transition to $\bar{H}$ representing hospital overflow, then to recovery ($R$) or death ($D$). Some severe cases, including nursing homes and assisted living facilities residents, people in prisons, or individuals, who do not have access to hospitalization for other reasons, transition to compartment $U$ and may later recover or die. The model assumes a closed population without births and does not capture non-COVID-19 deaths.}
 	\label{fig:model}
 \end{figure}
 
@@ -187,15 +187,15 @@ Figure \ref{fig:model} shows a schematic representation of the model structure. 
 \subsection{Compartmental model}
 
 The model divides the population into 11 compartments: susceptible ($S$), exposed, latent infections ($E$), infectious and asymptomatic ($A$), infectious and mild symptomatic ($I_M$), infectious and severe ($I_S$), isolated mild infections removed from the pool of infectious individuals ($R_M$), hospitalized ($H$), severe in need of hospitalization, but denied it due to hospital capacity overflow ($\bar{H}$), severe in nursing homes, prisons or otherwise not having access to hospitalization ($U$), recovered ($R$), and died ($D$).  Transmission dynamics for county $i$  are given by the following system of ordinary differential equations: 
-\[ \frac{\dx{S^{(i)}}}{\dx{t}} = -\beta S^{(i)} \left[ (1-k_n) \frac{ I_M^{(i)} + k_{I_S} I_S^{(i)} + k_A A^{(i)}}{N} + \frac{k_n}{|N_i|} \sum_{j\in N_i}  \frac{I_M^{(j)} + k_{I_S} I_S^{(j)} + k_A A^{(j)}}{N^{(j)}} \right], \]
-where $N_i$ is the set of counties adjacent to county $i$.
-\[ \frac{\dx{E^{(i)}}}{\dx{t}} = \beta S^{(i)} \left[ (1-k_n) \frac{ I_M^{(i)} + k_{I_S} I_S^{(i)} + k_A A^{(i)}}{N} + \frac{k_n}{|N_i|} \sum_{j\in N_i}  \frac{I_M^{(j)} + k_{I_S} I_S^{(j)} + k_A A^{(j)}}{N^{(j)}} \right] - \delta E^{(i)} \]
+\[ \frac{\dx{S^{(i)}}}{\dx{t}} = -\beta S^{(i)} \left[ (1-k_n) \frac{ I_M^{(i)} + k_{I_S} I_S^{(i)} + k_A A^{(i)}}{N_i} + \frac{k_n}{|J_i|} \sum_{j\in J_i}  \frac{I_M^{(j)} + k_{I_S} I_S^{(j)} + k_A A^{(j)}}{N_j} \right], \]
+where $N_i$ the population size of county $i$ and $J_i$ is the set of counties adjacent to county $i$.
+\[ \frac{\dx{E^{(i)}}}{\dx{t}} = \beta S^{(i)} \left[ (1-k_n) \frac{ I_M^{(i)} + k_{I_S} I_S^{(i)} + k_A A^{(i)}}{N_i} + \frac{k_n}{|J_i|} \sum_{j\in J_i}  \frac{I_M^{(j)} + k_{I_S} I_S^{(j)} + k_A A^{(j)}}{N_j} \right] - \delta E^{(i)} \]
 \[ \frac{\dx{A^{(i)}}}{\dx{t}} = q_A \delta E^{(i)} - \alpha_A A^{(i)} \]
 \[ \frac{\dx{I_M^{(i)}}}{\dx{t}} = q_{I_M} \delta E^{(i)} - \alpha_{I_M} I_M^{(i)} \]
 \[ \frac{\dx{R_M^{(i)}}}{\dx{t}} = \alpha_{I_M} I_M^{(i)} - \gamma_{R_M} R_M^{(i)} \]
 \[ \frac{\dx{I_S^{(i)}}}{\dx{t}} = q_{I_S} \delta E^{(i)} - \alpha_{I_S} I_S^{(i)} \]
-\[ \frac{\dx{H^{(i)}}}{\dx{t}} =  q_H (1 - \rho) \alpha_{I_S} I_S^{(i)} - \gamma_H H^{(i)}  \]
-\[ \frac{\dx{\bar{H}^{(i)}}}{\dx{t}} =  q_H \rho \alpha_{I_S} I_S^{(i)} - \gamma_{\bar{H}} \bar{H}^{(i)},  \]
+\[ \frac{\dx{H^{(i)}}}{\dx{t}} =  q_H (1 - \rho^{(i)}) \alpha_{I_S} I_S^{(i)} - \gamma_H H^{(i)}  \]
+\[ \frac{\dx{\bar{H}^{(i)}}}{\dx{t}} =  q_H \rho^{(i)} \alpha_{I_S} I_S^{(i)} - \gamma_{\bar{H}} \bar{H}^{(i)},  \]
 where $\rho^{(i)} = \left[ 1+\exp(0.5(C^{(i)}-H^{(i)})) \right]^{-1}$ is a ``soft'' hospitalization capacity overflow function, and $C^{(i)}$ represents hospitalization capacity in county $i$ at a given time point.
 \[ \frac{\dx{U^{(i)}}}{\dx{t}} =  (1 - q_H) \alpha_{I_S} I_S^{(i)} - \gamma_{U} U^{(i)}  \]
 \[ \frac{\dx{D^{(i)}}}{\dx{t}} = \gamma_H m_H H^{(i)} + \gamma_{\bar{H}}  m_{\bar{H}} \bar{H}^{(i)} + \gamma_{U} m_{U} U^{(i)} \]
@@ -483,7 +483,7 @@ Daily total available hospital beds (including occupied) in each county were obt
 Figure \ref{fig:fit} shows calibrated projections of hospitalizations and deaths, with 95\% uncertainty intervals, under the low asymptomatic fraction scenario and observed data as dots.  Observed data points track with mean projections and largely fall within uncertainty intervals.  Calibration results under medium and high asymptomatic fraction scenarios demonstrate a similar fit to historical data.  
 Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters under the three asymptomatic fraction scenarios.
 
-Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for these scenarios assuming `fast' reopening. The projections include daily COVID-19 incidence, hospital census, deaths, proportion of cumulative incidents, and effective reproductive number, $R\textsubscript{eff}$. 
+Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Slow reopening assumes that at one-month intervals, 10\% of the suppressed contact (relative to March 1 baseline) is released. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for the three asymptomatic fraction scenarios assuming `fast' reopening. Fast reopening assumes that 10\% of the suppressed contact is released at one-week intervals. The projections include daily COVID-19 incidence, hospital census, deaths, proportion of cumulative incidents, and effective reproductive number, $R\textsubscript{eff}$. 
 
 Under high asymptomatic fraction scenario, we would expect a higher number of infections, hospitalizations and deaths by the end of Summer. 
 Under slow reopening, hospitalization capacity is not expected to be overwhelmed under any of the scenarios. 
