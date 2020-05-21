@@ -302,12 +302,12 @@ The state of the system at any given time is therefore a deterministic function 
 
 \subsection{Reported hospitalizations and deaths} 
 
-We accommodate reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. We model the observed hospitalizations $h(t)$ and deaths $d(t)$, given parameters $\btheta$, at time $t$ using a Poisson model,  
+We accommodate reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. We model the observed hospitalizations $h(t)$ and deaths $d(t)$ at time $t$ using a Poisson model,  
 \begin{align}
-h(t) &\sim \mbox{Poisson}(H(t, L_H, \btheta)), \\
-d(t) &\sim \mbox{Poisson}(D(t, L_D, \btheta)), 
+h(t) &\sim \mbox{Poisson}(H(t, L_0, L_H, \btheta)), \\
+d(t) &\sim \mbox{Poisson}(D(t, L_0, L_D, \btheta)), 
 \end{align}
-where $H(t, L_H, \btheta)$ and $D(t, L_D, \btheta)$ are model-projected current hospitalizations and cumulative deaths at time $t$ with reporting lags $L_H$ and $L_D$ under parameter values $\btheta$. We put uniform priors on $L_H$ and $L_D$ over a range of plausible values. 
+where $H(t, L_0, L_H, \btheta)$ and $D(t, L_0, L_D, \btheta)$ are model-projected current hospitalizations and cumulative deaths at time $t$ with reporting lags $L_H$ and $L_D$, and epidemic onset lag $L_0$ under parameter values $\btheta$. We put uniform priors on $L_H$ and $L_D$ over a range of plausible values. 
 
 % \comments{
 % The hospitalizations and deaths data likelihood functions take a form:
@@ -329,14 +329,16 @@ where $H(t, L_H, \btheta)$ and $D(t, L_D, \btheta)$ are model-projected current 
 % \end{equation}
 % }
 
+\subsection{Posterior inference} 
+
 The model above yields the following posterior distribution,
 \begin{equation}
 p(\btheta, \bL | h(t), d(t)) \propto p(\btheta) p(\bL)
-							 \prod_t p\big(h(t)| H(t, L_H, \btheta)\big)
-							         p\big(d(t)| D(t, L_D, \btheta)\big).
+							 \prod_t p\big(h(t)| H(t, L_0, L_H, \btheta)\big)
+							         p\big(d(t)| D(t, L_0, L_D, \btheta)\big).
 \label{eq:posterior}
 \end{equation}
-Sampling from the joint posterior distribution of $\btheta$ given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis algorithm with symmetric Gaussian proposals for $\btheta$ and independent proposals for $\bL$. We ran the sampler for $200,000$ iterations and thinned the chain using every $5$-th iteration.
+Sampling from the joint posterior distribution of $\btheta$ given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis algorithm with random walk symmetric Gaussian proposals for $\btheta$ and independent proposals for $\bL$, where $\bL = (L_0, L_H, L_D)$. We ran the sampler for $200,000$ iterations and thinned the chain using every $10$-th iteration.
 
 
 %%%%%%%%%%%%%%%%%%
@@ -353,9 +355,9 @@ Asymptomatic infections play an important role in transmission of SARS-CoV-2 \ci
 \end{enumerate}
 
 The value $q_A = 0.36$ was calculated as an age-adjusted weighted average of several estimates available in the literature.  
-\citet{nishiura2020estimation} estimated 30.8\% among Japanese citizens evacuated from Wuhan, China and applied to age group 20-64 years old.  
-\citet{mizumoto2020estimating} estimated 17.9\% among infections on the Diamond Princess cruise ship and applied to age group 65 plus years old
-and we assumed 60\% for age group 0-19 years old, consistent with findings reported by \citet{russell2020estimating}, where 4 out of 6 infections in this age group were asymptomatic among passengers of the Diamond Princess. 
+\citet{nishiura2020estimation} estimated 30.8\% among Japanese citizens evacuated from Wuhan, China. We applied this estimate to age group 20-64 years old.  
+\citet{mizumoto2020estimating} estimated 17.9\% among infections on the Diamond Princess cruise ship. We applied this estimate to age group 65 plus years old, since the cruise population was older than average.
+We assumed 60\% for age group 0-19 years old, consistent with findings reported by \citet{russell2020estimating}, where 4 out of 6 infections in this age group were asymptomatic among passengers of the Diamond Princess. 
 The average was weighted by the age distribution of Connecticut population. 
 Based on recent evidence suggesting that the proportion of asymptomatic infections may be higher \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic}, we assumed $q_A = 0.5$ and $q_A = 0.7$ in medium and high scenarios respectively.  
 
@@ -363,9 +365,9 @@ Table \ref{table:priors} provides a list of prior mean, standard deviation, and 
 
 Duration of the latency period ($1/\delta$) was fixed, since reliable estimates of this parameter are available and because it is correlated with parameters that were allowed to vary, including reporting lags and parameters that determine duration of infectiousness and time between infection and recovery or death. We assume an average of 4 days of latency \citep{li2020substantial, salje2020estimating} and 1.5 days of presymptomatic infectiousness \citep{wei2020presymptomatic} resulting in an average incubation period of 5.5 days in line with \citep{lauer2020incubation, bi2020epidemiology, li2020early, linton2020incubation, he2020estimation, salje2020estimating}. 
 
-A subset of parameters ($\alpha_A$, $k_A$, $\alpha_{I_M}$, $\alpha_{I_S}$, $k_{I_S}$) collectively determine force of infection at a given time. Force of infection and transmission parameter $\beta$ together
+A subset of parameters ($\alpha_A$, $k_A$, $\alpha_{I_M}$, $\alpha_{I_S}$, $k_{I_S}$) collectively determines force of infection at a given time. Force of infection and transmission parameter $\beta$ together
 % , which combines contact frequency and transmission probability per contact, 
-determine the early growth of the epidemic. Without additional data, these parameters cannot be simultaneously identified. We therefore fixed parameters for which estimates are available or can be calculated from available estimates ($\alpha_A$, $\alpha_{I_M}$, $\alpha_{I_S}$), and calibrate those that are unavailable ($k_A$, $k_{I_S}$). We assume a diffuse prior on $\beta$, which absorbs additional variations of parameters that determine force of infection. 
+determine the early growth of the epidemic. Without additional data, these parameters cannot be simultaneously identified. We therefore fixed parameters for which estimates are available or can be calculated from available estimates ($\alpha_A$, $\alpha_{I_M}$, $\alpha_{I_S}$), and assume prior distributions and calibrate posterior of those that are unavailable ($k_A$, $k_{I_S}$). We assume a diffuse prior on $\beta$, which absorbs additional variations of parameters that determine force of infection. 
 
 \begin{spacing}{.9}
 	\begin{longtable}[H] {p{.15\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.38\textwidth} }
@@ -400,6 +402,10 @@ determine the early growth of the epidemic. Without additional data, these param
 		$q_{HD}$ & 0.48 & 0.01 & 0.43 & 0.53 & \citep{CHAwebsite, DPHwebsite} \\[0.5em]		
 		$q_H$ & 0.58 & {-} & {-} & {-} & {Calculated based $q_{HD}$ and $m_U/m_H$} \\[0.5em]
 		$k_n$ & 0.015 & {-} & {-} & {-} & Assumed \\[0.5em]
+		$w\textsubscript{school}$ & 0.15 & 0.015 & 0.1 & 0.2 & Assumed \\[0.5em]
+		$w\textsubscript{lockdown}$ & 0.7 & 0.05 & 0.58 & 0.82 & Assumed \\[0.5em]
+		$w\textsubscript{testing, $A$}$ & 0.2 & 0.03 & 0.1 & 0.3 & Assumed \\[0.5em]
+		$w\textsubscript{testing, $I_M$}$ & 0.5 & 0.04 & 0.35 & 0.65 & Assumed \\[0.5em]
 		\hline
 	\label{table:priors}
 	\end{longtable}
