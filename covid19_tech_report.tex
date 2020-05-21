@@ -21,13 +21,6 @@
 
 \usepackage{newtxtext,newtxmath}
 
-%\usepackage[scaled]{helvet}
-%\renewcommand\familydefault{\sfdefault}
-%\usepackage[T1]{fontenc}
-
-
-
-
 
 \usepackage{tikz-cd}
 \usepackage[hyphens]{url}
@@ -42,8 +35,6 @@
 
 \usepackage{setspace}
 \usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
-
-%\usepackage{endfloat}
 
 
 
@@ -153,12 +144,10 @@ and Forrest W. Crawford$^{1,2,3,4}$  \\[1em]
 
 
 Epidemiological models of disease transmission play an important role in supporting public health decision-making. Trajectories from these models can provide insights into the historical trends in epidemic dynamics or future outcomes under hypothetical intervention scenarios. 
-%, i.e. estimates of the $R_0$ (basic reproductive number) or $R\textsubscript{eff}$ (effective reproductive number) that accounts for the effects of interventions intended to slow down transmission and depletion of susceptible individuals.
 Transmission models are especially useful in situations of high uncertainty, offering a structured way to assess the potential effects of interventions under hypothetical scenarios.  Models cannot predict the future with certainty, but they can be helpful for scenario analysis by bounding the range of plausible future trajectories under assumptions about transmission \citep{holmdahl2020wrong}. 
 
 Most US states implemented social distancing measures and stay-at-home orders to slow transmission of SARS-CoV-2. 
-%, which, if remained uncontrolled, would have likely quickly overwhelmed health care system leading to a large number of deaths. 
-As many states, including Connecticut, begin phased lifting of stay-at-home orders, public officials and public health policymakers are faced with several questions: 1) How effective are public health interventions like social distancing and stay-at-home orders in reducing cases, hospitalizations, and deaths? 2)  How should public health interventions be implemented in the future to minimize the risk of a resurgence? 3) What will be the effect of phased reopening plans?  Mechanistic transmission models can help answer these questions. When models are developed with a primary goal to support decision-making, they must balance parsimony and realism. Projection models should be simple enough to provide clear outputs in a timely manner with assumptions that can be understood by policymakers. At the same time, for such models to be useful, they need to be flexible enough to accommodate various sets of scenarios and give projections of epidemiologic features that may be needed by different stakeholders. 
+As many states, including Connecticut, begin phased lifting of stay-at-home orders, public officials and public health policymakers are faced with several questions: 1) How effective are public health interventions like social distancing and stay-at-home orders in reducing cases, hospitalizations, and deaths? 2)  How should public health interventions be implemented in the future to minimize the risk of a resurgence? 3) What will be the effect of phased reopening plans?  Mechanistic transmission models can help answer these questions. When models are developed with a primary goal to support decision-making, they must balance parsimony and realism. Projection models should be simple enough to provide clear outputs in a timely manner with assumptions that can be understood by policymakers. At the same time, for such models to be useful, they need to be flexible enough to accommodate various sets of scenarios and give projections of epidemiological features that may be needed by different stakeholders. 
 
 Many of the nation-wide COVID-19 forecasting models that have been developed in the United States either do not use local data, or make simplifying assumptions not appropriate for localities \citep{cdc2020covid19forecasts}. These models may capture the country-wide dynamics, but are less useful for supporting decision-making in individual states or counties. Several nation-wide models have been developed with a goal to provide projections at the state level, but they usually use the same set of assumptions and estimates of key model parameters across all states, and may or may not be able to capture important local variations. For example, the COVID Act Now project \citep{covidactnow2020you} estimates that between April 13 - May 15, 2020, a 100\% of ICU rooms have been occupied in Connecticut, and that if all restriction are lifted, over 70\% of population would be infected and over 19,000 deaths would occur in the state before August 14th, 2020. Under current level of restrictions, the projections predict 26\% of population being infected and a total of 5,000 deaths by the same date. These projections may offer a useful snapshot of two hypothetical scenarios, but do not provide enough flexibility to estimate potential epidemic dynamics under partial lifting of restrictions, improved testing, increased hospitalization capacity, or a different set of assumptions about highly uncertain parameters.  
 
@@ -207,19 +196,14 @@ where $\rho^{(i)} = \left[ 1+\exp(0.5(C^{(i)}-H^{(i)})) \right]^{-1}$ is a ``sof
 
 \subsection{Parameter definitions}
 
-Table \ref{table:params} provides a list of model parameters and their definitions. Some of the parameters from Table \ref{table:params} are not directly used in the ODE system, but are used as inputs to compute other model parameters. \\ 
-\comments{Add the rest of parameters here, including intervention effects}
-\comments{I recommend you make this a regular table environment, single spacing, and let it float on the page}
+Table \ref{table:params} provides a list of model parameters and their definitions. Some of the parameters from Table \ref{table:params} are not directly used in the ODE system, but are used as inputs to compute other model parameters. 
 
-%\begin{spacing}{0.9}
-\begin{longtable} {p{.11\textwidth} p{.85\textwidth} }
-	\caption{Model parameters } \\
-	Notation & Definition \\[0.5em] \hline
-	{} & {} \\
-	\endfirsthead
-	Notation & Definition  \\[0.5em] \hline
-	\endhead
-	{} & {}  \\[-1em]
+\begingroup
+\renewcommand\arraystretch{0.5}
+\begin{table}[!htb] 
+	\caption{Model parameters } 
+	\begin{tabular}{p{.11\textwidth} p{.85\textwidth} }
+	Notation & Definition \\\hline\\
 	$\beta$ & Transmission parameter per $S-I$ pair \\[0.5em]
 	$\delta$ & (Latency period)$^{-1}$ (days$^{-1}$) \\[0.5em]
 	$q_A$, $q_{I_M}$, $q_{I_S}$  & Proportions of asymptomatic, mild symptomatic, and severe infections \\[0.5em]
@@ -246,17 +230,14 @@ Table \ref{table:params} provides a list of model parameters and their definitio
 	$L_H$, $L_D$ & Reporting lags of hospitalizations and deaths (days) \\[0.5em]
 	$L_0$ & Lag of epidemic onset date, days before 03-01-2020 \\[0.5em]
 	\hline
+	\end{tabular}
 	\label{table:params}
-\end{longtable}
-%\end{spacing}
-
-
+\end{table}
+\endgroup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 
 \subsection{Geographic structure}
 
-%\comments{Describe the contact structure for counties}
-%\comments{Richard, could you generate a map of Connecticut with counties labeled, alongside a labeled adjacency matrix for counties? }
 Figure \ref{fig:map} shows the county map of Connecticut along with the county adjacency matrix. The geographic boundary files were obtained from the Connecticut Department of Environmental Protection~\citep{shapefile}. We assume that a fraction $(1-k_n)$ of all contacts happen within a given county, and the remaining $k_n$ contacts happen between individuals residing in adjacent counties.
 
 \begin{figure} %[htb]
@@ -448,7 +429,7 @@ determine the early growth of the epidemic. Without additional data, these param
 \textbf{Initial conditions and reporting lags}\\[0.5em]
 Based on the relative population size of the counties and the date of first registered case and death, we assume an initial size of exposed compartment to be 7.5 in Fairfield, 6.5 in Hartford, 0 in Litchfield, 0.25 in Middlesex, 4.5 in New Haven, 0.13 in New London, 0.05 in Tolland and 0.04 in Windham. We allow the starting date of the epidemic to be between February 14th - 20th and calibrate a scenario-specific distribution of starting dates to the observed data. 
 
-Early in the epidemic, many infections were likely imported from New York City, which experienced a major outbreak in the spring of 2020. In particular, many residents of Fairfield county work in New York City. We do not directly model importation events, and the pre-specified number of exposed individuals in Fairfield does not include all infection importation events, which likely happened in the course of several days or even weeks. This unaccounted force of infection early in the epidemic got absorbed in the estimation of transmission parameter $\beta$.
+Early in the epidemic, many infections were likely imported from New York City, which experienced a major outbreak in the spring of 2020. In particular, many residents of Fairfield county work in New York City. We do not directly model importation events, and the prespecified number of exposed individuals in Fairfield does not include all infection importation events, which likely happened in the course of several days or even weeks. This unaccounted force of infection early in the epidemic got absorbed in the estimation of transmission parameter $\beta$.
 
 We specified a wide range of reporting lags for hospitalizations and deaths, resulting in ranges of 4-7 days for hospitalizations and 7-11 days for deaths. It is likely that deaths occurring in hospitals are reported with substantially smaller lag than those occurring in nursing homes, since many of them need to be confirmed by a medical examiner.  
 
@@ -501,7 +482,6 @@ Under slow reopening, hospitalization capacity is not expected to be overwhelmed
 In case of fast reopening, hospitalization capacity would likely be exceeded sooner if asymptomatic fraction is high. 
 The main difference between the asymptomatic fraction scenarios is in the cumulative incidence proportion. By the end of Summer, it may be as low as 0.1 under the low asymptomatic fraction and slow reopening, and as high as 0.65 under the high asymptomatic fraction and fast reopening. The latter scenario predicts the second peak of infections to occur in mid-August, while all other scenarios predict that the second peak would not occur until later in the Fall or even Winter under low asymptomatic fraction and slow reopening. While higher asymptomatic fraction is expected to result in higher number of deaths in the short-term, the total number of deaths by the end of the epidemic would likely be higher under low asymptomatic fraction. When asymptomatic fraction is low, infections and deaths are delayed, but the proportion of severe cases is higher. 
 
-%%%%%% calibration results %%%%%%
 
 \begin{figure} %[htb]
 	\centering
@@ -512,23 +492,21 @@ The main difference between the asymptomatic fraction scenarios is in the cumula
 
 
 
-%%%%%%%% posterior distributions of parameters %%%%%%
 
-%\begin{spacing}{1.25}
-\begin{table}
+\begin{table}[!htb]
 	\centering
 	\caption{Means and 95\% credible interval of marginal posterior distributions of model parameters under the low ($q_A = 0.36$), medium ($q_A = 0.5$), and high ($q_A = 0.7$) asymptomatic fraction scenarios.}
 	\begin{tabular}{rrrrrrrrrr}
-		\hline
+		\\\hline
 		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
 		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
 		\hline
-		$q_Is$ & 0.063 & 0.040 & 0.086 & 0.050 & 0.028 & 0.073 & 0.028 & 0.015 & 0.042 \\ 
+		$q_{I_S}$ & 0.063 & 0.040 & 0.086 & 0.050 & 0.028 & 0.073 & 0.028 & 0.015 & 0.042 \\ 
 		$\beta$ & 1.302 & 1.152 & 1.447 & 1.566 & 1.359 & 1.797 & 2.024 & 1.681 & 2.435 \\ 
 		$\gamma_H$ & 0.115 & 0.099 & 0.131 & 0.113 & 0.095 & 0.131 & 0.115 & 0.095 & 0.134 \\ 
 		$\gamma_U$ & 0.071 & 0.053 & 0.088 & 0.071 & 0.052 & 0.090 & 0.072 & 0.054 & 0.094 \\ 
 		$k_A$ & 0.395 & 0.305 & 0.495 & 0.403 & 0.306 & 0.501 & 0.392 & 0.289 & 0.502 \\ 
-		$k_Is$ & 0.697 & 0.603 & 0.796 & 0.698 & 0.606 & 0.795 & 0.707 & 0.599 & 0.798 \\ 
+		$k_{I_S}$ & 0.697 & 0.603 & 0.796 & 0.698 & 0.606 & 0.795 & 0.707 & 0.599 & 0.798 \\ 
 		$m_H$ & 0.209 & 0.186 & 0.231 & 0.209 & 0.183 & 0.232 & 0.208 & 0.185 & 0.232 \\ 
 		$m_U$ & 0.307 & 0.247 & 0.375 & 0.309 & 0.239 & 0.379 & 0.308 & 0.248 & 0.385 \\ 
 		$q_H$ & 0.572 & 0.520 & 0.617 & 0.573 & 0.519 & 0.620 & 0.574 & 0.524 & 0.622 \\ 
@@ -568,21 +546,21 @@ The main difference between the asymptomatic fraction scenarios is in the cumula
 \begin{figure} %[htb]
 	\centering
 	\includegraphics[width=.9\textwidth]{figures/fast_low_full.pdf}
-	\caption{Projections under a ``fast'' reopening scenario and Scenario 1, low asymptomatic proportion. 10\% of suppressed contact is released every 30 days, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
+	\caption{Projections under a ``fast'' reopening scenario and Scenario 1, low asymptomatic proportion. 10\% of suppressed contact is released every week starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
 	\label{fig:fast_low}
 \end{figure}
 
 \begin{figure} %[htb]
 	\centering
 	\includegraphics[width=.9\textwidth]{figures/fast_medium_full.pdf}
-	\caption{Projections under a ``fast'' reopening scenario and Scenario 2, medium asymptomatic proportion. 10\% of suppressed contact is released every 30 days, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
+	\caption{Projections under a ``fast'' reopening scenario and Scenario 2, medium asymptomatic proportion. 10\% of suppressed contact is released every week, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
 	\label{fig:fast_medium}
 \end{figure}
 
 \begin{figure} %[htb]
 	\centering
 	\includegraphics[width=.9\textwidth]{figures/fast_high_full.pdf}
-	\caption{Projections under a ``fast'' reopening scenario and Scenario 3, high asymptomatic proportion. 10\% of suppressed contact is released every 30 days, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
+	\caption{Projections under a ``fast'' reopening scenario and Scenario 3, high asymptomatic proportion. 10\% of suppressed contact is released every week, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
 	\label{fig:fast_high}
 \end{figure}
 
@@ -597,44 +575,19 @@ The main difference between the asymptomatic fraction scenarios is in the cumula
 
 \section{Discussion}
 
-%\comments{Contextualize the model structure by comparing it to others. This can be short.} 
-
-%\comments{When comparing IHME, probably mention we use all beds as capacity instead of available beds. IHME capacity is about 1/4 ours.}
-
 In this report, we have described technical details of a model of SARS-CoV-2 transmission and COVID-19 disease progression developed to support public health decision-making in Connecticut.  The model is calibrated to the observed dynamics of hospitalizations and cumulative deaths in Connecticut; its projections reproduce these dynamics accurately.  Many COVID-19 models have been developed and analyzed by the CDC in the attempt to perform ensemble forecasting of the epidemic development in the US \citep{cdc2020covid19forecasts}. Most of these models offer state-level projections. The CDC publishes updates of consolidated summary of cumulative death projections in the next four weeks from these models for each state. Local projections from national-level models may offer useful insights, but they inevitably make simplifying or uniform assumptions, which may hold in some locations, but not others. 
 
 
-There is substantial uncertainty about epidemiologic parameters that govern aspects of COVID-19 dynamics and have a direct impact on the quality of projections. When local context is not directly taken into account, the effects of parametric uncertainty is exacerbated.  State and county-level models are needed to support local decision-making.  The model described here captures distinct important features of COVID-19 dynamics and the relationship between model features and data reporting in Connecticut.  By calibrating model parameters to local data, including changes in hospitalization capacity, and the exact timing of intervention events, we can reduce uncertainty in projections. However, the calibrated posterior distribution of model parameters is not necessarily generalizable to other settings: model projections are tightly linked to the Connecticut reopening plans. 
+There is substantial uncertainty about epidemiological parameters that govern aspects of COVID-19 dynamics and have a direct impact on the quality of projections. When local context is not directly taken into account, the effects of parametric uncertainty is exacerbated.  State and county-level models are needed to support local decision-making.  The model described here captures distinct important features of COVID-19 dynamics and the relationship between model features and data reporting in Connecticut.  By calibrating model parameters to local data, including changes in hospitalization capacity, and the exact timing of intervention events, we can reduce uncertainty in projections. However, the calibrated posterior distribution of model parameters is not necessarily generalizable to other settings: model projections are tightly linked to the Connecticut reopening plans. 
 
-In addition to providing predictions for policymakers, model projections may be useful for prospectively planning epidemiologic studies that can inform the state's response.  In particular, planning of seroprevalence surveys requires estimates of the proportion of population who have been exposed to the virus in the past or are in an active stage of infection. Due to limited testing availability and potentially high proportion of asymptomatic individuals, official case counts offer a poor approximation to the true cumulative incidence. Seroprevalence surveys, if properly conducted, can provide an important piece of information that would permit more precise estimates of the fraction of asymptomatic infections. 
+In addition to providing predictions for policymakers, model projections may be useful for prospectively planning epidemiological studies that can inform the state's response.  In particular, planning of seroprevalence surveys requires estimates of the proportion of population who have been exposed to the virus in the past or are in an active stage of infection. Due to limited testing availability and potentially high proportion of asymptomatic individuals, official case counts offer a poor approximation to the true cumulative incidence. Seroprevalence surveys, if properly conducted, can provide an important piece of information that would permit more precise estimates of the fraction of asymptomatic infections. 
 
-Prior knowledge and assumptions about plausible ranges of parameter values combined with local data allows us to substantially reduce parametric uncertainty and produce narrow projection intervals. However, several important considerations limit our ability to make reliable long-term projections. First it is difficult to make predictions about the extent of contact rate increases following lockdown release steps, such as allowing only certain types of businesses to reopen. Second, the effectiveness of widespread testing and contact tracing on timely isolation of infectious individuals, and its subsequent impact on the force of infection is unknown. This effect is a complex function of viral shedding characteristics among symptomatic, presymptomatic and asymptomatic individuals, along with the implementation features of testing and isolation. Third, there may be unequal depletion of susceptibles depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced infection compared to low-risk individuals, then we may be over-estimating future number of deaths. Forth, we assume that all epidemiologic parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal.
+Prior knowledge and assumptions about plausible ranges of parameter values combined with local data allows us to substantially reduce parametric uncertainty and produce narrow projection intervals. However, several important considerations limit our ability to make reliable long-term projections. First it is difficult to make predictions about the extent of contact rate increases following lockdown release steps, such as allowing only certain types of businesses to reopen. Second, the effectiveness of widespread testing and contact tracing on timely isolation of infectious individuals, and its subsequent impact on the force of infection is unknown. This effect is a complex function of viral shedding characteristics among symptomatic, presymptomatic and asymptomatic individuals, along with the implementation features of testing and isolation. Third, there may be unequal depletion of susceptibles depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced infection compared to low-risk individuals, then we may be over-estimating future number of deaths. Forth, we assume that all epidemiological parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal.
 
-In an evolving public health crisis, it is important to keep projections up to date. As more information about the extent of asymptomatic transmission, general epidemiologic characteristics of COVID-19, and data on observable model features in Connecticut becomes available, we will update the projections presented in this paper.
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%5
-
-%\noindent \textbf{Acknowledgements}:
-% We are grateful to [...]
-% Eben Kenah
-% Ira Longini
-% Albert Ko
-% Sten Vermund
-% A. David Paltiel
-% Peter M. Aronow,
-% Xiaoxuan Cai,
-% Fredrik S\"avje
-% Daniel Weinberger
-% Virginia E. Pitzer
-% Who else?
-%for helpful comments.
+In an evolving public health crisis, it is important to keep projections up to date. As more information about the extent of asymptomatic transmission, general epidemiological characteristics of COVID-19, and data on observable model features in Connecticut becomes available, we will update the projections presented in this paper.
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibliographystyle{unsrtnat}
 
