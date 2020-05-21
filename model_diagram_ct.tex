@@ -74,19 +74,19 @@
 \node[shape=rectangle, draw=black] (S) at (0,0) {$S$};
 \node[shape=rectangle, draw=black] (E) at (2,0) {$E$};
 \node[shape=rectangle, draw=black] (Im) at (4,0) {$I_M$};
-\node[shape=rectangle, draw=black] (Is) at (4,2) {$I_S$};
-\node[shape=rectangle, draw=black] (A) at (4,-2) {$A$};
+\node[shape=rectangle, draw=black] (Is) at (4,1) {$I_S$};
+\node[shape=rectangle, draw=black] (A) at (4,-1) {$A$};
 
-\node[shape=rectangle, draw=black] (Rm) at (6,-0.5) {$R_M$};
+\node[shape=rectangle, draw=black] (Rm) at (6,0) {$R_M$};
 
-\node[shape=rectangle, draw=black] (R) at (8,-1) {$R$};
+\node[shape=rectangle, draw=black] (R) at (10,0) {$R$};
 
 %\node[shape=circle, draw=black, scale=0.15] (Hstream) at (6,2.5) {};
-\node[shape=rectangle, draw=black] (H) at (8,5) {$H$};
-\node[shape=rectangle, draw=black] (Hbar) at (9,3.5) {$\bar{H}$};
-\node[shape=rectangle, draw=black] (U) at (11,1) {$U$};
+\node[shape=rectangle, draw=black] (H) at (6,3) {$H$};
+\node[shape=rectangle, draw=black] (Hbar) at (6,2) {$\bar{H}$};
+\node[shape=rectangle, draw=black] (U) at (6,1) {$U$};
 
-\node[shape=rectangle, draw=black] (D) at (12, 5) {$D$};
+\node[shape=rectangle, draw=black] (D) at (8, 2) {$D$};
 
 %\node[shape=circle, draw=black, scale=0.15] (outH) at (8,4) {};
 %\node[shape=circle, draw=black, scale=0.15] (outHbar) at (10,2.5) {};
@@ -98,9 +98,9 @@
 \path [->] (E) edge node {} (Is);
 \path [->] (E) edge node {} (A);
 %\path [->] (Im) edge node {} (R);
-\draw [->] (Im) to [out=0, in=170] (Rm);
-\draw [->] (Rm) to [out=0, in=170] (R);
-\draw [->] (A) to [out=0, in=190] (R);
+\draw [->] (Im) to [out=0, in=180] (Rm);
+\draw [->] (Rm) to [out=0, in=180] (R);
+\draw [->] (A) to [out=0, in=225] (R);
 %\path [->] (A) edge node {} (R);
 
 %\path [-] (Is) edge node {} (Hstream);
@@ -116,9 +116,9 @@
 \path [->] (U) edge node {} (D);
 
 
-\path [->] (H) edge node {} (R);
-\draw [->] (Hbar) to [out=270, in=45] (R);
-\draw [->] (U) to [out=270, in=0] (R);
+\draw [->] (H) to [out=30, in=90] (R);
+\draw [->] (Hbar) to [out=-30, in=110] (R);
+\draw [->] (U) to [out=-20, in=135] (R);
 
 %\path [-] (H) edge node {} (outH);
 %\path [->] (outH) edge node {} (R);
