@@ -479,7 +479,18 @@ Daily total available hospital beds (including occupied) in each county were obt
 
 \section{Results}
 
-Figure \ref{fig:fit} shows calibrated projections of hospitalizations and deaths, with 95\% uncertainty intervals, under the low asymptomatic fraction scenario and observed data as dots.  Observed data points track with mean projections and largely fall within uncertainty intervals.  Calibration results under medium and high asymptomatic fraction scenarios demonstrate a similar fit to historical data.  Figures \ref{fig:slow_low} to \ref{fig:fast_high} show projections of under the three different scenarios with `slow' reopening. The projections show the assumed contact pattern, daily COVID-19 incidence, hospital census, deaths, proportion of cumulative incidence, and effective reproductive number, $R\textsubscript{eff}$.  Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters under the three asymptomatic fraction scenarios.
+
+Figure \ref{fig:fit} shows calibrated projections of hospitalizations and deaths, with 95\% uncertainty intervals, under the low asymptomatic fraction scenario and observed data as dots.  Observed data points track with mean projections and largely fall within uncertainty intervals.  Calibration results under medium and high asymptomatic fraction scenarios demonstrate a similar fit to historical data.  
+Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters under the three asymptomatic fraction scenarios.
+
+Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for these scenarios assuming `fast' reopening. The projections include daily COVID-19 incidence, hospital census, deaths, proportion of cumulative incidents, and effective reproductive number, $R\textsubscript{eff}$. 
+
+Under high asymptomatic fraction scenario, we would expect a higher number of infections, hospitalizations and deaths by the end of Summer. 
+Under slow reopening, hospitalization capacity is not expected to be overwhelmed under any of the scenarios. 
+In case of fast reopening, hospitalization capacity would likely be exceeded sooner if asymptomatic fraction is high. 
+The main difference between the asymptomatic fraction scenarios is in the cumulative incidence proportion. By the end of Summer, it may be as low as 0.1 under the low asymptomatic fraction and slow reopening, and as high as 0.65 under the high asymptomatic fraction and fast reopening. The latter scenario predicts the second peak of infections to occur in mid-August, while all other scenarios predict that the second peak would not occur until later in the Fall or even Winter under low asymptomatic fraction and slow reopening. While higher asymptomatic fraction is expected to result in higher number of deaths in the short-term, the total number of deaths by the end of the epidemic would likely be higher under low asymptomatic fraction. When asymptomatic fraction is low, infections and deaths are delayed, but the proportion of severe cases is higher. 
+
+%%%%%% calibration results %%%%%%
 
 \begin{figure} %[htb]
 	\centering
@@ -490,6 +501,36 @@ Figure \ref{fig:fit} shows calibrated projections of hospitalizations and deaths
 
 
 
+%%%%%%%% posterior distributions of parameters %%%%%%
+
+%\begin{spacing}{1.25}
+\begin{table}
+	\centering
+	\caption{Means and 95\% credible interval of marginal posterior distributions of model parameters under the low ($q_A = 0.36$), medium ($q_A = 0.5$), and high ($q_A = 0.7$) asymptomatic fraction scenarios.}
+	\begin{tabular}{rrrrrrrrrr}
+		\hline
+		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
+		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
+		\hline
+		$q_Is$ & 0.063 & 0.040 & 0.086 & 0.050 & 0.028 & 0.073 & 0.028 & 0.015 & 0.042 \\ 
+		$\beta$ & 1.302 & 1.152 & 1.447 & 1.566 & 1.359 & 1.797 & 2.024 & 1.681 & 2.435 \\ 
+		$\gamma_H$ & 0.115 & 0.099 & 0.131 & 0.113 & 0.095 & 0.131 & 0.115 & 0.095 & 0.134 \\ 
+		$\gamma_U$ & 0.071 & 0.053 & 0.088 & 0.071 & 0.052 & 0.090 & 0.072 & 0.054 & 0.094 \\ 
+		$k_A$ & 0.395 & 0.305 & 0.495 & 0.403 & 0.306 & 0.501 & 0.392 & 0.289 & 0.502 \\ 
+		$k_Is$ & 0.697 & 0.603 & 0.796 & 0.698 & 0.606 & 0.795 & 0.707 & 0.599 & 0.798 \\ 
+		$m_H$ & 0.209 & 0.186 & 0.231 & 0.209 & 0.183 & 0.232 & 0.208 & 0.185 & 0.232 \\ 
+		$m_U$ & 0.307 & 0.247 & 0.375 & 0.309 & 0.239 & 0.379 & 0.308 & 0.248 & 0.385 \\ 
+		$q_H$ & 0.572 & 0.520 & 0.617 & 0.573 & 0.519 & 0.620 & 0.574 & 0.524 & 0.622 \\ 
+		$w\textsubscript{school}$ & 0.149 & 0.123 & 0.177 & 0.150 & 0.120 & 0.177 & 0.151 & 0.121 & 0.178 \\ 
+		$w\textsubscript{lockdown}$ & 0.700 & 0.659 & 0.738 & 0.711 & 0.674 & 0.748 & 0.714 & 0.678 & 0.761 \\ 
+		\hline
+	\end{tabular}
+	\label{tbl:posterior}
+\end{table}
+%\end{spacing}
+
+
+%%%%%%%%% projections %%%%%%%%%%%%
 
 \begin{figure} %[htb]
 	\centering
@@ -538,31 +579,7 @@ Figure \ref{fig:fit} shows calibrated projections of hospitalizations and deaths
 
 
 
-%\begin{spacing}{1.25}
-\begin{table}
-	\centering
-	\caption{Means and 95\% credible interval of marginal posterior distributions of model parameters under the low ($q_A = 0.36$), medium ($q_A = 0.5$), and high ($q_A = 0.7$) asymptomatic fraction scenarios.}
-	\begin{tabular}{rrrrrrrrrr}
-		\hline
-		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
-		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
-		\hline
-	$q_Is$ & 0.063 & 0.040 & 0.086 & 0.050 & 0.028 & 0.073 & 0.028 & 0.015 & 0.042 \\ 
-	$\beta$ & 1.302 & 1.152 & 1.447 & 1.566 & 1.359 & 1.797 & 2.024 & 1.681 & 2.435 \\ 
-	$\gamma_H$ & 0.115 & 0.099 & 0.131 & 0.113 & 0.095 & 0.131 & 0.115 & 0.095 & 0.134 \\ 
-	$\gamma_U$ & 0.071 & 0.053 & 0.088 & 0.071 & 0.052 & 0.090 & 0.072 & 0.054 & 0.094 \\ 
-	$k_A$ & 0.395 & 0.305 & 0.495 & 0.403 & 0.306 & 0.501 & 0.392 & 0.289 & 0.502 \\ 
-	$k_Is$ & 0.697 & 0.603 & 0.796 & 0.698 & 0.606 & 0.795 & 0.707 & 0.599 & 0.798 \\ 
-	$m_H$ & 0.209 & 0.186 & 0.231 & 0.209 & 0.183 & 0.232 & 0.208 & 0.185 & 0.232 \\ 
-	$m_U$ & 0.307 & 0.247 & 0.375 & 0.309 & 0.239 & 0.379 & 0.308 & 0.248 & 0.385 \\ 
-	$q_H$ & 0.572 & 0.520 & 0.617 & 0.573 & 0.519 & 0.620 & 0.574 & 0.524 & 0.622 \\ 
-	$w\textsubscript{school}$ & 0.149 & 0.123 & 0.177 & 0.150 & 0.120 & 0.177 & 0.151 & 0.121 & 0.178 \\ 
-	$w\textsubscript{lockdown}$ & 0.700 & 0.659 & 0.738 & 0.711 & 0.674 & 0.748 & 0.714 & 0.678 & 0.761 \\ 
-		\hline
-	\end{tabular}
-\label{tbl:posterior}
-\end{table}
-%\end{spacing}
+
 
 
 %%%%%%%%%%%%%%%%%%
