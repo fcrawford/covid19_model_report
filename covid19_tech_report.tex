@@ -209,10 +209,11 @@ where $\rho^{(i)} = \left[ 1+\exp(0.5(C^{(i)}-H^{(i)})) \right]^{-1}$ is a ``sof
 
 Table \ref{table:params} provides a list of model parameters and their definitions. Some of the parameters from Table \ref{table:params} are not directly used in the ODE system, but are used as inputs to compute other model parameters. \\ 
 \comments{Add the rest of parameters here, including intervention effects}
+\comments{I recommend you make this a regular table environment, single spacing, and let it float on the page}
 
 %\begin{spacing}{0.9}
 \begin{longtable} {p{.11\textwidth} p{.85\textwidth} }
-	\caption{Model parameters [I recommend you make this a regular table environment, single sapcing, and let it float on the page.]} \\
+	\caption{Model parameters } \\
 	Notation & Definition \\[0.5em] \hline
 	{} & {} \\
 	\endfirsthead
@@ -237,7 +238,13 @@ Table \ref{table:params} provides a list of model parameters and their definitio
 	$m_{\bar{H}}$ & Case fatality ratio among severe cases denied hospitalization due to hospital capacity overflow \\[0.5em]
 	$m_{U}$ & Case fatality ratio among severe cases in nursing homes, prisons, or with no access to hospitalization \\[0.5em]
 	$k_n$ & Proportion of all contacts that happen with individuals from adjacent counties (as opposed to within county) \\[0.5em]
-	$C(t)$ & Hospitalization capacity at time $t$, may be constant or vary over time representing capacity increase intervention\\
+	$C(t)$ & Hospitalization capacity at time $t$, may be constant or vary over time representing capacity increase intervention \\[0.5em]
+	$w\textsubscript{school}$ & Maximum size of school closure effect on contact rate reduction \\[0.5em]
+	$w\textsubscript{lockdown}$ & Maximum size of lockdown effect on contact rate reduction \\[0.5em]
+	$w\textsubscript{testing, $A$}$ & Effect size of increased testing and contact tracing on the rate of removal (isolation) of asymptomatic infections \\[0.5em]
+	$w\textsubscript{testing, $I_M$}$ & Effect size of increased testing and contact tracing on the rate of isolation of mildly symptomatic infections \\[0.5em]
+	$L_H$, $L_D$ & Reporting lags of hospitalizations and deaths (days) \\[0.5em]
+	$L_0$ & Lag of epidemic onset date, days before 03-01-2020 \\[0.5em]
 	\hline
 	\label{table:params}
 \end{longtable}
@@ -277,6 +284,7 @@ Increase in testing capacity and contact-tracing is assumed to result in earlier
 \[ \alpha_A(t) = \alpha_A^{(0)} (1 + \iota\textsubscript{testing, $A$} (t)) \]
 \[ \alpha_{I_M}(t) = \alpha_{I_M}^{(0)} (1 + \iota\textsubscript{testing, $I_M$} (t)), \]
 where $\alpha_A^{(0)}$ and $\alpha_{I_M}^{(0)}$ are reciprocals of the duration of time until isolation among asymptomatic and mildly symptomatic infections respectively under current testing availability conditions. Similarly to the parametrization of distancing effects, $\iota\textsubscript{testing, $A$} (t)$ and $\iota\textsubscript{testing, $I_M$} (t)$ may vary over time. 
+We assume that soon after the lockdown is lifted, testing capacity increases and remains constant at that level. The values of $\iota\textsubscript{testing, $A$} (t)$ and $\iota\textsubscript{testing, $I_M$} (t)$ are assumed to be zero prior to May 20, 2020 and increase to $w\textsubscript{testing, $A$}$ and $w\textsubscript{testing, $I_M$}$ respectively afterwards.  
 
 
 
@@ -299,16 +307,19 @@ where $\alpha_A^{(0)}$ and $\alpha_{I_M}^{(0)}$ are reciprocals of the duration 
 
 We calibrate the joint posterior distribution of model parameters to the observed dynamics of community hospitalizations and cumulative number of deaths. 
 Due to changing testing patterns and varying case ascertainment proportions over time, we do not use reported cumulative case counts in the calibration procedure.  
-The parameters in the transmission model are not simultaneously identifiable given the observed data. In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates and calibrate the remaining parameters. The point estimates and prior distributions are summarized in Table \ref{table:priors}.
+The parameters in the transmission model are not simultaneously identifiable given the observed data. In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates and calibrate the remaining parameters. 
+Several model parameters influence epidemic dynamics in the future. These parameters include case fatality ratio in case of hospital overflow ($m_{\bar{H}}$), testing capacity and contact tracing effects ($w\textsubscript{testing, $A$}$ and $w\textsubscript{testing, $I_M$}$), and the extent of release of suppressed contacts once lockdown is lifted. These parameters cannot be estimated based on historical data, but may be estimated in the future. For the purpose of projections, we impose a distribution on these parameters independent of one another and of the joint posterior distribution of calibrated parameters. 
+The point estimates of models parameters, prior distributions, and assumed distributions are summarized in Table \ref{table:priors}.
 
-\subsection{Transmission parameters} 
 
-Let $\btheta$ denote the transmission parameters whose joint distribution is calibrated to observed data. For each $\theta$, we specify a fixed support $[\theta\textsubscript{min}, \theta\textsubscript{max}]$, and put independent beta priors on the transformed parameter, i.e.,
+\subsection{Continuous transmission model parameters} 
+
+Let $\btheta$ denote the subset of continuous transmission model parameters whose joint distribution is calibrated to observed data. For each $\theta$, we specify a fixed support $[\theta\textsubscript{min}, \theta\textsubscript{max}]$, and put independent beta priors on the transformed parameter, i.e.,
 \begin{equation}
 \frac{\theta - \theta\textsubscript{min}}{\theta\textsubscript{max} - \theta\textsubscript{min}} \sim \mbox{Beta}(a_{\theta}, b_{\theta}),
 \label{eq:truncdist}
 \end{equation}    
-where the shape parameters $a_{\theta}$ and $b_\theta$ are set to let $\theta$ have mean $\mu_\theta$ and standard deviation $\sigma_\theta$. Table \ref{table:priors} presents the list of $(\mu_\theta, \sigma_\theta, \theta\textsubscript{min}, \theta\textsubscript{max})$ for all parameters in $\btheta$. 
+where the shape parameters $a_{\theta}$ and $b_\theta$ are set to let $\theta$ have mean $\mu_\theta$ and standard deviation $\sigma_\theta$. Table \ref{table:priors} provides the list of $(\mu_\theta, \sigma_\theta, \theta\textsubscript{min}, \theta\textsubscript{max})$ for all parameters in $\btheta$. 
 
 % We assume prior independence of parameters in $\btheta$, so the prior likelihood function takes a form:
 % \begin{equation}
