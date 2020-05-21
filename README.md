@@ -4,7 +4,7 @@
 [![GitHub Release](https://img.shields.io/badge/download-latest-brightgreen.svg)](https://github.com/fcrawford/covid19_model_report/releases/latest) 
 
 
-This repository contains source files for the report "COVID-19 projections for Connecticut: Summer 2020 reopening scenarios" by Olga Morozova, Zehang Richard Li, and Forrest W. Crawford.
+This repository contains source files for the report "A model for COVID-19 transmission in Connecticut" by Olga Morozova, Zehang Richard Li, and Forrest W. Crawford.
 
 
 ## COVID-19 projections for Connecticut project page
