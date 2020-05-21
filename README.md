@@ -17,14 +17,15 @@ http://crawford-lab.github.io/tree/master/covid19_ct
 
 
 Bibtex:
-
-> @article{morozova2020model,
->    author = {Olga Morozova and Zehang Richard Li and Forrest W. Crawford},
->    title = {A model for COVID-19 transmission in Connecticut},
->    url = {https://github.com/fcrawford/covid19_model_report/releases},
->    journal = {Working Paper},
->    year = {2020}
->  }
+```
+@article{morozova2020model,
+    author = {Olga Morozova and Zehang Richard Li and Forrest W. Crawford},
+    title = {A model for COVID-19 transmission in Connecticut},
+    url = {https://github.com/fcrawford/covid19_model_report/releases},
+    journal = {Working Paper},
+    year = {2020}
+}
+```
 
 
 
