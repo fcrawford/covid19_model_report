@@ -477,18 +477,6 @@ Daily total available hospital beds (including occupied) in each county were obt
 
 \section{Results}
 
-%\comments{This can be brief. Show model fit, and projections. }
-\comments{Add: basic projections, including plots of R effective. Possibly, report estimates of epidemiologic quantities, such as $R_0$, IFR, hospitalization fraction, etc.}
-
-Figure \ref{fig:slow_low} to XX summarize projections of under different scenarios including daily COVID-19 incidence, cumulative COVID-19 infections, hospital census, deaths, proportion of cumulative incidents, and effective reproductive number $R\textsubscript{eff}$. \comments{Repeat this figure 6 times?}
-
-\begin{figure}[htb]
-	\centering
-	\includegraphics[width=.9\textwidth]{figures/slow_low_full.pdf}
-	\caption{Projections under a ``slow'' reopening scenario and Scenario 1, low asymptomatic proportion. 10\% of suppressed contact is released every 30 days, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
-	\label{fig:slow_low}
-\end{figure}
-
 Figure \ref{fig:fit} illustrates the results of parameter calibration to observed hospitalizations and deaths under the low asymptomatic fraction scenario. 
 Calibration results under medium and high asymptomatic fraction scenarios demonstrate a similar fit.
 
@@ -498,6 +486,34 @@ Calibration results under medium and high asymptomatic fraction scenarios demons
 	\caption{Parameter calibration results under the low asymptomatic fraction scenario ($q_A = 0.36$).}
 	\label{fig:fit}
 \end{figure}
+
+
+%\comments{This can be brief. Show model fit, and projections. }
+\comments{Add: basic projections, including plots of R effective. Possibly, report estimates of epidemiologic quantities, such as $R_0$, IFR, hospitalization fraction, etc.}
+
+Figure \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections of under the three different scenarios with `slow' reopening. The projections include daily COVID-19 incidence, hospital census, deaths, proportion of cumulative incidents, and effective reproductive number, $R\textsubscript{eff}$. 
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.9\textwidth]{figures/slow_low_full.pdf}
+	\caption{Projections under a ``slow'' reopening scenario and Scenario 1, low asymptomatic proportion. 10\% of suppressed contact is released every 30 days, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
+	\label{fig:slow_low}
+\end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.9\textwidth]{figures/slow_medium_full.pdf}
+	\caption{Projections under a ``slow'' reopening scenario and Scenario 2, medium asymptomatic proportion. 10\% of suppressed contact is released every 30 days, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
+	\label{fig:slow_medium}
+\end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.9\textwidth]{figures/slow_high_full.pdf}
+	\caption{Projections under a ``slow'' reopening scenario and Scenario 3, high asymptomatic proportion. 10\% of suppressed contact is released every 30 days, starting on May 20, 2020, with 95\% uncertainty intervals. The dashed line above hospitalization projections is an estimate of the hospital bed capacity in Connecticut \citep{CHAwebsite}. }
+	\label{fig:slow_high}
+\end{figure}
+
 
 
 Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters under the three asymptomatic fraction scenarios.
