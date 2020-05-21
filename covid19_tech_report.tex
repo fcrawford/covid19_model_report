@@ -274,57 +274,35 @@ We assume that soon after the lockdown is lifted, testing capacity increases and
 
 \section{Model calibration and Bayesian posterior inference}
 
-%\begin{enumerate}
-%\item Framework: due to identifiability issues, specify some parameters according to values in the literatuer, with uncertainty distributions, fit others to data
-%\item Priors for estimated parameters
-%\item initial conditions
-%\item Give the likelihood
-%\item Give the form of the posterior
-%\item posterior inference (MCMC?)
-%\item Generating posterior predictive samples
-%\end{enumerate}
-%
-%\comments{Richard and Olya: this is a bit tricky: the ODE solution is a deterministic function, so it does not have a natural likelihood.  I am assuming you are using the corresponding least squares or Poisson likelihood.  Please write this down in terms of, e.g. the model prediction $H(t_i|\btheta)$ and obs data $\hat{h}(t_i)$ where $\btheta$ is all parameters.  Then give the prior on $\btheta$, and the posterior (up to a normalizing constant). } 
 
-We calibrate the joint posterior distribution of model parameters to the observed dynamics of community hospitalizations and cumulative number of deaths. 
-Due to changing testing patterns and varying case ascertainment proportions over time, we do not use reported cumulative case counts in the calibration procedure.  
-The parameters in the transmission model are not simultaneously identifiable given the observed data. In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates and calibrate the remaining parameters. 
-Several model parameters influence epidemic dynamics in the future. These parameters include case fatality ratio in case of hospital overflow ($m_{\bar{H}}$), testing capacity and contact tracing effects ($w\textsubscript{testing, $A$}$ and $w\textsubscript{testing, $I_M$}$), and the extent of release of suppressed contacts once lockdown is lifted. These parameters cannot be estimated based on historical data, but may be estimated in the future. For the purpose of projections, we impose a distribution on these parameters independent of one another and of the joint posterior distribution of calibrated parameters. 
-The point estimates of models parameters, prior distributions, and assumed distributions are summarized in Table \ref{table:priors}.
+We estimate a joint posterior distribution of model parameters using the the observed dynamics of community hospitalizations and cumulative number of deaths.  Due to changing testing patterns and varying case ascertainment proportions over time, we do not use reported case counts in the calibration procedure.  The parameters in the transmission model are not simultaneously identifiable given the observed data. In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates and estimate the remaining parameters using Bayesian posterior sampling.  To generate 95\% uncertainty intervals for projections, we sample from the joint posterior over estimated parameters and uncertainty distributions for fixed parameters. 
+
+Several model parameters influence epidemic dynamics in the future, beyond the data available for calibration. These parameters include the case fatality ratio in the case of hospital overflow ($m_{\bar{H}}$), testing capacity and contact tracing effects ($w\textsubscript{testing, $A$}$ and $w\textsubscript{testing, $I_M$}$), and the extent of release of suppressed contact once lockdown is lifted. These parameters cannot be estimated based on historical data, but may be estimated in the future. For the purpose of projections, we impose a distribution on these parameters independent of one another and of the joint posterior distribution of calibrated parameters.  The point estimates of models parameters, prior distributions, and assumed distributions are summarized in Table \ref{table:priors}.
 
 
 \subsection{Continuous transmission model parameters} 
 
-Let $\btheta$ denote the subset of continuous transmission model parameters whose joint distribution is calibrated to observed data. For each $\theta$, we specify a fixed support $[\theta\textsubscript{min}, \theta\textsubscript{max}]$, and put independent beta priors on the transformed parameter, i.e.,
+Let $\btheta$ denote the subset of continuous transmission model parameters whose joint distribution is calibrated to observed data. For each individual parameter $\theta$, we specify a fixed support $[\theta\textsubscript{min}, \theta\textsubscript{max}]$, and put independent beta priors on the transformed parameter, i.e.,
 \begin{equation}
 \frac{\theta - \theta\textsubscript{min}}{\theta\textsubscript{max} - \theta\textsubscript{min}} \sim \mbox{Beta}(a_{\theta}, b_{\theta}),
 \label{eq:truncdist}
 \end{equation}    
 where the shape parameters $a_{\theta}$ and $b_\theta$ are set to let $\theta$ have mean $\mu_\theta$ and standard deviation $\sigma_\theta$. Table \ref{table:priors} provides the list of $(\mu_\theta, \sigma_\theta, \theta\textsubscript{min}, \theta\textsubscript{max})$ for all parameters in $\btheta$. 
 
-% We assume prior independence of parameters in $\btheta$, so the prior likelihood function takes a form:
-% \begin{equation}
-% \mathcal{L}_{prior} (\btheta | (\mu_{\btheta}, \sigma_{\btheta}, \btheta\textsubscript{min}, \btheta\textsubscript{max}) )  = \prod_{\theta_i} g(\theta_i | \mu_{\theta_i}, \sigma_{\theta_i}, \theta_{i, min}, \theta_{i, max}  ),
-% \end{equation}
-% where $\theta_i$ are elements of $\btheta$, and $g(\theta_i | \mu_{\theta_i}, \sigma_{\theta_i}, \theta_{i, min}, \theta_{i, max}  )$ is a probability density function of truncated beta distribution given in (\ref{eq:truncdist}).
 
-\subsection{Initial conditions} %\\[0.5em]
-Given a set of transmission parameters, we initialize the compartmental model by specifying the size of exposed compartment in each county and setting the size of the rest of downstream compartments to be zero. The initial size of susceptible compartment is the population of a given county minus the size of exposed compartment. The initial size of exposed compartment in each county was set based on the relative population size and the dates of first registered case and deaths in that county. They are not required to be integers. 
+\subsection{Initial conditions}
+
+Given a set of transmission parameters, we initialize the compartmental model by specifying the size of exposed ($E$) compartment in each county and setting the size of downstream compartments to be zero. The initial size of susceptible compartment is the population of a given county minus the size of exposed compartment. The initial size of exposed compartment in each county was set based on the relative population size and the dates of first registered case and deaths in that county. 
+%These values are not required to be integers. 
 We allow the date of epidemic onset to vary by setting the described initial conditions to correspond to day $-L_0$, where day $0$ corresponds to a calendar date of March 1, 2020. 
 % The value of $L_0$ was calibrated to data as part of the MCMC algorithm. At each step of the algorithm, a proposed value of $L_0$ was sampled independently from a set of candidate values, i.e. $L_{0} \sim \mbox{Unif} \{l\textsubscript{min}, \ldots, l\textsubscript{max}\}$. 
 The state of the system at any given time is therefore a deterministic function of the initial size of exposed compartment, model parameters, and $L_0$ that determines the date of epidemic onset. We put a uniform prior on $L_{0}$ over $\{l\textsubscript{min}, \ldots, l\textsubscript{max}\}$.
 
 
-% \subsection{Reporting lags} %\\[0.5em]
-% We assume that reported hospitalizations and deaths are subject to reporting lags $L_H$ and $L_D$ and put uniform priors on them over a range of plausible values. 
-% The reporting lags are treated as model parameters, which are required to be integers and are calibrated as part of the MCMC algorithms in a way similar to the calibration of epidemic onset lag $L_0$. At each MCMC step, proposed values of $L_H$ and $L_D$ are sampled from a given set of integers with given probabilities. 
-% The posterior distributions of $L_H$ and $L_D$ do not necessarily represent the actual reporting lags. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. 
 
+\subsection{Reported hospitalizations and deaths} 
 
-
-\subsection{Reported hospitalizations and deaths} %\\[0.5em]
-
-We expect there exist reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. We model the observed hospitalizations $h(t)$ and deaths $d(t)$ at time $t$ using a Poisson model, 
+We accommodate reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. We model the observed hospitalizations $h(t)$ and deaths $d(t)$, given parameters $\btheta$, at time $t$ using a Poisson model,  
 \begin{align}
 h(t) &\sim \mbox{Poisson}(H(t, L_H, \btheta)), \\
 d(t) &\sim \mbox{Poisson}(D(t, L_D, \btheta)), 
@@ -366,7 +344,7 @@ Sampling from the joint posterior distribution of $\btheta$ given in (\ref{eq:po
 
 \subsection{Parameter values, prior distributions, and data sources}
 
-While it is recognized that asymptomatic infections play an important role in transmission of SARS-CoV-2 \citep{furukawa2020evidence}, estimates of the proportion of infections that do not exhibit symptoms vary \citep{he2020estimation, nishiura2020estimation, mizumoto2020estimating, emery2020contribution}. The true proportion of asymptomatic infections is important for projections and policy planning due to their contribution to herd immunity. In the absence of reliable estimates of cumulative incidence based on sero-prevalence surveys, we consider three scenarios: 
+Asymptomatic infections play an important role in transmission of SARS-CoV-2 \citep{furukawa2020evidence}, but estimates of the proportion of infections that do not exhibit symptoms vary \citep{he2020estimation, nishiura2020estimation, mizumoto2020estimating, emery2020contribution}. The true proportion of asymptomatic infections is important for projections and policy planning due to its relationship to herd immunity. In the absence of reliable estimates of cumulative incidence based on sero-prevalence surveys, we consider three scenarios: 
 
 \begin{enumerate}
 	\item Scenario 1, low asymptomatic: $q_A = 0.36$
@@ -374,17 +352,20 @@ While it is recognized that asymptomatic infections play an important role in tr
 	\item Scenario 3, high asymptomatic: $q_A = 0.7$
 \end{enumerate}
 
-The value $q_A = 0.36$ was calculated as an age-adjusted weighted average of 30.8\% estimated by \citet{nishiura2020estimation} among Japanese citizens evacuated from Wuhan, China and applied to age group 20-64 years old; 17.9\% estimated by \citet{mizumoto2020estimating} among infections on the Diamond Princess cruise ship and applied to age group 65 plus years old; \comments{The following sentence is too long} and 60\% applied to age group 0-19 years old, which was assumed and consistent with findings reported by \citet{russell2020estimating}, where 4 out of 6 infections in this age group were asymptomatic among passengers of the Diamond Princess. The average was weighted by the age distribution of Connecticut population. Based on recent evidence suggesting that the proportion of asymptomatic infections may be higher \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic}, we assumed $q_A = 0.5$ and $q_A = 0.7$ in medium and high scenarios respectively.  
+The value $q_A = 0.36$ was calculated as an age-adjusted weighted average of several estimates available in the literature.  
+\citet{nishiura2020estimation} estimated 30.8\% among Japanese citizens evacuated from Wuhan, China and applied to age group 20-64 years old.  
+\citet{mizumoto2020estimating} estimated 17.9\% among infections on the Diamond Princess cruise ship and applied to age group 65 plus years old
+and we assumed 60\% for age group 0-19 years old, consistent with findings reported by \citet{russell2020estimating}, where 4 out of 6 infections in this age group were asymptomatic among passengers of the Diamond Princess. 
+The average was weighted by the age distribution of Connecticut population. 
+Based on recent evidence suggesting that the proportion of asymptomatic infections may be higher \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic}, we assumed $q_A = 0.5$ and $q_A = 0.7$ in medium and high scenarios respectively.  
 
-Table \ref{table:priors} provides a list of prior mean, standard deviation, and lower and upper bounds of the model parameters along with data sources. For parameters whose values were fixed, only mean is indicated. In the three scenarios considered, we fixed the respective values of asymptomatic proportions ($q_A$). The proportion of severe cases ($q_{I_S}$) was allowed to vary with a mean assumed to be 10\% of symptomatic infections in line with \citep{verity2020estimates, bi2020epidemiology, salje2020estimating}. $q_{I_M}$ is calculated as $(1 - q_A - q_{I_S})$. 
+Table \ref{table:priors} provides a list of prior mean, standard deviation, and lower and upper bounds of the model parameters along with data sources. For parameters whose values were fixed, only the mean is given. In the three scenarios considered, we fixed the values of asymptomatic proportions ($q_A$). The proportion of severe cases ($q_{I_S}$) was allowed to vary with a mean assumed to be 10\% of symptomatic infections in line with \citep{verity2020estimates, bi2020epidemiology, salje2020estimating}. $q_{I_M}$ is calculated as $1 - q_A - q_{I_S}$. 
 
-Duration of latency period ($1/\delta$) was fixed, since relatively reliable estimates of this parameter are available and because it is correlated with parameters that were allowed to vary, including reporting lags and parameters that determine duration of infectiousness and time between infection and outcome (recovery or death). We assume an average of 4 days of latency \citep{li2020substantial, salje2020estimating} and 1.5 days of presymptomatic infectiousness \citep{wei2020presymptomatic} resulting in an average incubation period of 5.5 days in line with \citep{lauer2020incubation, bi2020epidemiology, li2020early, linton2020incubation, he2020estimation, salje2020estimating}. 
-
-\comments{check if the following paragraph is still accurate} 
+Duration of the latency period ($1/\delta$) was fixed, since reliable estimates of this parameter are available and because it is correlated with parameters that were allowed to vary, including reporting lags and parameters that determine duration of infectiousness and time between infection and recovery or death. We assume an average of 4 days of latency \citep{li2020substantial, salje2020estimating} and 1.5 days of presymptomatic infectiousness \citep{wei2020presymptomatic} resulting in an average incubation period of 5.5 days in line with \citep{lauer2020incubation, bi2020epidemiology, li2020early, linton2020incubation, he2020estimation, salje2020estimating}. 
 
 A subset of parameters ($\alpha_A$, $k_A$, $\alpha_{I_M}$, $\alpha_{I_S}$, $k_{I_S}$) collectively determine force of infection at a given time. Force of infection and transmission parameter $\beta$ together
 % , which combines contact frequency and transmission probability per contact, 
-determine the early growth of the epidemic. Without additional data, these parameters cannot be simultaneously identified. We therefore fixed parameters for which estimates are available or can be calculated from available estimates ($\alpha_A$, $\alpha_{I_M}$, $\alpha_{I_S}$), and calibrate those that are unavailable ($k_A$, $k_{I_S}$). We put a diffuse prior on $\beta$, which absorbs additional variations of parameters that determine force of infection. 
+determine the early growth of the epidemic. Without additional data, these parameters cannot be simultaneously identified. We therefore fixed parameters for which estimates are available or can be calculated from available estimates ($\alpha_A$, $\alpha_{I_M}$, $\alpha_{I_S}$), and calibrate those that are unavailable ($k_A$, $k_{I_S}$). We assume a diffuse prior on $\beta$, which absorbs additional variations of parameters that determine force of infection. 
 
 \begin{spacing}{.9}
 	\begin{longtable}[H] {p{.15\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.38\textwidth} }
@@ -398,9 +379,9 @@ determine the early growth of the epidemic. Without additional data, these param
 		$q_A$: low & 0.36 & {-} & {-} & {-} & \citep{nishiura2020estimation, mizumoto2020estimating, russell2020estimating}  \\[0.5em]
 		$q_A$: medium & 0.5 & {-} & {-} & {-} & Assumed, in line with \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic} \\[0.5em]
 		$q_A$: high & 0.7  & {-} & {-} & {-} & Assumed, in line with \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic} \\[0.5em]
-		$q_{I_S}$ (low $q_A$) & 0.064 & 0.012 & 0.024 & 0.104 & 10\% of symptomatic infections: \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
-		$q_{I_S}$ (medium $q_A$) & 0.05 & 0.012 & 0.015 & 0.085 & 10\% of symptomatic infections: \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
-		$q_{I_S}$ (high $q_A$) & 0.03 & 0.0075 & 0.01 & 0.05 & 10\% of symptomatic infections: \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
+		$q_{I_S}$ (low $q_A$) & 0.064 & 0.012 & 0.024 & 0.104 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
+		$q_{I_S}$ (medium $q_A$) & 0.05 & 0.012 & 0.015 & 0.085 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
+		$q_{I_S}$ (high $q_A$) & 0.03 & 0.0075 & 0.01 & 0.05 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
 		$\beta$ (low $q_A$) & 1.25 & 0.5 & 0.25 & 2.25 & A diffuse prior assumed \\[0.5em]
 		$\beta$ (medium $q_A$) & 1.5 & 0.5 & 0.25 & 2.75 & A diffuse prior assumed \\[0.5em]
 		$\beta$ (high $q_A$) & 2 & 0.5 & 0.75 & 2.75 & A diffuse prior assumed \\[0.5em]
