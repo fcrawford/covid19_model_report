@@ -10,7 +10,7 @@
 \usepackage{amscd}
 
 \usepackage{longtable}
-
+\usepackage{booktabs}
 
 \usepackage{algorithm}
 \usepackage{algorithmicx}
@@ -202,7 +202,9 @@ Table \ref{table:params} provides a list of model parameters and their definitio
 \renewcommand\arraystretch{0.5}
 \begin{table}[!htb] 
 	\caption{Transmission model parameters.} 
+	\vspace{.5em}
 	\begin{tabular}{p{.11\textwidth} p{.85\textwidth} }
+	\toprule
 	Notation & Definition \\[0.5em] \hline \\
 	$\beta$ & Transmission parameter per $S-I$ pair \\[0.5em]
 	$\delta$ & (Latency period)$^{-1}$ (days$^{-1}$) \\[0.5em]
@@ -229,7 +231,7 @@ Table \ref{table:params} provides a list of model parameters and their definitio
 	$w\textsubscript{testing, $I_M$}$ & Effect size of increased testing and contact tracing on the mildly symptomatic isolation rate \\[0.5em]
 	$L_H$, $L_D$ & Reporting lags of hospitalizations and deaths (days) \\[0.5em]
 	$L_0$ & Lag of epidemic onset date, days before 03-01-2020 \\[0.5em]
-	\hline
+	\bottomrule
 	\end{tabular}
 	\label{table:params}
 \end{table}
@@ -376,15 +378,16 @@ determine the early growth of the epidemic. Without additional data, these param
 Duration of infectiousness of asymptomatic individuals is unknown. While several studies estimated that viral RNA could be detected in upper respiratory tract for 2-3 weeks \citep{young2020epidemiologic, kujawski2020clinical}, findings from \citep{wolfel2020virological} suggest that live virus can be isolated for a substantially shorter time period, which in this study was a maximum of 7 days. 
 We assume a diffuse prior on $\beta$, which absorbs additional variations of parameters that determine force of infection. \\
 
-\begin{spacing}{.9}
-	\begin{longtable}[H] {p{.15\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.38\textwidth} }
-		\caption{Prior distributions of model parameters} \\
-		Parameter & Mean & SD & Lower & Upper & Source   \\[0.5em] \hline
-		{} & {} & {} & {} & {} & {} \\
-		\endfirsthead
-		Parameter & Mean & SD & Lower & Upper & Source  \\[0.5em] \hline
-		{} & {} & {} & {} & {} & {}  \\
-		\endhead
+
+\begingroup
+\renewcommand\arraystretch{0.5}
+\begin{table}[!htb] 
+\caption{Prior distributions of model parameters}
+\vspace{.5em}
+\centering
+\begin{tabular}{p{.15\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.07\textwidth} p{.38\textwidth} }
+\toprule
+		Parameter & Mean & SD & Lower & Upper & Source  \\\hline \\[0.1em]
 		$q_A$: low & 0.36 & {-} & {-} & {-} & \citep{nishiura2020estimation, mizumoto2020estimating, russell2020estimating}  \\[0.5em]
 		$q_A$: medium & 0.5 & {-} & {-} & {-} & Assumed, in line with \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic} \\[0.5em]
 		$q_A$: high & 0.7  & {-} & {-} & {-} & Assumed, in line with \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic} \\[0.5em]
@@ -413,10 +416,12 @@ We assume a diffuse prior on $\beta$, which absorbs additional variations of par
 		$w\textsubscript{lockdown}$ & 0.7 & 0.05 & 0.58 & 0.82 & Assumed \\[0.5em]
 		$w\textsubscript{testing, $A$}$ & 0.2 & 0.03 & 0.1 & 0.3 & Assumed \\[0.5em]
 		$w\textsubscript{testing, $I_M$}$ & 0.5 & 0.04 & 0.35 & 0.65 & Assumed \\[0.5em]
-		\hline
+		\bottomrule
 	\label{table:priors}
-	\end{longtable}
-\end{spacing}
+	\end{tabular}
+	\end{table}
+\endgroup
+
 
 % $q_{HD}$ denotes proportion of all COVID-19 related deaths that occur in hospitals.
 
@@ -496,8 +501,9 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 \begin{table}[!htb]
 	\centering
 	\caption{Means and 95\% credible interval of marginal posterior distributions of model parameters under the low ($q_A = 0.36$), medium ($q_A = 0.5$), and high ($q_A = 0.7$) asymptomatic fraction scenarios.}
+	\vspace{.5em}
 	\begin{tabular}{rrrrrrrrrr}
-		\\\hline
+		\toprule
 		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
 		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
 		\hline
@@ -512,7 +518,7 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 		$q_H$ & 0.578 & 0.524 & 0.628 & 0.580 & 0.527 & 0.631 & 0.576 & 0.529 & 0.619 \\ 
 		$w\textsubscript{school}$ & 0.150 & 0.121 & 0.179 & 0.150 & 0.120 & 0.178 & 0.152 & 0.124 & 0.178 \\ 
 		$w\textsubscript{lockdown}$ & 0.702 & 0.662 & 0.739 & 0.703 & 0.665 & 0.740 & 0.716 & 0.675 & 0.753 \\ 
-		\hline
+		\bottomrule
 	\end{tabular}
 	\label{tbl:posterior}
 \end{table}
