@@ -262,8 +262,8 @@ Based on the known dates of school closure and lockdown orders, and assuming tha
 
 Increase in testing capacity and contact-tracing is assumed to result in earlier identification and isolation of mild symptomatic and asymptomatic cases, and leads to increases in $\alpha_A$ (rate of transition from $A$ to $R$) and $\alpha_{I_M}$ (rate of transition from $I_M$ to $R_M$). The values of the transition rates at time $t$ are calculated as:
 
-\[ \alpha_A(t) = \alpha_A^{(0)} (1 + \iota\textsubscript{testing, $A$} (t)) \]
-\[ \alpha_{I_M}(t) = \alpha_{I_M}^{(0)} (1 + \iota\textsubscript{testing, $I_M$} (t)), \]
+\[ \alpha_A(t) = \alpha_A^{(0)} \left[ 1 + \iota\textsubscript{testing, $A$} (t) \right] \]
+\[ \alpha_{I_M}(t) = \alpha_{I_M}^{(0)} \left[ 1 + \iota\textsubscript{testing, $I_M$} (t) \right], \]
 where $\alpha_A^{(0)}$ and $\alpha_{I_M}^{(0)}$ are reciprocals of the duration of time until isolation among asymptomatic and mildly symptomatic infections respectively under current testing availability conditions. Similarly to the parametrization of distancing effects, $\iota\textsubscript{testing, $A$} (t)$ and $\iota\textsubscript{testing, $I_M$} (t)$ may vary over time. 
 We assume that soon after the lockdown is lifted, testing capacity increases and remains constant at that level. The values of $\iota\textsubscript{testing, $A$} (t)$ and $\iota\textsubscript{testing, $I_M$} (t)$ are assumed to be zero prior to May 20, 2020 and increase to $w\textsubscript{testing, $A$}$ and $w\textsubscript{testing, $I_M$}$ respectively afterwards.  
 
@@ -416,7 +416,7 @@ determine the early growth of the epidemic. Without additional data, these param
 \textbf{Initial conditions and reporting lags}\\[0.5em]
 Based on the relative population size of the counties and the date of first registered case and death, we assume an initial size of exposed compartment to be 7.5 in Fairfield, 6.5 in Hartford, 0 in Litchfield, 0.25 in Middlesex, 4.5 in New Haven, 0.13 in New London, 0.05 in Tolland and 0.04 in Windham. We allow the starting date of the epidemic to be between February 14th - 20th and calibrate a scenario-specific distribution of starting dates to the observed data. 
 
-Early in the epidemic, many infections were likely imported from New York City, which experienced a major outbreak in the Spring of 2020. In particular, many residents of Fairfield county work in New York City. We do not directly model importation events, and the prespecified number of exposed individuals in Fairfield does not include all infection importation events, which likely happened in the course of several days or even weeks. This unaccounted force of infection early in the epidemic got absorbed in the estimation of transmission parameter $\beta$.
+Early in the epidemic, many infections were likely ``imported'' from New York City, which experienced a major outbreak in the Spring of 2020. In particular, many residents of Fairfield county work in New York City. We do not directly model importation events: the assumed number of exposed individuals at time zero in Fairfield county does not include all such events. Infection importation from New York City likely continued for days or even weeks early in the epidemic. This unaccounted force of infection is absorbed in the estimation of transmission parameter $\beta$.
 
 We specified a wide range of reporting lags for hospitalizations and deaths, resulting in ranges of 4-7 days for hospitalizations and 8-11 days for deaths. It is likely that deaths occurring in hospitals are reported with substantially smaller lag than those occurring in nursing homes, since many of the latter ones need to be confirmed by a medical examiner.  
 
@@ -463,6 +463,13 @@ Figure \ref{fig:fit} shows calibrated projections of hospitalizations and deaths
 Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters under the three asymptomatic fraction scenarios.
 
 Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Slow reopening assumes that at one-month intervals, 10\% of the suppressed contact (relative to March 1 baseline) is released. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for the three asymptomatic fraction scenarios assuming `fast' reopening. Fast reopening assumes that 10\% of the suppressed contact is released at two-week intervals. The projections include daily COVID-19 incidence, hospital census, deaths, proportion of cumulative incidents, and effective reproductive number, $R\textsubscript{eff}$. 
+
+Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is 4.95 with the 95\% CI = (4.46; 5.46), which is on the higher end of available estimates, but consistent with some modeling studies, in particular one that estimated an $R_0$ to be 5.9 in Louisiana and 5.2 in New York \citep{miller2020mobility}. Under the high asymptomatic fraction, our estimate is 6.2 with 95\% CI = (5.46 ; 7.00). 
+We believe that this over-estimates the true $R_0$, hence we label it ``crude''. 
+As described above, we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
+Unaccounted force of infection biases estimates of transmission parameter $\beta$, and hence estimates of $R_0$, upwards. 
+A recently published analysis is consistent with $R_0 = 3.3$ in Connecticut \citep{kaplan2020covid}. This suggests that about 30\% to 45\% of infection events early in the epidemic could be imported, which is a plausible proportion range. 
+Estimates of $R_{eff}$ at later stages of the epidemic are less likely to be affected by this source of bias, since lockdown measures have probably resulted in very low rate of inter-state contacts.  
 
 Under high asymptomatic fraction scenario, we would expect a higher number of infections, hospitalizations and deaths by the end of Summer. 
 Under slow reopening, hospitalization capacity is not expected to be overwhelmed under any of the scenarios. 
