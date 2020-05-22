@@ -9,7 +9,7 @@ This repository contains source files for the report "A model for COVID-19 trans
 
 ## COVID-19 projections for Connecticut project page
 
-http://crawford-lab.github.io/tree/master/covid19_ct
+<http://crawford-lab.github.io/covid19_ct>
 
 ## Citation
 
