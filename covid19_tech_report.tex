@@ -365,12 +365,13 @@ The value $q_A = 0.36$ was calculated as an age-adjusted weighted average of sev
 \citet{mizumoto2020estimating} estimated 17.9\% among infections on the Diamond Princess cruise ship. We applied this estimate to age group 65 plus years old, which is the age group, in which most infections occurred.
 We assumed 60\% for age group 0-19 years old, consistent with findings reported by \citet{russell2020estimating}, where 4 out of 6 infections in this age group were asymptomatic among passengers of the Diamond Princess. 
 The average was weighted by the age distribution of Connecticut population. 
+At the time of writing this report, the best estimate of asymptomatic proportion recommended by the CDC was 35\% \citep{cdc2020scenarios}.
 Based on recent evidence suggesting that the proportion of asymptomatic infections may be higher \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic, lavezzo2020suppression}, we assumed $q_A = 0.5$ and $q_A = 0.7$ in medium and high scenarios respectively.  
 
 Table \ref{table:priors} provides a list of prior mean, standard deviation, and lower and upper bounds of the model parameters along with data sources. For parameters whose values were fixed, only the mean is given. In the three scenarios considered, we fixed the values of asymptomatic proportions ($q_A$). The proportion of severe cases ($q_{I_S}$) was allowed to vary with a mean assumed to be 10\% of symptomatic infections in line with \citep{verity2020estimates, bi2020epidemiology, salje2020estimating}. 
 %$q_{I_M}$ is calculated as $1 - q_A - q_{I_S}$. 
 
-Duration of the latency period ($1/\delta$) was fixed, since reliable estimates of this parameter are available and because it is correlated with parameters that were allowed to vary, including reporting lags and parameters that determine duration of infectiousness and time between infection and recovery or death. We assume an average of 4 days of latency \citep{li2020substantial, salje2020estimating} and 1.5 days of presymptomatic infectiousness \citep{wei2020presymptomatic} resulting in an average incubation period of 5.5 days in line with \citep{lauer2020incubation, bi2020epidemiology, li2020early, linton2020incubation, he2020estimation, salje2020estimating}. 
+Duration of the latency period ($1/\delta$) was fixed, since reliable estimates of this parameter are available and because it is correlated with parameters that were allowed to vary, including reporting lags and parameters that determine duration of infectiousness and time between infection and recovery or death. We assume an average of 4 days of latency \citep{li2020substantial, salje2020estimating} and 1.5 days of presymptomatic infectiousness \citep{wei2020presymptomatic} resulting in an average incubation period of 5.5 days in line with \citep{lauer2020incubation, bi2020epidemiology, li2020early, linton2020incubation, he2020estimation, salje2020estimating, cdc2020scenarios}. 
 
 Parameters ($\alpha_A$, $k_A$, $\alpha_{I_M}$, $\alpha_{I_S}$, $k_{I_S}$) collectively determine force of infection at a given time. Force of infection and transmission parameter $\beta$ together
 % , which combines contact frequency and transmission probability per contact, 
@@ -472,14 +473,18 @@ Daily total available hospital beds (including occupied) in each county were obt
 
 
 Figure \ref{fig:fit} shows calibrated projections of hospitalizations and deaths, with 95\% uncertainty intervals, under the low asymptomatic fraction scenario and observed data as dots.  Observed data points track with mean projections and largely fall within uncertainty intervals.  Calibration results under medium and high asymptomatic fraction scenarios demonstrate a similar fit to historical data.  
-Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters under the three asymptomatic fraction scenarios.
+Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters and derived epidemiological parameters under the three asymptomatic fraction scenarios.
 
 Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Slow reopening assumes that at one-month intervals, 10\% of the suppressed contact (relative to March 1 baseline) is released. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for the three asymptomatic fraction scenarios assuming `fast' reopening. Fast reopening assumes that 10\% of the suppressed contact is released at two-week intervals. The projections include daily COVID-19 incidence, hospital census, deaths, cumulative incidence proportion, and effective reproductive number, $R\textsubscript{eff}$. 
 
-Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.95$ ($95\%$ CI: $4.46 - 5.46$), which is on the higher end of available estimates, but similar to one recent modeling study that estimated $R_0$ to be 5.9 in Louisiana and 5.2 in New York \citep{miller2020mobility}. Under the high asymptomatic fraction scenario, our estimate is 6.2 ($95\%$ CI: $5.46 - 7.00$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
+Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.95$ ($95\%$ CI: $4.46 - 5.46$), which is on the higher end of available estimates, but similar to one recent modeling study that estimated $R_0$ to be 5.9 in Louisiana and 5.2 in New York \citep{miller2020mobility}. Under the high asymptomatic fraction scenario, our estimate is 6.24 ($95\%$ CI: $5.45 - 7.12$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
 Unaccounted force of infection biases estimates of transmission parameter $\beta$, and hence our ``crude'' $R_0$, upwards. 
 A recently published analysis implies that $R_0 = 3.3$ in Connecticut \citep{kaplan2020covid}. This suggests that about 30\% to 45\% of infection events early in the epidemic could be imported, which is a plausible proportion range. 
-Estimates of $R\textsubscript{eff}$ at later stages of the epidemic are less likely to be affected by this source of bias, since lockdown measures have probably resulted in very low rate of inter-state contacts.  
+Estimates of $R\textsubscript{eff}$ at later stages of the epidemic are less likely to be affected by this source of bias, since lockdown measures have probably resulted in a very low rate of interstate contacts. Our estimates of $R\textsubscript{eff}$ om May 20 are similar under the three asymptomatic proportion scenarios.
+
+Our estimates of symptomatic case hospitalization ratio (CHR) and symptomatic CFR are higher than those recommended by the CDC for modeling studies \citep{cdc2020scenarios}. 
+Epidemic dynamics in Connecticut may be different from other states and from the average dynamics across the US. Our prior estimates are informed by the reports of Connecticut Department of Public Health \citep{DPHwebsite}, as well as data provided by the Connecticut Hospital Association \citep{CHAwebsite}, and by Yale New Haven Hospital. To the extent possible, we use data-driven approach to parameter estimation, and our posterior parameter estimates are highly consistent with observed epidemic dynamics. One of the important factors that may explain relatively high estimates of CFR in Connecticut is related to high mortality among resident of nursing homes and assisted living facilities. About 50\% of official COVID-19 related deaths in Connecticut occurred in this subpopulation. Lower CHR implies a lower proportion of severe cases, and would push estimated of CFR higher in order to reproduce the observed dynamics of hospitalizations and deaths simultaneously.  
+Epidemiological parameters provided by the CDC are regularly updated and may change in the future.
 
 Under high asymptomatic fraction scenario, we would expect a higher number of infections, hospitalizations and deaths by the end of summer. 
 Under slow reopening, hospitalization capacity is not expected to be overwhelmed under any of the scenarios. 
@@ -500,29 +505,40 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 
 \begin{table}[!htb]
 	\centering
-	\caption{Means and 95\% credible interval of marginal posterior distributions of model parameters under the low ($q_A = 0.36$), medium ($q_A = 0.5$), and high ($q_A = 0.7$) asymptomatic fraction scenarios.}
+	\caption{Means and 95\% credible interval of marginal posterior distributions of model parameters and epidemiological parameters under the low ($q_A = 0.36$), medium ($q_A = 0.5$), and high ($q_A = 0.7$) asymptomatic fraction scenarios.}
 	\vspace{.5em}
-	\begin{tabular}{rrrrrrrrrr}
+	\begin{tabular}{r|rrr|rrr|rrr}
 		\toprule
 		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
 		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
 		\hline
-		$q_{I_S}$ & 0.064 & 0.043 & 0.086 & 0.048 & 0.025 & 0.072 & 0.029 & 0.015 & 0.043 \\ 
-		$\beta$ & 1.334 & 1.187 & 1.496 & 1.515 & 1.319 & 1.751 & 1.956 & 1.605 & 2.313 \\ 
-		$\gamma_H$ & 0.114 & 0.096 & 0.130 & 0.116 & 0.097 & 0.132 & 0.113 & 0.098 & 0.129 \\ 
-		$\gamma_U$ & 0.072 & 0.054 & 0.088 & 0.072 & 0.053 & 0.089 & 0.071 & 0.051 & 0.089 \\ 
-		$k_A$ & 0.393 & 0.302 & 0.483 & 0.396 & 0.304 & 0.484 & 0.393 & 0.313 & 0.493 \\ 
-		$k_{I_S}$ & 0.694 & 0.605 & 0.793 & 0.691 & 0.601 & 0.786 & 0.708 & 0.607 & 0.802 \\ 
-		$m_H$ & 0.210 & 0.185 & 0.233 & 0.208 & 0.184 & 0.232 & 0.212 & 0.189 & 0.232 \\ 
-		$m_U$ & 0.314 & 0.251 & 0.394 & 0.316 & 0.251 & 0.387 & 0.317 & 0.248 & 0.388 \\ 
-		$q_H$ & 0.578 & 0.524 & 0.628 & 0.580 & 0.527 & 0.631 & 0.576 & 0.529 & 0.619 \\ 
-		$w\textsubscript{school}$ & 0.150 & 0.121 & 0.179 & 0.150 & 0.120 & 0.178 & 0.152 & 0.124 & 0.178 \\ 
-		$w\textsubscript{lockdown}$ & 0.702 & 0.662 & 0.739 & 0.703 & 0.665 & 0.740 & 0.716 & 0.675 & 0.753 \\ 
-		\bottomrule
+			$q_Is$ & 0.064 & 0.043 & 0.086 & 0.048 & 0.025 & 0.072 & 0.029 & 0.015 & 0.043 \\ 
+			$\beta$ & 1.33 & 1.19 & 1.50 & 1.52 & 1.32 & 1.75 & 1.96 & 1.61 & 2.31 \\ 
+			$\gamma_H$ & 0.114 & 0.096 & 0.130 & 0.116 & 0.097 & 0.132 & 0.113 & 0.098 & 0.129 \\ 
+			$\gamma_U$ & 0.072 & 0.054 & 0.088 & 0.072 & 0.053 & 0.089 & 0.071 & 0.051 & 0.089 \\ 
+			$k_A$ & 0.39 & 0.30 & 0.48 & 0.40 & 0.30 & 0.48 & 0.39 & 0.31 & 0.49 \\ 
+			$k_{I_S}$ & 0.69 & 0.60 & 0.79 & 0.69 & 0.60 & 0.79 & 0.71 & 0.61 & 0.80 \\ 
+			$m_H$ & 0.210 & 0.185 & 0.233 & 0.208 & 0.184 & 0.232 & 0.212 & 0.189 & 0.232 \\ 
+			$m_U$ & 0.314 & 0.251 & 0.394 & 0.316 & 0.251 & 0.387 & 0.317 & 0.248 & 0.388 \\ 
+			$q_H$ & 0.58 & 0.52 & 0.63 & 0.58 & 0.53 & 0.63 & 0.58 & 0.53 & 0.62 \\ 
+			$w\textsubscript{school}$ & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 \\ 
+			$w\textsubscript{lockdown}$ & 0.70 & 0.66 & 0.74 & 0.70 & 0.67 & 0.74 & 0.72 & 0.68 & 0.75 \\ 
+			crude $R_0$ & 4.95 & 4.46 & 5.46 & 5.30 & 4.74 & 5.93 & 6.24 & 5.45 & 7.12 \\ 
+			$R_\textsubscript{eff}$ on May 20, 2020 & 0.67 & 0.57 & 0.76 & 0.68 & 0.60 & 0.76 & 0.65 & 0.56 & 0.74 \\ 
+			symptomatic CHR & 0.057 & 0.037 & 0.079 & 0.055 & 0.029 & 0.084 & 0.055 & 0.027 & 0.084 \\ 
+			IHR & 0.037 & 0.024 & 0.051 & 0.028 & 0.015 & 0.042 & 0.017 & 0.008 & 0.025 \\ 
+			symptomatic CFR & 0.025 & 0.016 & 0.035 & 0.024 & 0.013 & 0.036 & 0.025 & 0.012 & 0.038 \\ 
+			IFR & 0.0161 & 0.0103 & 0.0224 & 0.0120 & 0.0063 & 0.0178 & 0.0074 & 0.0036 & 0.0113 \\ 
+		\bottomrule 
 	\end{tabular}
+	\vspace{0.5em}
+	
+	{\raggedright CHR, case hospitalization ratio (proportion of symptomatic cases requiring hospitalization); IHR, infection hospitalization ration (proportion of all infections requiring hospitalization);
+		          CFR, case fatality ratio (proportion of symptomatic cases who die); IFR, infection fatality ration (proportion of all infections who die). \par}
 	\label{tbl:posterior}
 \end{table}
 %\end{spacing}
+
 
 
 %%%%%%%%% projections %%%%%%%%%%%%
@@ -583,7 +599,6 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 
 In this report, we have described technical details of a model of SARS-CoV-2 transmission and COVID-19 disease progression developed to support public health decision-making in Connecticut.  The model is calibrated to the observed dynamics of hospitalizations and cumulative deaths in Connecticut; its projections reproduce these dynamics accurately.  Many COVID-19 models have been developed and analyzed by the CDC in the attempt to perform ensemble forecasting of the epidemic development in the US \citep{cdc2020covid19forecasts}. Most of these models offer state-level projections. The CDC publishes updates of consolidated summary of cumulative death projections in the next four weeks from these models for each state. Local projections from national-level models may offer useful insights, but they inevitably make simplifying or uniform assumptions, which may hold in some locations, but not others. 
 
-
 There is substantial uncertainty about epidemiological parameters that govern aspects of COVID-19 dynamics and have a direct impact on the quality of projections. When local context is not directly taken into account, the effects of parametric uncertainty is exacerbated.  State and county-level models are needed to support local decision-making.  The model described here captures distinct important features of COVID-19 dynamics and the relationship between model features and data reporting in Connecticut.  By calibrating model parameters to local data, including changes in hospitalization capacity, and the exact timing of intervention events, we can reduce uncertainty in projections. However, the calibrated posterior distribution of model parameters is not necessarily generalizable to other settings: model projections are tightly linked to the Connecticut reopening plans. 
 
 In addition to providing predictions for policymakers, model projections may be useful for prospectively planning epidemiological studies that can inform the state's response.  In particular, planning of seroprevalence surveys requires estimates of the proportion of population who have been exposed to the virus in the past or are in an active stage of infection. Due to limited testing availability and potentially high proportion of asymptomatic individuals, official case counts offer a poor approximation to the true cumulative incidence. Seroprevalence surveys, if properly conducted, can provide an important piece of information that would permit more precise estimates of the fraction of asymptomatic infections. 
@@ -591,8 +606,8 @@ In addition to providing predictions for policymakers, model projections may be 
 Prior knowledge and assumptions about plausible ranges of parameter values combined with local data allows us to substantially reduce parametric uncertainty and produce narrow projection intervals. However, several important considerations limit our ability to make reliable long-term projections. 
 First, it is difficult to make predictions about the extent of contact rate increases following lockdown release steps, such as allowing only certain types of businesses to reopen. 
 Second, the effectiveness of widespread testing and contact tracing on timely isolation of infectious individuals, and its subsequent impact on the force of infection is unknown. This effect is a complex function of viral shedding characteristics among symptomatic, presymptomatic and asymptomatic individuals, along with the implementation features of contact tracing, testing, and isolation. 
-Third, there may be unequal depletion of susceptibles depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced infection compared to low-risk individuals, then we may be over-estimating future number of deaths.
- Forth, we assume that all epidemiological parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal.
+Third, there may be unequal depletion of susceptibles depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced infection compared to low-risk individuals, then we may be over-estimating future number of deaths and the final epidemic size \citep{gomes2020individual, britton2020disease}.
+Forth, we assume that all epidemiological parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal.
 
 In an evolving public health crisis, it is important to keep projections up to date. As more information about the extent of asymptomatic transmission, general epidemiological characteristics of COVID-19, and data on observable model features in Connecticut becomes available, we will update the projections presented in this paper.
 
