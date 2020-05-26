@@ -344,7 +344,7 @@ p(\btheta, \bL | h(t), d(t)) \propto p(\btheta) p(\bL)
 \end{equation}
 where $\btheta = (q_{I_S}, \beta, \gamma_H, \gamma_U, k_A, k_{I_S}, m_H, m_U, q_{HD}, w\textsubscript{school}, w\textsubscript{lockdown})$ and $\bL = (L_0, L_H, L_D)$.
 
-Sampling from the joint posterior distribution of $\btheta$ given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis algorithm with random walk symmetric Gaussian proposals for $\btheta$ and independent uniform proposals for $\bL$. We ran the sampler for $200,000$ iterations and thinned the chain using every $10$-th iteration.
+Sampling from the joint posterior distribution of $\btheta$ given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis algorithm with random walk symmetric Gaussian proposals for $\btheta$ and independent uniform proposals for $\bL$. We ran the sampler for $500,000$ iterations and thinned the chain using every $50$-th iteration.
 
 
 %%%%%%%%%%%%%%%%%%
@@ -436,7 +436,7 @@ We specified a wide range of reporting lags for hospitalizations and deaths, res
 \textbf{Reduction in transmission following school closure and lockdown orders} \\[0.5em]
 We calibrated the parameters that determine reduction in contact rates following school closure and lockdown orders to the observed data. 
 We assume that $\iota\textsubscript{school}(t)$ equals zero before March 13th, 2020 - the date of school closure order, and equals some constant positive value $w\textsubscript{school}$ afterwards. 
-The  $\iota\textsubscript{lockdown} (t)$ equals zero before March 20th, 2020 - the date of lockdown order, and equals some constant positive value $w\textsubscript{lockdown}$ after March 22nd, 2020 - the date when the lockdown order took effect. Between March 20th - March 22nd, 2020 the value of $\iota\textsubscript{lockdown} (t)$ is smoothly increasing from zero to $w\textsubscript{lockdown}$. Posterior parameter estimates were similar if we allowed a smoother decrease in contact rates.
+The  $\iota\textsubscript{lockdown} (t)$ equals zero before March 20th, 2020 - the date of lockdown order, and equals some constant positive value $w\textsubscript{lockdown}$ after March 23rd, 2020 - the date when the lockdown order took effect. Between March 20th - March 23rd, 2020 the value of $\iota\textsubscript{lockdown} (t)$ is smoothly increasing from zero to $w\textsubscript{lockdown}$. Posterior parameter estimates were similar if we allowed a smoother decrease in contact rates.
 Since the dates of school closure and lockdown orders are very close, it is difficult to simultaneously identify $w\textsubscript{school}$ and $w\textsubscript{lockdown}$. We therefore put a narrow prior distribution on $w\textsubscript{school}$ and diffuse on $w\textsubscript{lockdown}$, subject to a constraint $ 0 \le (w\textsubscript{school} + w\textsubscript{lockdown}) \le 1$ . 
 
 
@@ -477,7 +477,7 @@ Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal 
 
 Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Slow reopening assumes that at one-month intervals, 10\% of the suppressed contact (relative to March 1 baseline) is released. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for the three asymptomatic fraction scenarios assuming `fast' reopening. Fast reopening assumes that 10\% of the suppressed contact is released at two-week intervals. The projections include daily COVID-19 incidence, hospital census, deaths, cumulative incidence proportion, and effective reproductive number, $R\textsubscript{eff}$. 
 
-Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.95$ ($95\%$ CI: $4.46 - 5.46$), which is on the higher end of available estimates, but similar to one recent modeling study that estimated $R_0$ to be 5.9 in Louisiana and 5.2 in New York \citep{miller2020mobility}. Under the high asymptomatic fraction scenario, our estimate is 6.24 ($95\%$ CI: $5.45 - 7.12$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
+Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.93$ ($95\%$ CI: $4.48 - 5.49$), which is on the higher end of available estimates, but similar to recent modeling studies that estimated $R_0$ to be between $4.7$  and $6.3$ in Northeastern United States, and around $5$ in New York and New Jersey \citep{miller2020mobility, chow2020global}. Under the high asymptomatic fraction scenario, our estimate of crude $R_0$ is $6.2$ ($95\%$ CI: $5.52 - 7.04$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
 Unaccounted force of infection biases estimates of transmission parameter $\beta$, and hence our ``crude'' $R_0$, upwards. 
 A recently published analysis implies that $R_0 = 3.3$ in Connecticut \citep{kaplan2020covid}. This suggests that about 30\% to 45\% of infection events early in the epidemic could be imported, which is a plausible proportion range. 
 Estimates of $R\textsubscript{eff}$ at later stages of the epidemic are less likely to be affected by this source of bias, since lockdown measures have probably resulted in a very low rate of interstate contacts. Our estimates of $R\textsubscript{eff}$ om May 20 are similar under the three asymptomatic proportion scenarios.
@@ -512,23 +512,23 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
 		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
 		\hline
-			$q_Is$ & 0.064 & 0.043 & 0.086 & 0.048 & 0.025 & 0.072 & 0.029 & 0.015 & 0.043 \\ 
-			$\beta$ & 1.33 & 1.19 & 1.50 & 1.52 & 1.32 & 1.75 & 1.96 & 1.61 & 2.31 \\ 
-			$\gamma_H$ & 0.114 & 0.096 & 0.130 & 0.116 & 0.097 & 0.132 & 0.113 & 0.098 & 0.129 \\ 
-			$\gamma_U$ & 0.072 & 0.054 & 0.088 & 0.072 & 0.053 & 0.089 & 0.071 & 0.051 & 0.089 \\ 
-			$k_A$ & 0.39 & 0.30 & 0.48 & 0.40 & 0.30 & 0.48 & 0.39 & 0.31 & 0.49 \\ 
-			$k_{I_S}$ & 0.69 & 0.60 & 0.79 & 0.69 & 0.60 & 0.79 & 0.71 & 0.61 & 0.80 \\ 
-			$m_H$ & 0.210 & 0.185 & 0.233 & 0.208 & 0.184 & 0.232 & 0.212 & 0.189 & 0.232 \\ 
-			$m_U$ & 0.314 & 0.251 & 0.394 & 0.316 & 0.251 & 0.387 & 0.317 & 0.248 & 0.388 \\ 
-			$q_H$ & 0.58 & 0.52 & 0.63 & 0.58 & 0.53 & 0.63 & 0.58 & 0.53 & 0.62 \\ 
+			$q_Is$ & 0.063 & 0.040 & 0.085 & 0.050 & 0.028 & 0.072 & 0.028 & 0.015 & 0.043 \\ 
+			$\beta$ & 1.33 & 1.17 & 1.51 & 1.49 & 1.30 & 1.72 & 1.93 & 1.63 & 2.31 \\ 
+			$\gamma_H$  & 0.115 & 0.097 & 0.132 & 0.114 & 0.096 & 0.131 & 0.114 & 0.096 & 0.132 \\ 
+			$\gamma_U$ & 0.072 & 0.053 & 0.090 & 0.072 & 0.053 & 0.092 & 0.073 & 0.052 & 0.092 \\ 
+			$k_A$ & 0.39 & 0.30 & 0.49 & 0.40 & 0.31 & 0.50 & 0.40 & 0.31 & 0.49 \\ 
+			$k_{I_S}$ & 0.70 & 0.61 & 0.79 & 0.70 & 0.61 & 0.79 & 0.70 & 0.61 & 0.79 \\ 
+			$m_H$ & 0.208 & 0.181 & 0.232 & 0.209 & 0.183 & 0.231 & 0.208 & 0.184 & 0.231 \\ 
+			$m_U$ & 0.310 & 0.240 & 0.379 & 0.311 & 0.244 & 0.385 & 0.312 & 0.242 & 0.386 \\ 
+			$q_H$ & 0.58 & 0.52 & 0.63 & 0.58 & 0.52 & 0.62 & 0.58 & 0.52 & 0.63 \\ 
 			$w\textsubscript{school}$ & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 \\ 
-			$w\textsubscript{lockdown}$ & 0.70 & 0.66 & 0.74 & 0.70 & 0.67 & 0.74 & 0.72 & 0.68 & 0.75 \\ 
-			crude $R_0$ & 4.95 & 4.46 & 5.46 & 5.30 & 4.74 & 5.93 & 6.24 & 5.45 & 7.12 \\ 
-			$R_\textsubscript{eff}$ on May 20, 2020 & 0.67 & 0.57 & 0.76 & 0.68 & 0.60 & 0.76 & 0.65 & 0.56 & 0.74 \\ 
-			symptomatic CHR & 0.057 & 0.037 & 0.079 & 0.055 & 0.029 & 0.084 & 0.055 & 0.027 & 0.084 \\ 
-			IHR & 0.037 & 0.024 & 0.051 & 0.028 & 0.015 & 0.042 & 0.017 & 0.008 & 0.025 \\ 
-			symptomatic CFR & 0.025 & 0.016 & 0.035 & 0.024 & 0.013 & 0.036 & 0.025 & 0.012 & 0.038 \\ 
-			IFR & 0.0161 & 0.0103 & 0.0224 & 0.0120 & 0.0063 & 0.0178 & 0.0074 & 0.0036 & 0.0113 \\ 
+			$w\textsubscript{lockdown}$ & 0.70 & 0.66 & 0.74 & 0.71 & 0.67 & 0.74 & 0.72 & 0.68 & 0.75 \\ 
+			crude $R_0$ & 4.93 & 4.48 & 5.49 & 5.26 & 4.76 & 5.88 & 6.20 & 5.52 & 7.04 \\ 
+			$R_\textsubscript{eff}$ on May 20, 2020 & 0.67 & 0.57 & 0.75 & 0.66 & 0.56 & 0.75 & 0.65 & 0.57 & 0.73 \\ 
+			symptomatic CHR & 0.056 & 0.036 & 0.078 & 0.057 & 0.031 & 0.083 & 0.054 & 0.028 & 0.083 \\ 
+			IHR & 0.036 & 0.023 & 0.050 & 0.029 & 0.016 & 0.042 & 0.016 & 0.008 & 0.025 \\ 
+			symptomatic CFR & 0.025 & 0.015 & 0.035 & 0.025 & 0.013 & 0.037 & 0.023 & 0.012 & 0.037 \\ 
+			IFR & 0.0158 & 0.0098 & 0.0221 & 0.0125 & 0.0067 & 0.0186 & 0.0070 & 0.0037 & 0.0110 \\ 
 		\bottomrule 
 	\end{tabular}
 	\vspace{0.5em}
@@ -538,6 +538,7 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 	\label{tbl:posterior}
 \end{table}
 %\end{spacing}
+
 
 
 
@@ -605,7 +606,7 @@ In addition to providing predictions for policymakers, model projections may be 
 
 Prior knowledge and assumptions about plausible ranges of parameter values combined with local data allows us to substantially reduce parametric uncertainty and produce narrow projection intervals. However, several important considerations limit our ability to make reliable long-term projections. 
 First, it is difficult to make predictions about the extent of contact rate increases following lockdown release steps, such as allowing only certain types of businesses to reopen. 
-Second, the effectiveness of widespread testing and contact tracing on timely isolation of infectious individuals, and its subsequent impact on the force of infection is unknown. This effect is a complex function of viral shedding characteristics among symptomatic, presymptomatic and asymptomatic individuals, along with the implementation features of contact tracing, testing, and isolation. 
+Second, the effectiveness of widespread testing and contact tracing on timely isolation of infectious individuals, and its subsequent impact on the force of infection is unknown. This effect is a complex function of viral shedding characteristics among symptomatic, presymptomatic and asymptomatic individuals, along with the implementation features of contact tracing, testing, and isolation \citep{kaplan2020logistics}. 
 Third, there may be unequal depletion of susceptibles depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced infection compared to low-risk individuals, then we may be over-estimating future number of deaths and the final epidemic size \citep{gomes2020individual, britton2020disease}.
 Forth, we assume that all epidemiological parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal.
 
