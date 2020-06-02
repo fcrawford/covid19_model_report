@@ -79,6 +79,7 @@
 \newcommand{\bomega}{\boldsymbol{\omega}}
 \newcommand{\bxi}{\boldsymbol{\xi}}
 \newcommand{\btheta}{\boldsymbol{\theta}}
+\newcommand{\blambda}{\boldsymbol{\lambda}}
 \newcommand{\bphi}{\boldsymbol{\phi}}
 \newcommand{\balpha}{\boldsymbol{\alpha}}
 \newcommand{\betapois}{\hat{\beta}_{\text{Pois}}}
@@ -314,13 +315,28 @@ The state of the system at any given time is therefore a deterministic function 
 
 \subsection{Reported hospitalizations and deaths} 
 
-We accommodate reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. We model the observed hospitalizations $h(t)$ and deaths $d(t)$ at time $t$ using a Poisson model,  
+We accommodate reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. Similar to \citet{osthus2017forecasting}, we model the observed population fractions of hospitalizations $h(t)$ and deaths $d(t)$ at time $t$ using Beta distribution,  
 \begin{align}
-h(t) &\sim \mbox{Poisson}(H(t, L_0, L_H, \btheta)), \\
-d(t) &\sim \mbox{Poisson}(D(t, L_0, L_D, \btheta)), 
+h(t) &\sim \mbox{Beta} \left( \lambda_h \frac{H(t, L_0, L_H, \btheta)}{N}, \quad \lambda_h  \left( 1 - \frac{H(t, L_0, L_H, \btheta)}{N} \right) \right), \\
+d(t) &\sim \mbox{Beta} \left( \lambda_d \frac{D(t, L_0, L_D, \btheta)}{N}, \quad \lambda_d  \left( 1 - \frac{D(t, L_0, L_D, \btheta)}{N} \right) \right), 
 \end{align}
-where $H(t, L_0, L_H, \btheta)$ and $D(t, L_0, L_D, \btheta)$ are model-projected current hospitalizations and cumulative deaths at time $t$ with reporting lags $L_H$ and $L_D$, and epidemic onset lag $L_0$ under parameter values $\btheta$. We put uniform priors on $L_H$ and $L_D$ over a range of plausible values. 
+where $N$ is the size of Connecticut population; and $H(t, L_0, L_H, \btheta)$ and $D(t, L_0, L_D, \btheta)$ are model-projected current hospitalizations and cumulative deaths at time $t$ with reporting lags $L_H$ and $L_D$, and epidemic onset lag $L_0$ under parameter values $\btheta$. We put uniform priors on $L_H$ and $L_D$ over a range of plausible values.  Parameters $\lambda_h$ and $\lambda_d$ control the variance of respective Beta distributions. We put the same independent Gamma prior on $\lambda_h$ and $\lambda_d$, i.e.
+\begin{equation}
+\lambda \sim \mbox{Gamma} (s_\lambda, r_\lambda),
+\label{eq:lamprior}
+\end{equation}
+where $s_\lambda$ and $r_\lambda$ are shape and rate parameters of Gamma distribution. 
 
+
+
+\subsection{Weighting of observed data} 
+
+When fitting the joint distribution of model parameters to data, we put more weight on more recent observations using logistic function, i.e.
+\begin{equation}
+z(t) = \frac{1}{1 + \exp(- k_z t)}, 
+\label{eq:datweight}
+\end{equation}
+where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..., t_\textsubscript{max} \}$ and the correspondence between $\{t_0, ..., t_\textsubscript{max} \}$ and calendar time is set such that $t=0$ corresponds to $M$ days prior to the most recent observation. Parameter $k_z$ controls the smoothness of logistic function.
 % \comments{
 % The hospitalizations and deaths data likelihood functions take a form:
 % \begin{align}
@@ -345,14 +361,14 @@ where $H(t, L_0, L_H, \btheta)$ and $D(t, L_0, L_D, \btheta)$ are model-projecte
 
 The model above yields the following posterior distribution,
 \begin{equation}
-p(\btheta, \bL | h(t), d(t)) \propto p(\btheta) p(\bL)
-							 \prod_{t = t_0}^T \left[ p\big(h(t)| H(t, L_0, L_H, \btheta)\big)
-							         p\big(d(t)| D(t, L_0, L_D, \btheta)\big) \right]^{1/T},
+p(\btheta, \blambda, \bL | h(t), d(t)) \propto p(\btheta) p(\blambda) p(\bL)
+							 \prod_t \left[ p\big(h(t)| H(t, L_0, L_H, \btheta), \lambda_h \big)
+							         p\big(d(t)| D(t, L_0, L_D, \btheta), \lambda_d \big) \right]^{z(t)/2},
 \label{eq:posterior}
 \end{equation}
-where $\btheta = (q_{I_S}, \beta, \gamma_H, \gamma_U, k_A, k_{I_S}, m_H, m_U, q_{HD}, w\textsubscript{school}, w\textsubscript{lockdown})$ and $\bL = (L_0, L_H, L_D)$.
+where $\btheta = (q_{I_S}, \beta, \gamma_H, \gamma_U, k_A, k_{I_S}, m_H, m_U, q_{HD}, w\textsubscript{school}, w\textsubscript{lockdown})$, $\blambda = (\lambda_h, \lambda_d)$, and $\bL = (L_0, L_H, L_D)$.
 
-Sampling from the joint posterior distribution of $\btheta$ given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis algorithm with random walk symmetric Gaussian proposals for $\btheta$ and independent uniform proposals for $\bL$. We ran the sampler for $500,000$ iterations and thinned the chain using every $50$-th iteration.
+Sampling from the joint posterior distribution of $(\btheta, \blambda, \bL)$  given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis-Hastings algorithm with random walk proposals for $\btheta$ and $\blambda$ and independent proposals for $\bL$. We ran the sampler for $1,000,000$ iterations and thinned the chain using every $100$-th iteration.
 
 
 %%%%%%%%%%%%%%%%%%
@@ -400,29 +416,29 @@ We assume a diffuse prior on $\beta$, which absorbs additional variations of par
 		$q_A$: low & 0.36 & {-} & {-} & {-} & \citep{nishiura2020estimation, mizumoto2020estimating, russell2020estimating}  \\[0.5em]
 		$q_A$: medium & 0.5 & {-} & {-} & {-} & Assumed, in line with \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic} \\[0.5em]
 		$q_A$: high & 0.7  & {-} & {-} & {-} & Assumed, in line with \citep{he2020estimation, emery2020contribution, kimball2020asymptomatic} \\[0.5em]
-		$q_{I_S}$ (low $q_A$) & 0.064 & 0.012 & 0.024 & 0.104 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating, lane2020country} \\[0.5em]
-		$q_{I_S}$ (medium $q_A$) & 0.05 & 0.012 & 0.015 & 0.085 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
-		$q_{I_S}$ (high $q_A$) & 0.03 & 0.0075 & 0.01 & 0.05 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
+		$q_{I_S}$ (low $q_A$) & 0.064 & 0.013 & 0.014 & 0.114 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating, lane2020country} \\[0.5em]
+		$q_{I_S}$ (medium $q_A$) & 0.05 & 0.013 & 0.01 & 0.09 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
+		$q_{I_S}$ (high $q_A$) & 0.03 & 0.009 & 0.005 & 0.055 & 10\% of symptomatic infections \citep{verity2020estimates, bi2020epidemiology, salje2020estimating} \\[0.5em]
 		$\beta$ (low $q_A$) & 1.25 & 0.5 & 0.25 & 2.25 & A diffuse prior assumed \\[0.5em]
 		$\beta$ (medium $q_A$) & 1.5 & 0.5 & 0.25 & 2.75 & A diffuse prior assumed \\[0.5em]
-		$\beta$ (high $q_A$) & 2 & 0.5 & 0.75 & 3.25 & A diffuse prior assumed \\[0.5em]
+		$\beta$ (high $q_A$) & 2 & 0.5 & 0.5 & 3.5 & A diffuse prior assumed \\[0.5em]
 		$\delta$ & 1/4 & {-} & {-} & {-} & \citep{lauer2020incubation, bi2020epidemiology, li2020early, linton2020incubation, he2020estimation, salje2020estimating, wei2020presymptomatic} \\[0.5em]
 		$\alpha_A$ & 1/7 & {-} & {-} & {-} & \citep{wolfel2020virological, cdc2020isolation} \\[0.5em]
 		$\alpha_{I_M}$ & 1/4 & {-} & {-} & {-} & \citep{salje2020estimating, li2020substantial, kissler2020projecting}; of 4 days, 1.5 is assumed to be presymptomatic \citep{wei2020presymptomatic} \\[0.5em]
 		$\gamma_{R_M}$ & 1/7 & {-} & {-} & {-} & \citep{wolfel2020virological, cdc2020isolation} \\[0.5em]
 		$\alpha_{I_S}$ & 1/9.5 & {-} & {-} & {-} & \citep{verity2020estimates, lewnard2020incidence, garg2020hospitalization, perez2020clinical} \\[0.5em]
-		$\gamma_H$, $\gamma_{\bar{H}}$ & 1/10 & 0.015 & 0.06 & 0.14 & \citep{lane2020country, lewnard2020incidence, paranjpe2020clinical, gold2020characteristics}, data from Yale Hew Haven Hospital \\[0.5em]
+		$\gamma_H$, $\gamma_{\bar{H}}$ & 1/10 & 0.015 & 0.04 & 0.16 & \citep{lane2020country, lewnard2020incidence, paranjpe2020clinical, gold2020characteristics}, data from Yale Hew Haven Hospital \\[0.5em]
 		$\gamma_U$ & 1/14 & 0.01 & 0.03 & 0.11 & Assumed \\[0.5em]
-		$k_A$ & 0.4 & 0.05 & 0.25 & 0.55 & \citep{salomon2020defining, ferguson2020impact} \\[0.5em]
-		$k_{I_S}$ &  0.7 & 0.05 & 0.55 & 0.85 & Assumed \\[0.5em]
-		$m_H$ & 0.2 & 0.015 & 0.155 & 0.245 & \citep{lane2020country, lewnard2020incidence, paranjpe2020clinical, petrilli2020factors, verity2020estimates, perez2020clinical, docherty2020features, CHAwebsite} \\[0.5em]
-		$m_U / m_H$ & 1.5 & 0.15 & 1.1 & 1.9 & Assumed \\[0.5em]
+		$k_A$ & 0.4 & 0.05 & 0.2 & 0.6 & \citep{salomon2020defining, ferguson2020impact} \\[0.5em]
+		$k_{I_S}$ &  0.7 & 0.05 & 0.5 & 0.9 & Assumed \\[0.5em]
+		$m_H$ & 0.2 & 0.015 & 0.1 & 0.3 & \citep{lane2020country, lewnard2020incidence, paranjpe2020clinical, petrilli2020factors, verity2020estimates, perez2020clinical, docherty2020features, CHAwebsite} \\[0.5em]
+		$m_U / m_H$ & 1.5 & 0.15 & 1 & 2 & Assumed \\[0.5em]
 		$m_{\bar{H}} / m_H$ & 1.5 & 0.25 & 1 & 2 & Assumed \\[0.5em]
-		$q_{HD}$ & 0.48 & 0.01 & 0.43 & 0.53 & \citep{CHAwebsite, DPHwebsite} \\[0.5em]		
+		$q_{HD}$ & 0.48 & 0.012 & 0.36 & 0.6 & \citep{CHAwebsite, DPHwebsite} \\[0.5em]		
 		$q_H$ & 0.58 & {-} & {-} & {-} & {Calculated based $q_{HD}$ and $m_U/m_H$} \\[0.5em]
 		$k_n$ & 0.015 & {-} & {-} & {-} & Assumed \\[0.5em]
 		$w\textsubscript{school}$ & 0.15 & 0.015 & 0.1 & 0.2 & Assumed \\[0.5em]
-		$w\textsubscript{lockdown}$ & 0.7 & 0.05 & 0.58 & 0.82 & Assumed \\[0.5em]
+		$w\textsubscript{lockdown}$ & 0.7 & 0.05 & 0.55 & 0.85 & Assumed \\[0.5em]
 		$w\textsubscript{testing, $A$}$ & 0.2 & 0.03 & 0.1 & 0.3 & Assumed \\[0.5em]
 		$w\textsubscript{testing, $I_M$}$ & 0.5 & 0.04 & 0.35 & 0.65 & Assumed \\[0.5em]
 		\bottomrule
@@ -452,6 +468,10 @@ Since the dates of school closure and lockdown orders are very close, it is diff
 % Cumulative deaths were obtained from the New York Times coronavirus data repository~\citep{nyt2020Connecticut}. 
 Cumulative deaths and current hospitalizations were obtained from Connecticut Department of Public Health daily reports~\citep{DPHwebsite} and the Connecticut Hospital Association~\citep{CHAwebsite}. 
 We calculated county-level population and age structure in Connecticut using the 2014--2018 estimates of the American Community Survey~\citep{acs2018}. 
+
+To compute weights for observations at different time points, we used a logistic function given in (\ref{eq:datweight}) with $t=0$ corresponding to $M = 45$ days prior to the most recent data point used in posterior calibration, and $k_z = 0.3$.
+We used Gamma distribution given in (\ref{eq:lamprior}) to put prior on $\lambda_h$ and $\lambda_d$ with shape parameter $s_\lambda = 4$ and rate parameter $r_\lambda = 0.0002$.
+
 Daily total available hospital beds (including occupied) in each county were obtained from the Connecticut Hospital Association~\citep{CHAwebsite} and used as hospitalization capacity values on a given date. The latest available value of hospitalization capacity was used for future projections.
 
 % We used data from the United States Census Bureau to estimate county-level population and age structure in Connecticut \citep{bureau2020american} \comments{give the correct reference}. 
@@ -485,7 +505,7 @@ Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal 
 
 Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Slow reopening assumes that at one-month intervals, 10\% of the contacts suppressed via lockdown is released. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for the three asymptomatic fraction scenarios assuming `fast' reopening. Fast reopening assumes that 10\% of the suppressed lockdown contact is released at two-week intervals. The projections include daily COVID-19 incidence, hospital census, deaths, cumulative incidence proportion, and effective reproductive number, $R\textsubscript{eff}$. 
 
-Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.93$ ($95\%$ CI: $4.48 - 5.49$), which is on the higher end of available estimates \citep{cdc2020scenarios, li2020early, li2020substantial, kissler2020projecting, ferguson2020impact, perez2020importance, he2020estimation, chow2020global}, but similar to recent modeling studies that estimated $R_0$ to be between $4.7$  and $6.3$ in Northeastern United States, and around $5$ in New York and New Jersey \citep{miller2020mobility, chow2020global}. Under the high asymptomatic fraction scenario, our estimate of crude $R_0$ is $6.2$ ($95\%$ CI: $5.52 - 7.04$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
+Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.71$ ($95\%$ CI: $4.23 - 5.38$), which is on the higher end of available estimates \citep{cdc2020scenarios, li2020early, li2020substantial, kissler2020projecting, ferguson2020impact, perez2020importance, he2020estimation, chow2020global}, but similar to recent modeling studies that estimated $R_0$ to be between $4.7$  and $6.3$ in Northeastern United States, and around $5$ in New York and New Jersey \citep{miller2020mobility, chow2020global}. Under the high asymptomatic fraction scenario, our estimate of crude $R_0$ is $5.98$ ($95\%$ CI: $5.32 - 6.85$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
 Unaccounted force of infection biases estimates of transmission parameter $\beta$, and hence our ``crude'' $R_0$, upwards. 
 A recently published analysis implies that $R_0 = 3.3$ in Connecticut \citep{kaplan2020covid}. This suggests that about 30\% to 45\% of infection events early in the epidemic could be imported, which is a plausible proportion range. 
 Estimates of $R\textsubscript{eff}$ at later stages of the epidemic are less likely to be affected by this source of bias, since lockdown measures have probably resulted in a very low rate of interstate contacts. Our estimates of $R\textsubscript{eff}$ on May 20 are similar under the three asymptomatic proportion scenarios.
@@ -493,7 +513,7 @@ Estimates of $R\textsubscript{eff}$ at later stages of the epidemic are less lik
 Under high asymptomatic fraction scenario, we would expect a higher number of infections, hospitalizations and deaths by the end of summer. 
 Under slow reopening, hospitalization capacity is not expected to be overwhelmed under any of the scenarios. 
 In case of fast reopening, hospitalization capacity would likely be exceeded sooner if asymptomatic fraction is high. 
-The main difference between the asymptomatic fraction scenarios is in the cumulative incidence proportion. By the end of summer, it may be as low as 0.1 under the low asymptomatic fraction and slow reopening, and as high as 0.65 under the high asymptomatic fraction and fast reopening. The latter scenario predicts the second peak of infections to occur in mid-August, while all other scenarios predict that the second peak would not occur until later in the Fall. 
+The main difference between the asymptomatic fraction scenarios is in the cumulative incidence proportion. By the end of summer, it may be as low as $0.1$ under the low asymptomatic fraction and slow reopening, and as high as $0.67$ under the high asymptomatic fraction and fast reopening. The latter scenario predicts the second peak of infections to occur in mid-August, while all other scenarios predict that the second peak would not occur until later in the Fall. 
 While higher asymptomatic fraction is expected to result in higher number of deaths in the short-term, the total number of deaths by the end of the epidemic would likely be higher under low asymptomatic fraction. When asymptomatic fraction is low, infections and deaths are delayed, but the proportion of severe cases is higher. 
 
 
@@ -516,23 +536,23 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
 		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
 		\hline
-			$q_Is$ & 0.063 & 0.040 & 0.085 & 0.050 & 0.028 & 0.072 & 0.028 & 0.015 & 0.043 \\ 
-			$\beta$ & 1.33 & 1.17 & 1.51 & 1.49 & 1.30 & 1.72 & 1.93 & 1.63 & 2.31 \\ 
-			$\gamma_H$  & 0.115 & 0.097 & 0.132 & 0.114 & 0.096 & 0.131 & 0.114 & 0.096 & 0.132 \\ 
-			$\gamma_U$ & 0.072 & 0.053 & 0.090 & 0.072 & 0.053 & 0.092 & 0.073 & 0.052 & 0.092 \\ 
-			$k_A$ & 0.39 & 0.30 & 0.49 & 0.40 & 0.31 & 0.50 & 0.40 & 0.31 & 0.49 \\ 
-			$k_{I_S}$ & 0.70 & 0.61 & 0.79 & 0.70 & 0.61 & 0.79 & 0.70 & 0.61 & 0.79 \\ 
-			$m_H$ & 0.208 & 0.181 & 0.232 & 0.209 & 0.183 & 0.231 & 0.208 & 0.184 & 0.231 \\ 
-			$m_U$ & 0.310 & 0.240 & 0.379 & 0.311 & 0.244 & 0.385 & 0.312 & 0.242 & 0.386 \\ 
-			$q_H$ & 0.58 & 0.52 & 0.63 & 0.58 & 0.52 & 0.62 & 0.58 & 0.52 & 0.63 \\ 
+			$q_{I_S}$ & 0.064 & 0.037 & 0.089 & 0.049 & 0.024 & 0.075 & 0.030 & 0.013 & 0.047 \\ 
+			$\beta$ & 1.26 & 1.10 & 1.46 & 1.51 & 1.29 & 1.75 & 1.86 & 1.56 & 2.25 \\ 
+			$\gamma_H$ & 0.113 & 0.096 & 0.131 & 0.112 & 0.094 & 0.130 & 0.113 & 0.096 & 0.130 \\ 
+			$\gamma_U$ & 0.071 & 0.053 & 0.090 & 0.072 & 0.054 & 0.090 & 0.072 & 0.052 & 0.091 \\ 
+			$k_A$ & 0.40 & 0.30 & 0.49 & 0.40 & 0.30 & 0.50 & 0.40 & 0.30 & 0.49 \\ 
+			$k_{I_S}$ & 0.70 & 0.60 & 0.80 & 0.70 & 0.61 & 0.80 & 0.70 & 0.60 & 0.80 \\ 
+			$m_H$ & 0.209 & 0.186 & 0.235 & 0.209 & 0.184 & 0.235 & 0.209 & 0.184 & 0.233 \\ 
+			$m_U$ & 0.311 & 0.246 & 0.386 & 0.314 & 0.239 & 0.393 & 0.312 & 0.242 & 0.387 \\ 
+			$q_H$ & 0.57 & 0.52 & 0.63 & 0.58 & 0.52 & 0.62 & 0.58 & 0.52 & 0.62 \\ 
 			$w\textsubscript{school}$ & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 \\ 
-			$w\textsubscript{lockdown}$ & 0.70 & 0.66 & 0.74 & 0.71 & 0.67 & 0.74 & 0.72 & 0.68 & 0.75 \\ 
-			crude $R_0$ & 4.93 & 4.48 & 5.49 & 5.26 & 4.76 & 5.88 & 6.20 & 5.52 & 7.04 \\ 
-			$R_\textsubscript{eff}$ on May 20, 2020 & 0.67 & 0.57 & 0.75 & 0.66 & 0.56 & 0.75 & 0.65 & 0.57 & 0.73 \\ 
-			symptomatic CHR & 0.056 & 0.036 & 0.078 & 0.057 & 0.031 & 0.083 & 0.054 & 0.028 & 0.083 \\ 
-			IHR & 0.036 & 0.023 & 0.050 & 0.029 & 0.016 & 0.042 & 0.016 & 0.008 & 0.025 \\ 
-			symptomatic CFR & 0.025 & 0.015 & 0.035 & 0.025 & 0.013 & 0.037 & 0.023 & 0.012 & 0.037 \\ 
-			IFR & 0.0158 & 0.0098 & 0.0221 & 0.0125 & 0.0067 & 0.0186 & 0.0070 & 0.0037 & 0.0110 \\ 
+			$w\textsubscript{lockdown}$ & 0.70 & 0.65 & 0.74 & 0.71 & 0.67 & 0.75 & 0.72 & 0.68 & 0.76 \\ 
+			crude $R_0$ & 4.71 & 4.23 & 5.38 & 5.32 & 4.73 & 5.97 & 5.98 & 5.32 & 6.85 \\ 
+			$R_\textsubscript{eff}$ on May 20, 2020 & 0.66 & 0.56 & 0.74 & 0.65 & 0.56 & 0.73 & 0.63 & 0.53 & 0.71 \\ 
+			symptomatic CHR & 0.057 & 0.034 & 0.081 & 0.057 & 0.028 & 0.087 & 0.057 & 0.024 & 0.089 \\ 
+			IHR & 0.036 & 0.021 & 0.052 & 0.028 & 0.014 & 0.044 & 0.017 & 0.007 & 0.027 \\ 
+			symptomatic CFR & 0.025 & 0.014 & 0.036 & 0.025 & 0.012 & 0.039 & 0.025 & 0.010 & 0.041 \\ 
+			IFR & 0.0160 & 0.0093 & 0.0228 & 0.0125 & 0.0059 & 0.0194 & 0.0075 & 0.0031 & 0.0123 \\ 
 		\bottomrule 
 	\end{tabular}
 	\vspace{0.5em}
@@ -626,7 +646,7 @@ Multiple studies conclude that social distancing is highly effective in reducing
 Connecticut officials plan increases in contact tracing and testing capacity to mitigate potential increases in contact rates, and several modeling studies suggest that combination of reduced social distancing with increased testing may prevent a second wave of infections \citep{aleta2020modeling, childs2020impact}, but testing coverage should be very high and isolation should happen rapidly \citep{perez2020importance}. It is, however, unclear how feasible is repeated population-level screening and how successful is traditional ``manual'' contact tracing. Some researchers argue that while repeated testing is important for health-care workers and high risk groups, it is unlikely to have a substantial impact on transmission \citep{grassly2020role}. 
 Contact tracing using mobile technology may be a promising intervention \citep{ferretti2020quantifying}. Overall, our estimates suggest that at the end of May, 2020 $R\textsubscript{eff}$ was around $0.7$, meaning that a substantial level of social distancing would need to be maintained long-term and that testing and contact tracing alone would likely be insufficient to keep $R\textsubscript{eff}$ below $1$.
 
-Third, there may be unequal depletion of susceptible individuals depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced infection compared to low-risk individuals, then we may be under-estimating current prevalence and over-estimating future number of deaths and the final epidemic size \citep{gomes2020individual, britton2020disease}. Case counts and mortality data from nursing homes suggest that susceptible individuals in this group are likely depleted faster than the general population \citep{DPHwebsitenursing}, but there may be other high risk groups, which have not yet experienced major outbreaks. While uniform reduction in contact rates following lockdown is consistent with observations, lower risk groups may have reduced their contacts slower than high-risk groups, resulting in higher cumulative incidence with the majority of infections being asymptomatic \citep{campbell2020prevalence}.
+Third, there may be unequal depletion of susceptible individuals depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced infection compared to low-risk individuals, then we may be under-estimating current prevalence and over-estimating future number of deaths and the final epidemic size \citep{gomes2020individual, britton2020disease}. Case counts and mortality data from nursing homes suggest that susceptible individuals in this group are likely depleted faster than the in general population \citep{DPHwebsitenursing}, but there may be other high risk groups, which have not yet experienced major outbreaks. While uniform reduction in contact rates following lockdown is consistent with observations, lower risk groups may have reduced their contacts slower than high-risk groups, resulting in higher cumulative incidence with the majority of infections being asymptomatic \citep{campbell2020prevalence}.
 
 Forth, we assume that all epidemiological parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal. A recent study, however, suggests that the overall impart of warm temperature is small and insufficient to reduce transmission during summer months below the epidemic threshold in the absence of other interventions \citep{xu2020modest}.
 
