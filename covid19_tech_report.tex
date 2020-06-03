@@ -286,7 +286,7 @@ We assume that soon after the lockdown is lifted, testing capacity and contact t
 \section{Model calibration and Bayesian posterior inference}
 
 
-We estimate a joint posterior distribution of model parameters using the observed dynamics of community hospitalizations and cumulative number of deaths.  Due to changing testing patterns and varying case ascertainment proportions over time, we do not use reported case counts in the calibration procedure \citep{holmdahl2020wrong, pitzer2020impact}.  The parameters in the transmission model are not simultaneously identifiable given the observed data. In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates and estimate the remaining parameters using Bayesian posterior sampling.  To generate uncertainty intervals for projections, we sample from the joint posterior over estimated parameters and uncertainty distributions for a subset of fixed parameters. 
+We calibrate the distribution of model parameters using the observed dynamics of community hospitalizations and cumulative number of deaths.  Due to changing testing patterns and varying case ascertainment proportions over time, we do not use reported case counts in the calibration procedure \citep{holmdahl2020wrong, pitzer2020impact}.  The parameters in the transmission model are not simultaneously identifiable given the observed data. In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates and estimate the remaining parameters using a Bayesian approach.  To generate uncertainty intervals for projections, we sample from the joint posterior over estimated parameters and uncertainty distributions for a subset of fixed parameters. 
 
 Several model parameters influence epidemic dynamics in the future, beyond the data available for calibration. These parameters include the hospital overflow CFR ($m_{\bar{H}}$), testing capacity and contact tracing effects ($w\textsubscript{testing, $A$}$ and $w\textsubscript{testing, $I_M$}$), and the extent of release of suppressed contact once lockdown is lifted. These parameters cannot be estimated based on historical data, but may be estimated in the future. For the purpose of projections, we impose a distribution on $m_{\bar{H}}$, $w\textsubscript{testing, $A$}$, and $w\textsubscript{testing, $I_M$}$ independent of one another and of the joint posterior distribution of calibrated parameters.  
 Increases in contact rates following state reopening are parameterized relative to the size of lockdown effect $w\textsubscript{lockdown}$.
@@ -328,18 +328,29 @@ where $N$ is the size of Connecticut population; and $H(t, L_0, L_H, \btheta)$ a
 \lambda \sim \mbox{Gamma} (s_\lambda, r_\lambda),
 \label{eq:lamprior}
 \end{equation}
-where $s_\lambda$ and $r_\lambda$ are shape and rate parameters of Gamma distribution. 
+where $s_\lambda$ and $r_\lambda$ are shape and rate parameters of Gamma distribution. We use $s_\lambda = 4$ and $r_\lambda = 0.0002$.
 
 
-
-\subsection{Weighting of observed data} 
-
-When fitting the joint distribution of model parameters to data, we put more weight on more recent observations using logistic function, i.e.
+\subsection{Posterior inference} 
+% \subsection{Weighting of observed data} 
+Posterior inference is performed with a weighted likelihood that assigns more weight on more recent observations. We let the weight function $z(t)$ take the following form, 
+% When fitting the joint distribution of model parameters to data, we put more weight on more recent observations using logistic function, i.e.
 \begin{equation}
 z(t) = \frac{1}{1 + \exp(- k_z t)}, 
 \label{eq:datweight}
 \end{equation}
-where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..., t_\textsubscript{max} \}$ and the correspondence between $\{t_0, ..., t_\textsubscript{max} \}$ and calendar time is set such that $t=0$ corresponds to $M$ days prior to the most recent observation. Parameter $k_z$ controls the smoothness of logistic function.
+where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..., t_\textsubscript{max} \}$ and the correspondence between $\{t_0, ..., t_\textsubscript{max} \}$ and calendar time is set such that $t=0$ corresponds to $M = 45$ days prior to the most recent observation. Parameter $k_z$ controls the smoothness of logistic function. We set $k_z = 0.3$, which leads to the weight function in Figure \ref{fig:datweights}. 
+
+% To compute weights for observations at different time points, we used a logistic function given in (\ref{eq:datweight}) with $t=0$ corresponding to $M = 45$ days prior to the most recent data point used in posterior calibration, and $k_z = 0.3$. The resulting weights are shown in Figure \ref{fig:datweights}.
+% We used Gamma distribution given in (\ref{eq:lamprior}) to put prior on $\lambda_h$ and $\lambda_d$ with shape parameter $s_\lambda = 4$ and rate parameter $r_\lambda = 0.0002$.
+
+\begin{figure} %[htb]
+	\centering
+	\includegraphics[width=.6\textwidth]{figures/data_weights.pdf}
+	\caption{Weight function used in the weighted likelihood. The assigned weights are close to $1$ after April 12.}
+	\label{fig:datweights}
+\end{figure}
+
 % \comments{
 % The hospitalizations and deaths data likelihood functions take a form:
 % \begin{align}
@@ -351,7 +362,6 @@ where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..
 % \mathcal{L}_{data} (\btheta | h(t_{h_1},\cdots, t_{h_K}), d(t_{d_1},\cdots, t_{d_M}) ) =  \mathcal{L}_{hosp. data} (\btheta | h(t_{h_1},\cdots, t_{h_K}) ) \mathcal{L}_{death. data} (\btheta | d(t_{d_1},\cdots, t_{d_M}) )
 % \end{equation}
 % }
-
 % \comments{
 % Joint posterior distribution of $\btheta$ up to a normalizing constant is given by
 % \begin{equation}
@@ -359,10 +369,8 @@ where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..
 % \label{eq:posterior}
 % \end{equation}
 % }
-
-\subsection{Posterior inference} 
-
-The model above yields the following posterior distribution,
+% \subsection{Posterior inference} 
+The model yields the following posterior distribution,
 \begin{equation}
 p(\btheta, \blambda, \bL | h(t), d(t)) \propto p(\btheta) p(\blambda) p(\bL)
 							 \prod_t \left[ p\big(h(t)| H(t, L_0, L_H, \btheta), \lambda_h \big)
@@ -472,17 +480,17 @@ Since the dates of school closure and lockdown orders are very close, it is diff
 Cumulative deaths and current hospitalizations were obtained from Connecticut Department of Public Health daily reports~\citep{DPHwebsite} and the Connecticut Hospital Association~\citep{CHAwebsite}. 
 We calculated county-level population and age structure in Connecticut using the 2014--2018 estimates of the American Community Survey~\citep{acs2018}. 
 
-To compute weights for observations at different time points, we used a logistic function given in (\ref{eq:datweight}) with $t=0$ corresponding to $M = 45$ days prior to the most recent data point used in posterior calibration, and $k_z = 0.3$. The resutling weights are shown in Figure \ref{fig:datweights}.
-We used Gamma distribution given in (\ref{eq:lamprior}) to put prior on $\lambda_h$ and $\lambda_d$ with shape parameter $s_\lambda = 4$ and rate parameter $r_\lambda = 0.0002$.
+% To compute weights for observations at different time points, we used a logistic function given in (\ref{eq:datweight}) with $t=0$ corresponding to $M = 45$ days prior to the most recent data point used in posterior calibration, and $k_z = 0.3$. The resulting weights are shown in Figure \ref{fig:datweights}.
+% We used Gamma distribution given in (\ref{eq:lamprior}) to put prior on $\lambda_h$ and $\lambda_d$ with shape parameter $s_\lambda = 4$ and rate parameter $r_\lambda = 0.0002$.
 
 Daily total available hospital beds (including occupied) in each county were obtained from the Connecticut Hospital Association~\citep{CHAwebsite} and used as hospitalization capacity values on a given date. The latest available value of hospitalization capacity was used for future projections.
 
-\begin{figure} %[htb]
-	\centering
-	\includegraphics[width=.6\textwidth]{figures/data_weights.pdf}
-	\caption{Weights applied to observed data as a function of calendar date.}
-	\label{fig:datweights}
-\end{figure}
+% \begin{figure} %[htb]
+% 	\centering
+% 	\includegraphics[width=.6\textwidth]{figures/data_weights.pdf}
+% 	\caption{Weights applied to observed data as a function of calendar date.}
+% 	\label{fig:datweights}
+% \end{figure}
 
 
 
