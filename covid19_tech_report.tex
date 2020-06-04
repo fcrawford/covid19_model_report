@@ -139,7 +139,7 @@ and Forrest W. Crawford$^{1,2,3,4}$  \\[1em]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
-\comment{yes, this needs an abstract.}
+\comments{yes, this needs an abstract.}
 \end{abstract}
 
 
@@ -168,10 +168,11 @@ In this technical report, we introduce a county-structured transmission model of
 \section{Model specification}
 
 We developed a deterministic compartmental model of SARS-CoV-2 transmission and COVID-19 disease progression.
-The model is based on the SEIR (Susceptible, Exposed, Infectious, Recovered) framework \citep{keeling2011modeling}, which we extend to accommodate distinct features of COVID-19 disease. We calibrate the model to observed dynamics of deaths and hospitalizations in Connecticut, and produce estimates of incidence and prevalence that may be helpful in designing population-level surveys. Similar models have been published recently, offering intervention effect estimates and projections in various locations \citep{cdc2020covid19forecasts, li2020substantial, kissler2020projecting, brett2020covid, perez2020importance, miller2020mobility, childs2020impact, salje2020estimating, salomon2020defining}.
+The model is based on the SEIR (Susceptible, Exposed, Infectious, Recovered) framework \citep{keeling2011modeling}, which we extend to accommodate geographical variation in Connecticut and distinct features of COVID-19 disease. We calibrate the model to observed dynamics of deaths and hospitalizations in Connecticut, and produce estimates of incidence and prevalence that may be helpful in designing population-level surveys. Similar models have been published recently, offering intervention effect estimates and projections in various locations \citep{cdc2020covid19forecasts, li2020substantial, kissler2020projecting, brett2020covid, perez2020importance, miller2020mobility, childs2020impact, salje2020estimating, salomon2020defining}.
 
-Figure \ref{fig:model} shows a schematic representation of the model structure. We categorize infections as asymptomatic, mild symptomatic, and severe. Only severe infections may lead to death. Severe infections are defined as those requiring hospitalization. Since one of the key observable features of the model is dynamics of hospitalizations in the community, we use separate compartments for community hospitalizations and for severe cases occurring in closed communities, such as nursing homes, assisted living facilities, or prisons. Case fatality ratio (CFR) among severe cases in closed communities is assumed to be higher than the community hospital CFR.  If hospitalization capacity is overwhelmed, some severe cases in the community are denied hospitalization, and experience a higher probability of death compared to hospitalized cases. Mild symptomatic infections are assumed to self-isolate shortly after they develop symptoms and remain isolated until they recover. During the infectiousness period of symptomatic cases, we assume a period of presymptomatic viral shedding, i.e. the latency period is shorter than incubation period \citep{furukawa2020evidence, liu2020contribution, he2020temporal}. In line with other similar models, we assume that asymptomatic cases exert lower force of infection, but remain infectious for a longer period of time, since they are less likely to self-isolate in the absence of widespread testing \citep{ferguson2020impact, childs2020impact, salomon2020defining}.  The average time that severe cases spend in the infectious state is approximated by the time between onset of infectiousness and hospitalization (or attempted hospitalization in case of hospital overflow). Since severe cases are likely to be isolated at home before hospitalization, and those in nursing homes, assisted living facilities, or prisons likely get isolated within a few days after symptom onset, we use an ``isolation coefficient'' to reduce the effective force of infection from severe infectious compartment without introducing an additional transient compartment to capture pre-hospitalization isolation. Force of infection from hospitalized patients to unhospitalized susceptible individuals is assumed to be negligible. We assume that recovered individuals remain immune to reinfection for the duration of modeling period.  The model is implemented at the level of individual counties in Connecticut assuming that most contacts are happening within a given county. A small proportion of contacts is allowed to happen between adjacent counties. 
-The analysis was performed using R statistical computing environment \citep{R2020}.
+Figure \ref{fig:model} shows a schematic representation of the model structure. A mathematical description of the model, which includes information about how the model accommodates geographic variation across Connecticut counties, appears below.  We categorize infections as asymptomatic, mild symptomatic, and severe. Only severe infections may lead to death. Severe infections are defined as those requiring hospitalization. Since one of the key observable features of the model is dynamics of hospitalizations in the community, we use separate compartments for community hospitalizations and for severe cases occurring in institutional settings, such as nursing homes, assisted living facilities, or prisons. The case fatality ratio (CFR) among severe cases in closed communities is assumed to be higher than the community hospital CFR.  If hospitalization capacity is overwhelmed, some severe cases in the community are denied hospitalization, and experience a higher probability of death compared to hospitalized cases. Mild symptomatic infections are assumed to self-isolate shortly after they develop symptoms and remain isolated until they recover. During the infectiousness period of symptomatic cases, we assume a period of presymptomatic viral shedding, i.e. the latency period is shorter than incubation period \citep{furukawa2020evidence, liu2020contribution, he2020temporal}. In line with other similar models, we assume that individuals with asymptomatic infection exert a lower force of infection, but remain infectious for a longer period of time, since they are less likely to self-isolate in the absence of widespread testing \citep{ferguson2020impact, childs2020impact, salomon2020defining}.  The average time that severe cases spend in the infectious state is approximated by the time between onset of infectiousness and hospitalization (or attempted hospitalization in case of hospital overflow). Since severe cases are likely to be isolated at home before hospitalization, and those in nursing homes, assisted living facilities, or prisons are likely to be isolated within a few days after symptom onset, we assume reduced force of infection from severe infections in this setting. 
+%compartment without introducing an additional transient compartment to capture pre-hospitalization isolation. 
+The force of infection from hospitalized patients to unhospitalized susceptible individuals is assumed to be negligible. We further assume that recovered individuals remain immune to reinfection for the duration of the study period.  The model is implemented at the level of individual counties in Connecticut assuming that most contacts are happening within a given county. A small proportion of contacts is allowed to happen between adjacent counties.  The analysis was performed using the R statistical computing environment \citep{R2020}.  \comments{cite ode solver}
 
 \begin{figure}
 	\begin{center}
@@ -184,11 +185,10 @@ The analysis was performed using R statistical computing environment \citep{R202
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Compartmental model}
+\subsection{Compartmental model and parameters}
 
-The model divides the population into 11 compartments: susceptible ($S$), exposed, latent infections ($E$), infectious and asymptomatic ($A$), infectious and mild symptomatic ($I_M$), infectious and severe ($I_S$), isolated mild infections removed from the pool of infectious individuals ($R_M$), hospitalized ($H$), severe in need of hospitalization, but denied it due to hospital capacity overflow ($\bar{H}$), severe in nursing homes, assisted living facilities, prisons or otherwise not having access to hospitalization ($U$), recovered ($R$), and died ($D$).  Transmission dynamics for county $i$  are given by the following system of ordinary differential equations (ODE): 
+The model divides the population into 11 compartments: susceptible ($S$), exposed, latent infections ($E$), infectious and asymptomatic ($A$), infectious and mild symptomatic ($I_M$), infectious and severe ($I_S$), isolated mild infections removed from the pool of infectious individuals ($R_M$), hospitalized ($H$), severe in need of hospitalization, but denied it due to hospital capacity overflow ($\bar{H}$), severe in nursing homes, assisted living facilities, prisons or otherwise not having access to hospitalization ($U$), recovered ($R$), and died ($D$).  Let $N_i$ be the population size of county $i$ and $J_i$ the set of counties adjacent to county $i$.  Let $C^{(i)}$ represent hospitalization capacity in county $i$, which may vary over time.  Transmission dynamics for county $i$  are given by the following system of ordinary differential equations. 
 \[ \frac{\dx{S^{(i)}}}{\dx{t}} = -\beta S^{(i)} \left[ (1-k_n) \frac{ I_M^{(i)} + k_{I_S} I_S^{(i)} + k_A A^{(i)}}{N_i} + \frac{k_n}{|J_i|} \sum_{j\in J_i}  \frac{I_M^{(j)} + k_{I_S} I_S^{(j)} + k_A A^{(j)}}{N_j} \right], \]
-where $N_i$ is the population size of county $i$ and $J_i$ is the set of counties adjacent to county $i$.
 \[ \frac{\dx{E^{(i)}}}{\dx{t}} = \beta S^{(i)} \left[ (1-k_n) \frac{ I_M^{(i)} + k_{I_S} I_S^{(i)} + k_A A^{(i)}}{N_i} + \frac{k_n}{|J_i|} \sum_{j\in J_i}  \frac{I_M^{(j)} + k_{I_S} I_S^{(j)} + k_A A^{(j)}}{N_j} \right] - \delta E^{(i)} \]
 \[ \frac{\dx{A^{(i)}}}{\dx{t}} = q_A \delta E^{(i)} - \alpha_A A^{(i)} \]
 \[ \frac{\dx{I_M^{(i)}}}{\dx{t}} = q_{I_M} \delta E^{(i)} - \alpha_{I_M} I_M^{(i)} \]
@@ -196,18 +196,18 @@ where $N_i$ is the population size of county $i$ and $J_i$ is the set of countie
 \[ \frac{\dx{I_S^{(i)}}}{\dx{t}} = q_{I_S} \delta E^{(i)} - \alpha_{I_S} I_S^{(i)} \]
 \[ \frac{\dx{H^{(i)}}}{\dx{t}} =  q_H (1 - \rho^{(i)}) \alpha_{I_S} I_S^{(i)} - \gamma_H H^{(i)}  \]
 \[ \frac{\dx{\bar{H}^{(i)}}}{\dx{t}} =  q_H \rho^{(i)} \alpha_{I_S} I_S^{(i)} - \gamma_{\bar{H}} \bar{H}^{(i)},  \]
-where $\rho^{(i)} = \left[ 1+\exp(0.5(C^{(i)}-H^{(i)})) \right]^{-1}$ is a ``soft'' hospitalization capacity overflow function, and $C^{(i)}$ represents hospitalization capacity in county $i$ at a given time point.
 \[ \frac{\dx{U^{(i)}}}{\dx{t}} =  (1 - q_H) \alpha_{I_S} I_S^{(i)} - \gamma_{U} U^{(i)}  \]
 \[ \frac{\dx{D^{(i)}}}{\dx{t}} = \gamma_H m_H H^{(i)} + \gamma_{\bar{H}}  m_{\bar{H}} \bar{H}^{(i)} + \gamma_{U} m_{U} U^{(i)} \]
 \[ \frac{\dx{R}}{\dx{t}} = \alpha_A A^{(i)} + \gamma_{R_M} R_M^{(i)} + \gamma_H (1-m_H) H^{(i)} + \gamma_{\bar{H}} (1 - m_{\bar{H}}) \bar{H}^{(i)} + \gamma_{U} (1- m_{U}) U^{(i)}  \]
+The function $\rho^{(i)} = \left[ 1+\exp(0.5(C^{(i)}-H^{(i)})) \right]^{-1}$ is a ``soft'' hospitalization capacity overflow function.  
+
+Table \ref{table:params} shows model parameters and their definitions. Some of the parameters from Table \ref{table:params} are not directly used in the ODE system, but are used as inputs to compute other model parameters. 
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Parameter definitions}
 
-Table \ref{table:params} provides a list of model parameters and their definitions. Some of the parameters from Table \ref{table:params} are not directly used in the ODE system, but are used as inputs to compute other model parameters. 
 
 \begingroup
 \renewcommand\arraystretch{0.5}
@@ -241,15 +241,13 @@ Table \ref{table:params} provides a list of model parameters and their definitio
 	$w\textsubscript{testing, $A$}$ & Effect size of increased testing and contact tracing on the asymptomatic isolation rate  \\[0.5em]
 	$w\textsubscript{testing, $I_M$}$ & Effect size of increased testing and contact tracing on the mildly symptomatic isolation rate \\[0.5em]
 	$L_H$, $L_D$ & Reporting lags of hospitalizations and deaths (days) \\[0.5em]
-	$L_0$ & Lag of epidemic onset date, days before 03-01-2020 \\[0.5em]
+	$L_0$ & Lag of epidemic onset date, days before March 1, 2020 \\[0.5em]
 	\bottomrule
 	\end{tabular}
 	\label{table:params}
 \end{table}
 \endgroup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-
-\subsection{Geographic structure}
 
 Figure \ref{fig:map} shows the county map of Connecticut along with the county adjacency matrix. The geographic boundary files were obtained from the Connecticut Department of Environmental Protection~\citep{shapefile}. We assume that a fraction $(1-k_n)$ of all contacts happen within a given county, and the remaining $k_n$ contacts happen between individuals residing in adjacent counties.
 
@@ -287,7 +285,7 @@ We assume that soon after the lockdown is lifted, testing capacity and contact t
 \section{Model calibration and Bayesian posterior inference}
 
 
-We calibrate the distribution of model parameters using the observed dynamics of community hospitalizations and cumulative number of deaths.  Due to changing testing patterns and varying case ascertainment proportions over time, we do not use reported case counts in the calibration procedure \citep{holmdahl2020wrong, pitzer2020impact}.  The parameters in the transmission model are not simultaneously identifiable given the observed data. In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates and estimate the remaining parameters using a Bayesian approach.  To generate uncertainty intervals for projections, we sample from the joint posterior over estimated parameters and uncertainty distributions for a subset of fixed parameters. 
+We calibrate the distribution of model parameters using the observed dynamics of community hospitalizations and cumulative number of deaths.  Due to changing testing patterns and varying case ascertainment proportions over time, we do not use reported case counts in the calibration procedure \citep{holmdahl2020wrong, pitzer2020impact}.  As is often the case for epidemic models, not all parameters are simultaneously identifiable given the observed data on hospitalizations and deaths.  In particular, different sets of parameters that collectively determine early epidemic growth rate (i.e. transmission parameter $\beta$ and parameters that define force of infection) are observationally equivalent. Given this limitation, we fix a subset of parameters at their point estimates and estimate the remaining parameters using a Bayesian approach.  To generate uncertainty intervals for projections, we sample from the joint posterior over estimated parameters and uncertainty distributions for a subset of fixed parameters, then find pointwise 95\% posterior predictive intervals for each time point. 
 
 Several model parameters influence epidemic dynamics in the future, beyond the data available for calibration. These parameters include the hospital overflow CFR ($m_{\bar{H}}$), testing capacity and contact tracing effects ($w\textsubscript{testing, $A$}$ and $w\textsubscript{testing, $I_M$}$), and the extent of release of suppressed contact once lockdown is lifted. These parameters cannot be estimated based on historical data, but may be estimated in the future. For the purpose of projections, we impose a distribution on $m_{\bar{H}}$, $w\textsubscript{testing, $A$}$, and $w\textsubscript{testing, $I_M$}$ independent of one another and of the joint posterior distribution of calibrated parameters.  
 Increases in contact rates following state reopening are parameterized relative to the size of lockdown effect $w\textsubscript{lockdown}$.
@@ -319,7 +317,7 @@ The state of the system at any given time is therefore a deterministic function 
 
 \subsection{Reported hospitalizations and deaths} 
 
-We accommodate reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. Similar to \citet{osthus2017forecasting}, we model the observed population fractions of hospitalizations $h(t)$ and deaths $d(t)$ at time $t$ using Beta distribution,  
+We accommodate reporting lags in observed hospitalizations and deaths. Reporting lags are correlated with other unknown parameters, including latency period, epidemic onset lag, time between infection and hospitalization, time between infection and death, length of hospital stay, and difference in death reporting lags between hospitals and nursing homes. Following \citet{osthus2017forecasting}, we model the observed population fractions of hospitalizations $h(t)$ and deaths $d(t)$ at time $t$ using a Beta distribution,  
 \begin{align}
 h(t) &\sim \mbox{Beta} \left( \lambda_h \frac{H(t, L_0, L_H, \btheta)}{N}, \quad \lambda_h  \left( 1 - \frac{H(t, L_0, L_H, \btheta)}{N} \right) \right), \\
 d(t) &\sim \mbox{Beta} \left( \lambda_d \frac{D(t, L_0, L_D, \btheta)}{N}, \quad \lambda_d  \left( 1 - \frac{D(t, L_0, L_D, \btheta)}{N} \right) \right), 
@@ -329,13 +327,13 @@ where $N$ is the size of Connecticut population; and $H(t, L_0, L_H, \btheta)$ a
 \lambda \sim \mbox{Gamma} (s_\lambda, r_\lambda),
 \label{eq:lamprior}
 \end{equation}
-where $s_\lambda$ and $r_\lambda$ are shape and rate parameters of Gamma distribution. We use $s_\lambda = 4$ and $r_\lambda = 0.0002$.
+where $s_\lambda$ and $r_\lambda$ are shape and rate parameters of the Gamma distribution, set to $s_\lambda = 4$ and $r_\lambda = 0.0002$.
 
 
 \subsection{Posterior inference} 
+
 % \subsection{Weighting of observed data} 
-Posterior inference is performed with a weighted likelihood that assigns more weight on more recent observations. We let the weight function $z(t)$ take the following form, 
-% When fitting the joint distribution of model parameters to data, we put more weight on more recent observations using logistic function, i.e.
+Posterior inference is performed using a weighted likelihood that assigns more weight to more recent observations. We let the weight function $z(t)$ take the following form, 
 \begin{equation}
 z(t) = \frac{1}{1 + \exp(- k_z t)}, 
 \label{eq:datweight}
@@ -348,7 +346,7 @@ where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..
 \begin{figure} %[htb]
 	\centering
 	\includegraphics[width=.6\textwidth]{figures/data_weights.pdf}
-	\caption{Weight function used in the weighted likelihood. The assigned weights are close to $1$ after April 12.}
+	\caption{Weight function used in the weighted likelihood. The assigned weights are close to $1$ after April 12. \comments{fix aspect ratio here, make labels bigger, overlay data, indicate May 20}}
 	\label{fig:datweights}
 \end{figure}
 
@@ -371,16 +369,16 @@ where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..
 % \end{equation}
 % }
 % \subsection{Posterior inference} 
-The model yields the following posterior distribution,
+
+
+We construct the posterior distribution over unknown parameters $(\btheta, blambda, \bL)$ as 
 \begin{equation}
 p(\btheta, \blambda, \bL | h(t), d(t)) \propto p(\btheta) p(\blambda) p(\bL)
 							 \prod_t \left[ p\big(h(t)| H(t, L_0, L_H, \btheta), \lambda_h \big)
 							         p\big(d(t)| D(t, L_0, L_D, \btheta), \lambda_d \big) \right]^{z(t)/2},
 \label{eq:posterior}
 \end{equation}
-where $\btheta = (q_{I_S}, \beta, \gamma_H, \gamma_U, k_A, k_{I_S}, m_H, m_U, q_{HD}, w\textsubscript{school}, w\textsubscript{lockdown})$, $\blambda = (\lambda_h, \lambda_d)$, and $\bL = (L_0, L_H, L_D)$.
-
-Sampling from the joint posterior distribution of $(\btheta, \blambda, \bL)$  given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis-Hastings algorithm with random walk proposals for $\btheta$ and $\blambda$ and independent proposals for $\bL$. We ran the sampler for $1,000,000$ iterations and thinned the chain using every $100$-th iteration.
+where $\btheta = (q_{I_S}, \beta, \gamma_H, \gamma_U, k_A, k_{I_S}, m_H, m_U, q_{HD}, w\textsubscript{school}, w\textsubscript{lockdown})$, $\blambda = (\lambda_h, \lambda_d)$, and $\bL = (L_0, L_H, L_D)$. Each likelihood term is weighted by $z(t)/2$ because we assign equal weight 1/2 to data contributions from both hospitalizations and deaths.  Sampling from the joint posterior distribution of $(\btheta, \blambda, \bL)$  given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis-Hastings algorithm with random walk proposals for $\btheta$ and $\blambda$ and independent proposals for $\bL$. We ran the sampler for 1,000,000 iterations and thinned the chain using every $100$th iteration.
 
 
 %%%%%%%%%%%%%%%%%%
@@ -412,8 +410,8 @@ Duration of the latency period ($1/\delta$) was fixed, since reliable estimates 
 Parameters ($\alpha_A$, $k_A$, $\alpha_{I_M}$, $\alpha_{I_S}$, $k_{I_S}$) collectively determine force of infection at a given time. Force of infection and transmission parameter $\beta$ together
 % , which combines contact frequency and transmission probability per contact, 
 determine the early growth of the epidemic. Without additional data, these parameters cannot be simultaneously identified. We therefore fixed parameters for which estimates are available or which can be calculated from available estimates ($\alpha_A$, $\alpha_{I_M}$, $\alpha_{I_S}$), and assumed prior distributions and calibrated posterior of those that are unavailable ($k_A$, $k_{I_S}$). 
-Duration of infectiousness of asymptomatic individuals is unknown, but is likely shorter than that of symptomatic \citep{yang2020comparison}. While several studies estimated that viral RNA could be detected in upper respiratory tract for 2-3 weeks \citep{young2020epidemiologic, kujawski2020clinical}, findings from \citep{wolfel2020virological} suggest that live virus can be isolated for a substantially shorter time period, which in this study was a maximum of 7 days. 
-We assume a diffuse prior on $\beta$, which absorbs additional variations of parameters that determine force of infection. \\
+Duration of infectiousness of asymptomatic individuals is unknown, but is likely shorter than that of symptomatic individuals \citep{yang2020comparison}. While several studies estimated that viral RNA could be detected in upper respiratory tract for 2-3 weeks \citep{young2020epidemiologic, kujawski2020clinical}, findings from \citep{wolfel2020virological} suggest that live virus can be isolated for a substantially shorter time period, which in this study was a maximum of 7 days. 
+We assume a diffuse prior on $\beta$, which absorbs additional variations of parameters that determine force of infection. 
 
 
 \begingroup
@@ -502,7 +500,7 @@ Daily total available hospital beds (including occupied) in each county were obt
 \section{Results}
 
 
-Figure \ref{fig:fit} shows calibrated projections of hospitalizations and deaths, with 95\% uncertainty intervals, under the medium asymptomatic fraction scenario and observed data as dots.  Observed data points track with mean projections and largely fall within uncertainty intervals.  Calibration results under low and high asymptomatic fraction scenarios demonstrate a similar fit to historical data.  
+Figure \ref{fig:fit} shows projections of hospitalizations and deaths, with 95\% posterior predictive intervals, under the medium asymptomatic fraction scenario and observed data as dots.  Observed data points track with mean projections and largely fall within uncertainty intervals.  Calibration results under low and high asymptomatic fraction scenarios demonstrate a similar fit to historical data.  
 Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal posterior distributions of model parameters and derived epidemiological parameters under the three asymptomatic fraction scenarios.
 
 Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Slow reopening assumes that at one-month intervals, 10\% of the contacts suppressed via lockdown is released. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for the three asymptomatic fraction scenarios assuming `fast' reopening. Fast reopening assumes that 10\% of the suppressed lockdown contact is released at two-week intervals. The projections include daily COVID-19 incidence, hospital census, deaths, cumulative incidence proportion, and effective reproductive number, $R\textsubscript{eff}$. 
@@ -641,18 +639,16 @@ Estimates of IFR that rely on official COVID-19 related death counts are likely 
 
 % Projections: can we mitigate increase in contacts with contact tracing and testing?
 Prior knowledge and assumptions about plausible ranges of parameter values combined with local data allows us to substantially reduce parametric uncertainty and produce narrow projection intervals. However, several important considerations limit our ability to make reliable long-term projections. 
-First, it is difficult to make predictions about the extent of contact rate increases following lockdown release steps, such as allowing only certain types of businesses to reopen. 
-
-Second, the effectiveness of widespread testing and contact tracing on timely isolation of infectious individuals, and its subsequent impact on the force of infection is unknown. This effect is a complex function of viral shedding characteristics among symptomatic, presymptomatic and asymptomatic individuals, along with the implementation features of contact tracing, testing, and isolation \citep{kaplan2020logistics}. 
+First, it is difficult to make predictions about the extent of contact rate increases following lockdown release steps, such as allowing only certain types of businesses to reopen.  Second, the effectiveness of widespread testing and contact tracing on timely isolation of infectious individuals, and its subsequent impact on the force of infection is unknown. This effect is a complex function of viral shedding characteristics among symptomatic, presymptomatic and asymptomatic individuals, along with the implementation features of contact tracing, testing, and isolation \citep{kaplan2020logistics}. 
 Multiple studies conclude that social distancing is highly effective in reducing transmission with effect estimates similar to our estimate of combined school closure and lockdown effect \citep{salje2020estimating, perez2020importance, dehning2020inferring, brett2020covid,  prem2020effect}. 
 Connecticut officials plan increases in contact tracing and testing capacity to mitigate potential increases in contact rates, and several modeling studies suggest that combination of reduced social distancing with increased testing may prevent a second wave of infections \citep{aleta2020modeling, childs2020impact}, but testing coverage should be very high and isolation should happen rapidly \citep{perez2020importance}. It is, however, unclear how feasible is repeated population-level screening and how successful is traditional ``manual'' contact tracing. Some researchers argue that while repeated testing is important for health-care workers and high risk groups, it is unlikely to have a substantial impact on transmission \citep{grassly2020role}. 
 Contact tracing using mobile technology may be a promising intervention \citep{ferretti2020quantifying}. Overall, our estimates suggest that at the end of May, 2020 $R\textsubscript{eff}$ was around $0.65$, meaning that a substantial level of social distancing would need to be maintained long-term and that testing and contact tracing alone would likely be insufficient to keep $R\textsubscript{eff}$ below $1$.
 
 Third, there may be unequal depletion of susceptible individuals depending on their severity risk profile. If a higher fraction of high-risk individuals have already experienced infection compared to low-risk individuals, then we may be under-estimating current prevalence and over-estimating future number of deaths and the final epidemic size \citep{gomes2020individual, britton2020disease}. Case counts and mortality data from nursing homes suggest that susceptible individuals in this group are likely depleted faster than the in general population \citep{DPHwebsitenursing}, but there may be other high risk groups, which have not yet experienced major outbreaks. While uniform reduction in contact rates following lockdown is consistent with observations, lower risk groups may have reduced their contacts slower than high-risk groups, resulting in higher cumulative incidence with the majority of infections being asymptomatic \citep{campbell2020prevalence}.
 
-Forth, we assume that all epidemiological parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal. A recent study, however, suggests that the overall impart of warm temperature is small and insufficient to reduce transmission during summer months below the epidemic threshold in the absence of other interventions \citep{xu2020modest}.
+Fourth, we assume that all epidemiological parameters are constant over time and are not subject to seasonal forcing. It is hypothesized that temperature may play a role in transmission dynamics beyond its impact on contact patterns \citep{kissler2020projecting}, in which case we would expect lower transmission intensity in summer all other things being equal. A recent study, however, suggests that the overall impart of warm temperature is small and insufficient to reduce transmission during summer months below the epidemic threshold in the absence of other interventions \citep{xu2020modest}.
 
-In an evolving public health crisis, it is important to keep projections up to date. As more information about the extent of asymptomatic transmission, general epidemiological characteristics of COVID-19, and data on observable model features in Connecticut becomes available, we will update the projections presented in this paper.
+In an evolving public health crisis, it is important to keep projections up to date. As more information about the extent of asymptomatic transmission, general epidemiological characteristics of COVID-19, and data on observable model features in Connecticut becomes available, we will update the projections presented in this paper. Reports in this series are posted to \url{https://crawford-lab.github.io/covid19_ct/}. 
 
 
 
