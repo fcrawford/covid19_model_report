@@ -471,7 +471,7 @@ Based on the relative population size of the counties and the date of first regi
 
 Early in the epidemic, many infections were likely ``imported'' from New York City, which experienced a major outbreak in the spring of 2020. In particular, many residents of Fairfield county work in New York City. We do not directly model importation events: the assumed number of exposed individuals at time zero in Fairfield county does not include all such events. Infection importation from New York City likely continued for days or even weeks early in the epidemic. This unaccounted force of infection is absorbed in the estimation of transmission parameter $\beta$.
 
-We specified a wide range of reporting lags for hospitalizations and deaths, resulting in ranges of 4-8 days for hospitalizations and 7-11 days for deaths. It is likely that deaths occurring in hospitals are reported with substantially smaller lag than those occurring in nursing homes, since many of the latter ones need to be confirmed by a medical examiner \citep{DPHwebsitenursing}.  
+We specified a wide range of reporting lags for hospitalizations and deaths, resulting in ranges of 5-9 days for hospitalizations and 8-11 days for deaths. It is likely that deaths occurring in hospitals are reported with substantially smaller lag than those occurring in nursing homes, since many of the latter ones need to be confirmed by a medical examiner \citep{DPHwebsitenursing}.  
 
 \textbf{Reduction in transmission following school closure and lockdown orders} \\[0.5em]
 We calibrated the parameters that determine reduction in contact rates following school closure and lockdown orders to the observed data. 
@@ -511,9 +511,9 @@ Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal 
 
 Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Slow reopening assumes that at one-month intervals, 10\% of the contacts suppressed via lockdown is released. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for the three asymptomatic fraction scenarios assuming `fast' reopening. Fast reopening assumes that 10\% of the suppressed lockdown contact is released at two-week intervals. The projections include daily COVID-19 incidence, hospital census, deaths, cumulative incidence proportion, and effective reproductive number, $R\textsubscript{eff}$. 
 
-Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.71$ ($95\%$ CI: $4.23 - 5.38$), which is on the higher end of available estimates \citep{cdc2020scenarios, li2020early, li2020substantial, kissler2020projecting, ferguson2020impact, perez2020importance, he2020estimation, chow2020global}, but similar to recent modeling studies that estimated $R_0$ to be between $4.7$  and $6.3$ in Northeastern United States, and around $5$ in New York and New Jersey \citep{miller2020mobility, chow2020global}. Under the high asymptomatic fraction scenario, our estimate of crude $R_0$ is $5.98$ ($95\%$ CI: $5.32 - 6.85$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
+Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.71$ ($95\%$ CI: $4.23 - 5.38$), which is on the higher end of available estimates \citep{cdc2020scenarios, li2020early, li2020substantial, kissler2020projecting, ferguson2020impact, perez2020importance, he2020estimation, chow2020global}, but similar to recent modeling studies that estimated $R_0$ to be between $4.7$  and $6.3$ in Northeastern United States, and around $5$ in New York and New Jersey \citep{miller2020mobility, chow2020global}. Under the high asymptomatic fraction scenario, our estimate of crude $R_0$ is $5.75$ ($95\%$ CI: $5.05 - 6.65$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
 Unaccounted force of infection biases estimates of transmission parameter $\beta$, and hence our ``crude'' $R_0$, upwards. 
-A recently published analysis implies that $R_0 = 3.3$ in Connecticut \citep{kaplan2020covid}. This suggests that about 30\% to 45\% of infection events early in the epidemic could be imported, which is a plausible proportion range. 
+A recently published analysis implies that $R_0 = 3.3$ in Connecticut \citep{kaplan2020covid}. This suggests that about 30\% to 40\% of infection events early in the epidemic could be imported, which is a plausible proportion range. 
 Estimates of $R\textsubscript{eff}$ at later stages of the epidemic are less likely to be affected by this source of bias, since lockdown measures have probably resulted in a very low rate of interstate contacts. Our estimates of $R\textsubscript{eff}$ on May 20 are similar under the three asymptomatic proportion scenarios.
 
 Under high asymptomatic fraction scenario, we would expect a higher number of infections, hospitalizations and deaths by the end of summer. 
@@ -542,23 +542,23 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
 		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
 		\hline
-			$q_{I_S}$ & 0.064 & 0.037 & 0.089 & 0.049 & 0.024 & 0.075 & 0.030 & 0.013 & 0.047 \\ 
-			$\beta$ & 1.26 & 1.10 & 1.46 & 1.51 & 1.29 & 1.75 & 1.86 & 1.56 & 2.25 \\ 
-			$\gamma_H$ & 0.113 & 0.096 & 0.131 & 0.112 & 0.094 & 0.130 & 0.113 & 0.096 & 0.130 \\ 
-			$\gamma_U$ & 0.071 & 0.053 & 0.090 & 0.072 & 0.054 & 0.090 & 0.072 & 0.052 & 0.091 \\ 
-			$k_A$ & 0.40 & 0.30 & 0.49 & 0.40 & 0.30 & 0.50 & 0.40 & 0.30 & 0.49 \\ 
-			$k_{I_S}$ & 0.70 & 0.60 & 0.80 & 0.70 & 0.61 & 0.80 & 0.70 & 0.60 & 0.80 \\ 
-			$m_H$ & 0.209 & 0.186 & 0.235 & 0.209 & 0.184 & 0.235 & 0.209 & 0.184 & 0.233 \\ 
-			$m_U$ & 0.311 & 0.246 & 0.386 & 0.314 & 0.239 & 0.393 & 0.312 & 0.242 & 0.387 \\ 
-			$q_H$ & 0.57 & 0.52 & 0.63 & 0.58 & 0.52 & 0.62 & 0.58 & 0.52 & 0.62 \\ 
-			$w\textsubscript{school}$ & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 \\ 
-			$w\textsubscript{lockdown}$ & 0.70 & 0.65 & 0.74 & 0.71 & 0.67 & 0.75 & 0.72 & 0.68 & 0.76 \\ 
-			crude $R_0$ & 4.71 & 4.23 & 5.38 & 5.32 & 4.73 & 5.97 & 5.98 & 5.32 & 6.85 \\ 
-			$R_\textsubscript{eff}$ on May 20, 2020 & 0.66 & 0.56 & 0.74 & 0.65 & 0.56 & 0.73 & 0.63 & 0.53 & 0.71 \\ 
-			symptomatic CHR & 0.057 & 0.034 & 0.081 & 0.057 & 0.028 & 0.087 & 0.057 & 0.024 & 0.089 \\ 
-			IHR & 0.036 & 0.021 & 0.052 & 0.028 & 0.014 & 0.044 & 0.017 & 0.007 & 0.027 \\ 
-			symptomatic CFR & 0.025 & 0.014 & 0.036 & 0.025 & 0.012 & 0.039 & 0.025 & 0.010 & 0.041 \\ 
-			IFR & 0.0160 & 0.0093 & 0.0228 & 0.0125 & 0.0059 & 0.0194 & 0.0075 & 0.0031 & 0.0123 \\ 
+				$q_{I_S}$ & 0.064 & 0.037 & 0.089 & 0.051 & 0.026 & 0.075 & 0.028 & 0.011 & 0.046 \\ 
+				$\beta$ & 1.26 & 1.10 & 1.46 & 1.46 & 1.26 & 1.72 & 1.79 & 1.46 & 2.22 \\ 
+				$\gamma_H$ & 0.113 & 0.096 & 0.131 & 0.113 & 0.095 & 0.132 & 0.114 & 0.097 & 0.131 \\ 
+				$\gamma_U$ & 0.071 & 0.053 & 0.090 & 0.072 & 0.054 & 0.090 & 0.071 & 0.052 & 0.089 \\ 
+				$k_A$ & 0.40 & 0.30 & 0.49 & 0.40 & 0.30 & 0.49 & 0.40 & 0.30 & 0.49 \\ 
+				$k_{I_S}$ & 0.70 & 0.60 & 0.80 & 0.70 & 0.61 & 0.80 & 0.70 & 0.60 & 0.80 \\ 
+				$m_H$ & 0.209 & 0.186 & 0.235 & 0.209 & 0.186 & 0.234 & 0.208 & 0.184 & 0.230 \\ 
+				$m_U$ & 0.311 & 0.246 & 0.386 & 0.315 & 0.248 & 0.393 & 0.311 & 0.242 & 0.387 \\ 
+				$q_H$ & 0.57 & 0.52 & 0.63 & 0.58 & 0.52 & 0.63 & 0.58 & 0.52 & 0.63 \\ 
+				$w\textsubscript{school}$ & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 \\ 
+				$w\textsubscript{lockdown}$ & 0.70 & 0.65 & 0.74 & 0.71 & 0.67 & 0.75 & 0.71 & 0.67 & 0.76 \\ 
+				crude $R_0$ & 4.71 & 4.23 & 5.38 & 5.17 & 4.60 & 5.88 & 5.75 & 5.05 & 6.65 \\ 
+				$R_\textsubscript{eff}$ on May 20, 2020 & 0.65 & 0.56 & 0.74 & 0.64 & 0.54 & 0.73 & 0.62 & 0.52 & 0.71 \\ 
+				symptomatic CHR & 0.057 & 0.034 & 0.081 & 0.059 & 0.030 & 0.087 & 0.054 & 0.021 & 0.090 \\ 
+				IHR & 0.036 & 0.021 & 0.052 & 0.030 & 0.015 & 0.044 & 0.016 & 0.006 & 0.027 \\ 
+				symptomatic CFR & 0.025 & 0.014 & 0.036 & 0.026 & 0.013 & 0.039 & 0.024 & 0.009 & 0.040 \\ 
+				IFR & 0.0160 & 0.0093 & 0.0228 & 0.0129 & 0.0065 & 0.0195 & 0.0071 & 0.0026 & 0.0120 \\ 
 		\bottomrule 
 	\end{tabular}
 	\vspace{0.5em}
@@ -568,7 +568,6 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 	\label{tbl:posterior}
 \end{table}
 %\end{spacing}
-
 
 
 
