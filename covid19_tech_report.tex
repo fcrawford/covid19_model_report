@@ -260,7 +260,7 @@ Figure \ref{fig:map} shows the county map of Connecticut along with the county a
 \begin{figure} %[htb]
 	\centering
 	\includegraphics[width=.7\textwidth]{figures/map_adj.pdf}
-	\caption{County map of Connecticut and county adjacency matrix.}
+	\caption{County map of Connecticut and county adjacency matrix. The dark gray cells correspond to counties that are adjacent. Contacts between adjacent counties are included in the model in addition to contacts within counties.}
 	\label{fig:map}
 \end{figure}
 
@@ -351,8 +351,8 @@ where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..
 
 \begin{figure} %[htb]
 	\centering
-	\includegraphics[width=.6\textwidth]{figures/data_weights.pdf}
-	\caption{Weight function used in the weighted likelihood. The assigned weights are close to $1$ after April 12. \comments{fix aspect ratio here, make labels bigger, overlay data, indicate May 20}}
+	\includegraphics[width=\textwidth]{figures/data_weights.pdf}
+	\caption{Weight function used in the weighted likelihood. The assigned weights are close to $1$ after April 12. }
 	\label{fig:datweights}
 \end{figure}
 
