@@ -386,7 +386,7 @@ p(\btheta, \blambda, \bL | h(t), d(t)) \propto p(\btheta) p(\blambda) p(\bL)
 							         p\big(d(t)| D(t, L_0, L_D, \btheta), \lambda_d \big) \right]^{z(t)/2},
 \label{eq:posterior}
 \end{equation}
-where $\btheta = (q_{I_S}, \beta, \gamma_H, \gamma_U, k_A, k_{I_S}, m_H, m_U, q_{HD}, w\textsubscript{school}, w\textsubscript{lockdown})$, $\blambda = (\lambda_h, \lambda_d)$, and $\bL = (L_0, L_H, L_D)$. Each likelihood term is weighted by $z(t)/2$ because we assign equal weight 1/2 to data contributions from both hospitalizations and deaths.  Sampling from the joint posterior distribution of $(\btheta, \blambda, \bL)$  given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis-Hastings algorithm with random walk proposals for $\btheta$ and $\blambda$ and independent proposals for $\bL$. We ran the sampler for 1,000,000 iterations and thinned the chain using every $100$th iteration.
+where $\btheta = (q_{I_S}, \beta, \gamma_H, \gamma_U, k_A, k_{I_S}, m_H, m_U, q_{HD}, w\textsubscript{school}, w\textsubscript{lockdown})$, $\blambda = (\lambda_h, \lambda_d)$, and $\bL = (L_0, L_H, L_D)$. Each likelihood term is weighted by $z(t)/2$ because we assign equal weight 1/2 to data contributions from both hospitalizations and deaths.  Sampling from the joint posterior distribution of $(\btheta, \blambda, \bL)$  given in (\ref{eq:posterior}) is performed using Markov Chain Monte Carlo (MCMC). We implemented a Metropolis-Hastings algorithm with random walk proposals for $\btheta$ and $\blambda$ and independent proposals for $\bL$. We ran the sampler for 2,000,000 iterations and thinned the chain using every $400$th iteration.
 
 
 %%%%%%%%%%%%%%%%%%
@@ -514,7 +514,7 @@ Table \ref{tbl:posterior} reports means and 95\% credible intervals of marginal 
 
 Figures \ref{fig:slow_low} to \ref{fig:slow_high} summarize projections under the low, medium and high asymptomatic fraction and `slow' reopening. Slow reopening assumes that at one-month intervals, 10\% of the contacts suppressed via lockdown is released. Figures \ref{fig:fast_low} to \ref{fig:fast_high} summarize projections for the three asymptomatic fraction scenarios assuming `fast' reopening. Fast reopening assumes that 10\% of the suppressed lockdown contact is released at two-week intervals. The projections include daily COVID-19 incidence, hospital census, deaths, cumulative incidence proportion, and effective reproductive number, $R\textsubscript{eff}$. 
 
-Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.71$ ($95\%$ CI: $4.23 - 5.38$), which is on the higher end of available estimates \citep{cdc2020scenarios, li2020early, li2020substantial, kissler2020projecting, ferguson2020impact, perez2020importance, he2020estimation, chow2020global}, but similar to recent modeling studies that estimated $R_0$ to be between $4.7$  and $6.3$ in Northeastern United States, and around $5$ in New York and New Jersey \citep{miller2020mobility, chow2020global}. Under the high asymptomatic fraction scenario, our estimate of crude $R_0$ is $5.75$ ($95\%$ CI: $5.05 - 6.65$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
+Our estimate of ``crude'' $R_0$ under the low asymptomatic fraction scenario is $4.69$ ($95\%$ CI: $4.14 - 5.33$), which is on the higher end of available estimates \citep{cdc2020scenarios, li2020early, li2020substantial, kissler2020projecting, ferguson2020impact, perez2020importance, he2020estimation, chow2020global}, but similar to recent modeling studies that estimated $R_0$ to be between $4.7$  and $6.3$ in Northeastern United States, and around $5$ in New York and New Jersey \citep{miller2020mobility, chow2020global}. Under the high asymptomatic fraction scenario, our estimate of crude $R_0$ is $5.76$ ($95\%$ CI: $5.05 - 6.65$). We believe that this over-estimates the true $R_0$ as we do not model infection importation events from New York City that likely made a substantial contribution to the force of infection early in the epidemic. 
 Unaccounted force of infection biases estimates of transmission parameter $\beta$, and hence our ``crude'' $R_0$, upwards. 
 A recently published analysis implies that $R_0 = 3.3$ in Connecticut \citep{kaplan2020covid}. This suggests that about 30\% to 40\% of infection events early in the epidemic could be imported, which is a plausible proportion range. 
 Estimates of $R\textsubscript{eff}$ at later stages of the epidemic are less likely to be affected by this source of bias, since lockdown measures have probably resulted in a very low rate of interstate contacts. Our estimates of $R\textsubscript{eff}$ on May 20 are similar under the three asymptomatic proportion scenarios.
@@ -522,7 +522,7 @@ Estimates of $R\textsubscript{eff}$ at later stages of the epidemic are less lik
 Under high asymptomatic fraction scenario, we would expect a higher number of infections, hospitalizations and deaths by the end of summer. 
 Under slow reopening, hospitalization capacity is not expected to be overwhelmed under any of the scenarios. 
 In case of fast reopening, hospitalization capacity would likely be exceeded sooner if asymptomatic fraction is high. 
-The main difference between the asymptomatic fraction scenarios is in the cumulative incidence proportion. By the end of summer, it may be as low as $0.1$ under the low asymptomatic fraction and slow reopening, and as high as $0.67$ under the high asymptomatic fraction and fast reopening. The latter scenario predicts the second peak of infections to occur in mid-August, while all other scenarios predict that the second peak would not occur until later in the Fall. 
+The main difference between the asymptomatic fraction scenarios is in the cumulative incidence proportion. By the end of summer, it may be as low as $0.1$ under the low asymptomatic fraction and slow reopening, and as high as $0.6$ under the high asymptomatic fraction and fast reopening. The latter scenario predicts the second peak of infections to occur in mid-August, while all other scenarios predict that the second peak would not occur until later in the Fall. 
 While higher asymptomatic fraction is expected to result in higher number of deaths in the short-term, the total number of deaths by the end of the epidemic would likely be higher under low asymptomatic fraction. When asymptomatic fraction is low, infections and deaths are delayed, but the proportion of severe cases is higher. 
 
 
@@ -545,23 +545,23 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 		Parameter & \multicolumn{3}{c}{low asymptomatic} & \multicolumn{3}{c}{medium asymptomatic} & \multicolumn{3}{c}{high asymptomatic} \\
 		{} & mean & CI-low & CI-high & mean & CI-low & CI-high & mean & CI-low & CI-high \\ 
 		\hline
-				$q_{I_S}$ & 0.064 & 0.037 & 0.089 & 0.051 & 0.026 & 0.075 & 0.028 & 0.011 & 0.046 \\ 
-				$\beta$ & 1.26 & 1.10 & 1.46 & 1.46 & 1.26 & 1.72 & 1.79 & 1.46 & 2.22 \\ 
-				$\gamma_H$ & 0.113 & 0.096 & 0.131 & 0.113 & 0.095 & 0.132 & 0.114 & 0.097 & 0.131 \\ 
-				$\gamma_U$ & 0.071 & 0.053 & 0.090 & 0.072 & 0.054 & 0.090 & 0.071 & 0.052 & 0.089 \\ 
-				$k_A$ & 0.40 & 0.30 & 0.49 & 0.40 & 0.30 & 0.49 & 0.40 & 0.30 & 0.49 \\ 
-				$k_{I_S}$ & 0.70 & 0.60 & 0.80 & 0.70 & 0.61 & 0.80 & 0.70 & 0.60 & 0.80 \\ 
-				$m_H$ & 0.209 & 0.186 & 0.235 & 0.209 & 0.186 & 0.234 & 0.208 & 0.184 & 0.230 \\ 
-				$m_U$ & 0.311 & 0.246 & 0.386 & 0.315 & 0.248 & 0.393 & 0.311 & 0.242 & 0.387 \\ 
-				$q_H$ & 0.57 & 0.52 & 0.63 & 0.58 & 0.52 & 0.63 & 0.58 & 0.52 & 0.63 \\ 
-				$w\textsubscript{school}$ & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 \\ 
-				$w\textsubscript{lockdown}$ & 0.70 & 0.65 & 0.74 & 0.71 & 0.67 & 0.75 & 0.71 & 0.67 & 0.76 \\ 
-				crude $R_0$ & 4.71 & 4.23 & 5.38 & 5.17 & 4.60 & 5.88 & 5.75 & 5.05 & 6.65 \\ 
-				$R_\textsubscript{eff}$ on May 20, 2020 & 0.65 & 0.56 & 0.74 & 0.64 & 0.54 & 0.73 & 0.62 & 0.52 & 0.71 \\ 
-				symptomatic CHR & 0.057 & 0.034 & 0.081 & 0.059 & 0.030 & 0.087 & 0.054 & 0.021 & 0.090 \\ 
-				IHR & 0.036 & 0.021 & 0.052 & 0.030 & 0.015 & 0.044 & 0.016 & 0.006 & 0.027 \\ 
-				symptomatic CFR & 0.025 & 0.014 & 0.036 & 0.026 & 0.013 & 0.039 & 0.024 & 0.009 & 0.040 \\ 
-				IFR & 0.0160 & 0.0093 & 0.0228 & 0.0129 & 0.0065 & 0.0195 & 0.0071 & 0.0026 & 0.0120 \\ 
+			$q_{I_S}$ & 0.063 & 0.038 & 0.089 & 0.049 & 0.025 & 0.074 & 0.028 & 0.011 & 0.046 \\ 
+			$\beta$ & 1.26 & 1.09 & 1.46 & 1.44 & 1.23 & 1.70 & 1.81 & 1.48 & 2.19 \\ 
+			$\gamma_H$ & 0.112 & 0.095 & 0.131 & 0.113 & 0.095 & 0.132 & 0.114 & 0.097 & 0.131 \\ 
+			$\gamma_U$ & 0.072 & 0.053 & 0.091 & 0.072 & 0.053 & 0.090 & 0.071 & 0.052 & 0.089 \\ 
+			$k_A$ & 0.40 & 0.30 & 0.49 & 0.40 & 0.30 & 0.49 & 0.39 & 0.30 & 0.49 \\ 
+			$k_{I_S}$ & 0.70 & 0.60 & 0.80 & 0.70 & 0.60 & 0.80 & 0.70 & 0.60 & 0.80 \\ 
+			$m_H$ & 0.209 & 0.183 & 0.236 & 0.209 & 0.182 & 0.234 & 0.208 & 0.184 & 0.233 \\ 
+			$m_U$ & 0.314 & 0.248 & 0.386 & 0.313 & 0.246 & 0.390 & 0.311 & 0.243 & 0.386 \\ 
+			$q_H$ & 0.58 & 0.52 & 0.63 & 0.58 & 0.52 & 0.63 & 0.58 & 0.52 & 0.62 \\ 
+			$w\textsubscript{school}$ & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 & 0.15 & 0.12 & 0.18 \\ 
+			$w\textsubscript{lockdown}$ & 0.70 & 0.65 & 0.74 & 0.71 & 0.67 & 0.75 & 0.71 & 0.67 & 0.75 \\ 
+			crude $R_0$ & 4.69 & 4.14 & 5.33 & 5.07 & 4.49 & 5.73 & 5.76 & 5.05 & 6.65 \\ 
+			$R_\textsubscript{eff}$ on May 20, 2020 & 0.65 & 0.55 & 0.74 & 0.64 & 0.54 & 0.73 & 0.62 & 0.51 & 0.71 \\ 
+			symptomatic CHR & 0.056 & 0.034 & 0.081 & 0.056 & 0.029 & 0.086 & 0.054 & 0.021 & 0.088 \\ 
+			IHR & 0.036 & 0.022 & 0.052 & 0.028 & 0.014 & 0.043 & 0.016 & 0.006 & 0.027 \\ 
+			symptomatic CFR & 0.025 & 0.014 & 0.036 & 0.025 & 0.013 & 0.038 & 0.023 & 0.009 & 0.039 \\ 
+			IFR & 0.0159 & 0.0091 & 0.0232 & 0.0123 & 0.0064 & 0.0189 & 0.0070 & 0.0026 & 0.0118 \\ 
 		\bottomrule 
 	\end{tabular}
 	\vspace{0.5em}
@@ -571,7 +571,6 @@ While higher asymptomatic fraction is expected to result in higher number of dea
 	\label{tbl:posterior}
 \end{table}
 %\end{spacing}
-
 
 
 %%%%%%%%% projections %%%%%%%%%%%%
