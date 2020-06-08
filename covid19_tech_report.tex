@@ -139,14 +139,13 @@ and Forrest W. Crawford$^{1,2,3,4}$  \\[1em]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
-Most states in the US implemented lockdown and stay-at-home orders during March and April of 2020 in response to a threat of uncontrolled outbreak of COVID-19. 
-States use different criteria to make decisions about the timing and extent of releasing social distancing measures. 
-Transmission models calibrated to local context offer a useful way to forecast possible epidemic trajectories under different assumptions about epidemiological parameters and intervention effectiveness.  
-To support public health policymakers in Connecticut as they begin phased lifting of social distancing restrictions, we developed a county-structured compartmental SEIR-type model of SARS-CoV-2 transmission and COVID-19 disease progression. We calibrated this model to the local dynamics of deaths and hospitalizations and the exact timing of state interventions, including school closures and stay-at-home order. 
-In this technical report, we describe the details of the model design, implementation and calibration, and show projections of epidemic development through the Summer of 2020 under different assumptions about the increase in contact rates following partial state reopening.  Our model results are consistent with high effectiveness of state lockdown measures, but changes in human interaction patterns during the coming months are unknown.
+\noindent
+%Most US states implemented lockdown and stay-at-home orders during March and April of 2020 in response to a threat of uncontrolled outbreak of COVID-19. 
+%States use different criteria to make decisions about the timing and extent of releasing social distancing measures. 
+%Transmission models calibrated to local context offer a useful way to forecast possible epidemic trajectories under different assumptions about epidemiological parameters and intervention effectiveness.  
+To support public health policymakers in Connecticut as they begin phased lifting of social distancing restrictions, we developed a county-structured compartmental SEIR-type model of SARS-CoV-2 transmission and COVID-19 disease progression. We calibrated this model to the local dynamics of deaths and hospitalizations and the exact timing of state interventions, including school closures and stay-at-home order.  In this technical report, we describe the details of the model design, implementation and calibration, and show projections of epidemic development through the Summer of 2020 under different assumptions about the increase in contact rates following partial state reopening.  Our model results are consistent with high effectiveness of state lockdown measures, but changes in human interaction patterns during the coming months are unknown.
 In addition, a lot of uncertainty remains with respect to several key epidemiological parameters and the effectiveness of increased testing and contact tracing capacity. 
-As more information becomes available, we will update the projections presented in this report. Reports in this series are posted to \url{https://crawford-lab.github.io/covid19_ct/}. \\
-
+As more information becomes available, we will update the projections presented in this report. Reports in this series are posted to \url{https://crawford-lab.github.io/covid19_ct/}. \\[1em]
 \textbf{Keywords:} SARS-CoV-2, mathematical modeling, SEIR model, lockdown, social distancing.
 \end{abstract}
 
@@ -358,26 +357,6 @@ where $z(t)$ is the weight assigned to observation at time $t$, $t \in \{t_0, ..
 	\label{fig:datweights}
 \end{figure}
 
-% \comments{
-% The hospitalizations and deaths data likelihood functions take a form:
-% \begin{align}
-% \mathcal{L}_{hosp. data} (\btheta | h(t_{h_1},\cdots, t_{h_K}) ) =  \prod_{t=t_{h_1}}^{t_{h_K}} \left[ f_{Pois} (h(t) | H(t, L_H , \btheta) ) \right]^{\frac{1}{K}} \\
-% \mathcal{L}_{death. data} (\btheta | d(t_{d_1},\cdots, t_{d_M}) ) =  \prod_{t=t_{d_1}}^{t_{d_K}} \left[ f_{Pois} (d(t) | D(t, L_D , \btheta) ) \right]^{\frac{1}{M}}, 
-% \end{align}
-% where $f_{Pois}(x | \lambda) $ is a probability mass function of Poisson distribution with rate parameter $\lambda$, $K$ is number of observations in hospitalization data series, and $M$ is number of observations in death data series. The joint data likelihood function combines hospitalizations and deaths likelihoods:
-% \begin{equation}
-% \mathcal{L}_{data} (\btheta | h(t_{h_1},\cdots, t_{h_K}), d(t_{d_1},\cdots, t_{d_M}) ) =  \mathcal{L}_{hosp. data} (\btheta | h(t_{h_1},\cdots, t_{h_K}) ) \mathcal{L}_{death. data} (\btheta | d(t_{d_1},\cdots, t_{d_M}) )
-% \end{equation}
-% }
-% \comments{
-% Joint posterior distribution of $\btheta$ up to a normalizing constant is given by
-% \begin{equation}
-% f_{posterior}(\btheta) = \mathcal{L}_{prior} (\btheta | (\mu_{\btheta}, \sigma_{\btheta}, \btheta\textsubscript{min}, \btheta\textsubscript{max}) ) \mathcal{L}_{data} (\btheta | h(t_{h_1},\cdots, t_{h_K}), d(t_{d_1},\cdots, t_{d_M}) )
-% \label{eq:posterior}
-% \end{equation}
-% }
-% \subsection{Posterior inference} 
-
 
 We construct the posterior distribution over unknown parameters $(\btheta, \blambda, \bL)$ as 
 \begin{equation}
@@ -499,10 +478,10 @@ Daily total available hospital beds (including occupied) in each county were obt
 % 	\label{fig:datweights}
 % \end{figure}
 
-\textbf{Ethics statement} \\[0.5em]
-\comments{Forrest, can you please add this}
+%\textbf{Ethics statement} \\[0.5em]
+%\comments{Forrest, can you please add this}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -661,13 +640,12 @@ In an evolving public health crisis, it is important to keep projections up to d
 
 %%%%%%%%%%%%%%%%%%
 
-\textbf{Funding} \\
-
-\comments{Forrest, Richard, please add your funding sources.} \\
+%\textbf{Funding} \\
+%\comments{Forrest, Richard, please add your funding sources.} \\
 
 %%%%%%%%%%%%%%%%%%
 
-\textbf{Competing interests:} none. \\
+%\textbf{Competing interests:} none. \\
 
 
 %%%%%%%%%%%%%%%%%%
