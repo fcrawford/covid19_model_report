@@ -469,7 +469,7 @@ We calculated county-level population and age structure in Connecticut using the
 % To compute weights for observations at different time points, we used a logistic function given in (\ref{eq:datweight}) with $t=0$ corresponding to $M = 45$ days prior to the most recent data point used in posterior calibration, and $k_z = 0.3$. The resulting weights are shown in Figure \ref{fig:datweights}.
 % We used Gamma distribution given in (\ref{eq:lamprior}) to put prior on $\lambda_h$ and $\lambda_d$ with shape parameter $s_\lambda = 4$ and rate parameter $r_\lambda = 0.0002$.
 
-Daily total available hospital beds (including occupied) in each county were obtained from the Connecticut Hospital Association~\citep{CHAwebsite} and used as hospitalization capacity values on a given date. The latest available value of hospitalization capacity was used for future projections.
+Daily total available hospital beds (including occupied) in each county were obtained from the Connecticut Hospital Association/CHIMEData ~\citep{CHAwebsite,CHIMEData} and used as hospitalization capacity values on a given date. The latest available value of hospitalization capacity was used for future projections.
 
 % \begin{figure} %[htb]
 % 	\centering
@@ -638,6 +638,7 @@ In an evolving public health crisis, it is important to keep projections up to d
 
 
 
+
 %%%%%%%%%%%%%%%%%%
 
 \textbf{Funding}: We acknowledge NIH/NICHD grant 1DP2HD091799-01. 
@@ -649,6 +650,9 @@ In an evolving public health crisis, it is important to keep projections up to d
 
 %%%%%%%%%%%%%%%%%%
 
+\textbf{Acknowledgements}: We are grateful to Edward H. Kaplan for helpful comments. We thank the Connecticut Hospital Association for providing data on COVID-19 hospitalizations and deaths. 
+
+%%%%%%%%%%%%%%%%%%
 
 \bibliographystyle{unsrtnat}
 
